@@ -1,0 +1,91 @@
+[
+    {
+        "Routes": [
+            {
+                "controlPoints": [
+                    [
+                        560.390380859375,
+                        157.10693359375
+                    ],
+                    [
+                        151.0,
+                        986.0
+                    ],
+                    [
+                        -24.00006103515625,
+                        570.0
+                    ],
+                    [
+                        -500.0,
+                        400.0
+                    ],
+                    [
+                        -846.4654541015625,
+                        250.797119140625
+                    ],
+                    [
+                        -566.9671630859375,
+                        -25.173919677734375
+                    ],
+                    [
+                        -601.4653930664063,
+                        -244.202880859375
+                    ]
+                ],
+                "control_point_size": 15.0,
+                "maxConcurrentSameTypeSegments": 6,
+                "numSegments": 100,
+                "samples_per_segment": 50,
+                "segmentSize": 20.0,
+                "tex1": "src/textures/control_point.png",
+                "tex2": "src/textures/control_point2.png",
+                "velocity": 2.0
+            }
+        ],
+        "Shooters": [
+            {
+                "angle": 247.01661682128906,
+                "collision": false,
+                "direction": [
+                    0.0,
+                    0.0
+                ],
+                "position": [
+                    0.0,
+                    0.0
+                ],
+                "shotSize": 20.0,
+                "shotVelocity": 10.0,
+                "size": [
+                    100.0,
+                    100.0
+                ],
+                "texture": "src/textures/frog.png",
+                "velocity": 0.0
+            }
+        ],
+        "Sprites": [
+            {
+                "angle": 0.0,
+                "collision": false,
+                "direction": [
+                    0.0,
+                    1.0
+                ],
+                "position": [
+                    0.0,
+                    200.0
+                ],
+                "size": [
+                    50.0,
+                    50.0
+                ],
+                "texture": "src/textures/red.jpg",
+                "velocity": 2.0
+            }
+        ]
+    },
+    null,
+    null,
+    null
+]

@@ -1,0 +1,105 @@
+[
+    {
+        "Sprites": [
+            {
+                "angle": 0.0,
+                "collision": false,
+                "direction": [
+                    0.0,
+                    0.0
+                ],
+                "position": [
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    500.0,
+                    500.0
+                ],
+                "texture": "src\\Textures\\watergardenofzuma.png",
+                "velocity": 0.0
+            }
+        ]
+    },
+    {
+        "Shooters": [
+            {
+                "angle": 214.59547424316406,
+                "collision": false,
+                "direction": [
+                    0.0,
+                    0.0
+                ],
+                "position": [
+                    -180.0,
+                    80.0
+                ],
+                "shotSize": 20.0,
+                "shotVelocity": 10.0,
+                "size": [
+                    100.0,
+                    100.0
+                ],
+                "texture": "src/textures/frog.png",
+                "velocity": 0.0
+            }
+        ]
+    },
+    {
+        "Routes": [
+            {
+                "controlPoints": [
+                    [
+                        361.2195739746094,
+                        531.1331787109375
+                    ],
+                    [
+                        345.6153259277344,
+                        270.05517578125
+                    ],
+                    [
+                        389.6794128417969,
+                        -374.9539794921875
+                    ],
+                    [
+                        289.61529541015625,
+                        -409.94482421875
+                    ],
+                    [
+                        176.34605407714844,
+                        -439.9541015625
+                    ],
+                    [
+                        -183.342529296875,
+                        -423.15093994140625
+                    ],
+                    [
+                        -515.32080078125,
+                        -423.287353515625
+                    ],
+                    [
+                        -548.6541137695313,
+                        -156.62060546875
+                    ],
+                    [
+                        -548.6541137695313,
+                        76.712646484375
+                    ],
+                    [
+                        -511.9874267578125,
+                        335.0460205078125
+                    ]
+                ],
+                "control_point_size": 15.0,
+                "maxConcurrentSameTypeSegments": 2,
+                "numSegments": 10,
+                "samples_per_segment": 50,
+                "segmentSize": 20.0,
+                "tex1": "src/textures/control_point.png",
+                "tex2": "src/textures/control_point2.png",
+                "velocity": 2.0
+            }
+        ]
+    },
+    null
+]

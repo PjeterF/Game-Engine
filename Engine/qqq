@@ -1,0 +1,105 @@
+{
+    "Layers": [
+        {
+            "Routes": [
+                {
+                    "controlPoints": [
+                        [
+                            900.0,
+                            900.0
+                        ],
+                        [
+                            437.9999694824219,
+                            735.0
+                        ],
+                        [
+                            -24.00006103515625,
+                            570.0
+                        ],
+                        [
+                            -500.0,
+                            400.0
+                        ]
+                    ],
+                    "control_point_size": 15.0,
+                    "maxConcurrentSameTypeSegments": 6,
+                    "numSegments": 10,
+                    "samples_per_segment": 50,
+                    "segmentSize": 20.0,
+                    "tex1": "src/textures/control_point.png",
+                    "tex2": "src/textures/control_point2.png",
+                    "velocity": 2.0
+                }
+            ],
+            "Shooters": [
+                {
+                    "angle": 177.82608032226563,
+                    "collision": false,
+                    "direction": [
+                        0.0,
+                        0.0
+                    ],
+                    "position": [
+                        0.0,
+                        0.0
+                    ],
+                    "shotSize": 20.0,
+                    "shotVelocity": 12.0,
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "texture": "src/textures/frog.png",
+                    "velocity": 0.0
+                }
+            ]
+        },
+        null,
+        null,
+        null
+    ],
+    "SegmentTemplates": [
+        {
+            "frameDuration": 10,
+            "frames": [
+                [
+                    0.0,
+                    0.0,
+                    16.0,
+                    16.0
+                ]
+            ],
+            "size": 20,
+            "tag": 1,
+            "texture": "src/textures/marble1.png"
+        },
+        {
+            "frameDuration": 10,
+            "frames": [
+                [
+                    0.0,
+                    0.0,
+                    16.0,
+                    16.0
+                ]
+            ],
+            "size": 20,
+            "tag": 2,
+            "texture": "src/textures/marble2.png"
+        },
+        {
+            "frameDuration": 10,
+            "frames": [
+                [
+                    0.0,
+                    0.0,
+                    16.0,
+                    16.0
+                ]
+            ],
+            "size": 20,
+            "tag": 3,
+            "texture": "src/textures/marble3.png"
+        }
+    ]
+}
