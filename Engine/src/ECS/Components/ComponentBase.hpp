@@ -3,6 +3,9 @@
 #include "glm/vec2.hpp"
 #include "../../../Externals/includes/nlohmann/json.hpp"
 
+#include <typeinfo>
+#include <typeindex>
+
 enum CType
 {
 	Transform,
@@ -14,7 +17,7 @@ enum CType
 	//Zuma
 	RouteInfo,
 	ShooterInfo
-	};
+};
 
 class ComponentBase
 {

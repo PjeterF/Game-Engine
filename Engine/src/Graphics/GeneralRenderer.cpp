@@ -26,7 +26,7 @@ void RenderingAPI::drawSprite(glm::vec2 position, glm::vec2 scale, float angle, 
 	spriteRenderer->draw(position, scale, angle, texture);
 }
 
-void RenderingAPI::drawSpriteSampled(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, Animation::Division division)
+void RenderingAPI::drawSpriteSampled(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, TextureDivision division)
 {
 	spriteRenderer->draw(position, scale, angle, texture, division);
 }

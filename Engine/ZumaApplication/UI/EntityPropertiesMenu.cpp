@@ -358,6 +358,22 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 		if (ImGui::Button("Remove"))
 			selectedEntity->removeComponent(Sprite);
 
+		int n = 0;
+		for (auto& division : component->divisions)
+		{
+			if (ImGui::TreeNode(("div" + std::to_string(n)).c_str()))
+			{
+				float* pos[2] = { &division.x, &division.y };
+				float* size[2] = { &division.width, &division.height };
+
+				ImGui::InputFloat2("pos", *pos);
+				ImGui::InputFloat2("size", *size);
+
+				ImGui::TreePop();
+			}
+			n++;
+		}
+
 		ImGui::Separator();
 		ImGui::TreePop();
 	}

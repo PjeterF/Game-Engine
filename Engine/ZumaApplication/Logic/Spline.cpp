@@ -1,6 +1,6 @@
 #include "Spline.hpp"
 
-Spline::Spline(float xInit, float yInit, int samples_per_segment, Resource<Texture>* texture1, Resource<Texture>* texture2, float control_point_size)
+Spline::Spline(float xInit, float yInit, int samples_per_segment, Resource<Texture>* texture1, Resource<Texture>* texture2, float control_point_size) : EventObserver(UI)
 {
 	this->samples_per_segment = samples_per_segment;
 	this->tex1 = texture1;
@@ -14,7 +14,7 @@ Spline::Spline(float xInit, float yInit, int samples_per_segment, Resource<Textu
 	sample();
 }
 
-Spline::Spline(std::vector<glm::vec2> controlPoints, int samples_per_segment, Resource<Texture>* texture1, Resource<Texture>* texture2, float control_point_size)
+Spline::Spline(std::vector<glm::vec2> controlPoints, int samples_per_segment, Resource<Texture>* texture1, Resource<Texture>* texture2, float control_point_size) : EventObserver(UI)
 {
 	this->samples_per_segment = samples_per_segment;
 	this->tex1 = texture1;
@@ -31,6 +31,57 @@ Spline::~Spline()
 {
 	tex1->unsubscribe();
 	tex2->unsubscribe();
+}
+
+void Spline::handleEvent(Event& event)
+{
+	switch (event.getType())
+	{
+	case Event::MouseClick:
+	{
+		glm::vec2* mousePos = (glm::vec2*)event.getPayload();
+		if (!moving)
+		{
+			float delta = 20;
+			int n = 0;
+			for (auto& point : controlPoints)
+			{
+				bool xAxis = mousePos->x > point.x - delta && mousePos->x < point.x + delta;
+				bool yAxis = mousePos->y > point.y - delta && mousePos->y < point.y + delta;
+				if (xAxis && yAxis)
+				{
+					moving = true;
+					movingIndex = n;
+					break;
+				}
+				n++;
+			}
+		}
+		else
+		{
+			controlPoints.at(movingIndex).x = mousePos->x;
+			controlPoints.at(movingIndex).y = mousePos->y;
+			sample();
+			moving = false;
+
+		}
+	}
+	break;
+	case Event::MouseMove:
+	{
+		if (moving)
+		{
+			glm::vec2* mousePos = (glm::vec2*)event.getPayload();
+			controlPoints.at(movingIndex).x = mousePos->x;
+			controlPoints.at(movingIndex).y = mousePos->y;
+			sample();
+			EventManager::getInstance().notify(Event(Event::MoveCtrlPoints, &sampledPoints), ECS);
+		}
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 int Spline::getNumberOfSegments()

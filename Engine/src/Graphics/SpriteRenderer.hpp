@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../OpenGL/package.hpp"
 #include "glm/vec2.hpp"
 #include <glm/mat4x4.hpp>
@@ -9,14 +10,15 @@
 
 #include "../Events/EventPackage.hpp"
 #include "../Graphics/Camera.hpp"
-#include "Animation.hpp"
+
+#include "../ECS/Components/AnimatedSpriteC.hpp"
 
 class SpriteRenderer : public EventObserver
 {
 public:
 	SpriteRenderer(GLuint shaderProgramID, Camera* camera);
 	void draw(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture);
-	void draw(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, Animation::Division division);
+	void draw(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, TextureDivision division);
 
 	virtual void handleEvent(Event& event) override;
 

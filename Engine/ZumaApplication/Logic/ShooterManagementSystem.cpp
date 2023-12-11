@@ -47,7 +47,7 @@ void ShooterManagementSystem::handleEvent(Event& event)
 {
 	switch (event.getType())
 	{
-	case Event::Shoot:
+	case Event::MouseClick:
 	{
 		auto targetPos = (glm::vec2*)event.getPayload();
 		for (auto& entity : entities)

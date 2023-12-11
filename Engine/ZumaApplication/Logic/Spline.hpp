@@ -5,13 +5,16 @@
 #include <vector>
 #include "../../src/Graphics/GeneralRenderer.hpp"
 #include "../../src/Managers/Resource/ResourceManager.hpp"
+#include "../../src/Events/EventManager.hpp"
 
-class Spline
+class Spline : public EventObserver
 {
 public:
 	Spline(float xInit, float yInit, int samples_per_segment, Resource<Texture>* texture1, Resource<Texture>* texture2, float control_point_size);
 	Spline(std::vector<glm::vec2> controlPoints, int samples_per_segment, Resource<Texture>* texture1, Resource<Texture>* texture2, float control_point_size);
 	~Spline();
+
+	virtual void handleEvent(Event& event) override;
 
 	int getNumberOfSegments();
 	glm::vec2 getValueAt(float t);

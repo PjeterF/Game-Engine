@@ -67,6 +67,12 @@ void RouteManagementSystem::handleEvent(Event& event)
 			this->removeEntity(entity->getID());
 	}
 	break;
+	case Event::MoveCtrlPoints:
+	{
+		std::vector<glm::vec2>* points = (std::vector<glm::vec2>*)event.getPayload();
+		pathPoints = *points;
+	}
+	break;
 	}
 }
 
@@ -139,13 +145,13 @@ void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
 			if (otherRouteInfo->route == nullptr)
 			{
 				otherRouteInfo->route = routeInfo->route;
-				otherRouteInfo->targetSample = routeInfo->targetSample;
+				otherRouteInfo->targetSample = routeInfo->targetSample+1;
 
 				auto otherTransform = (TransformC*)otherEntity->getComponent(Transform);
 				float forwardLength = glm::distance(otherTransform->position, transform->position + transform->position + velocity->velocity);
 				float backwardsLength = glm::distance(otherTransform->position, transform->position + transform->position - velocity->velocity);
 
-				EventManager::getInstance().notify(Event(Event::MarbleInsertion, otherEntity));
+				EventManager::getInstance().notify(Event(Event::MarbleInsertion, otherEntity), ECS);
 				auto it_insert = it;
 				it_insert++;
 				/*if (forwardLength < backwardsLength)

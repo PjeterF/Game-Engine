@@ -15,5 +15,7 @@ public:
 	virtual bool wasKeyPressed(int keycode) = 0;
 	virtual bool wasMouseButtonPressed(int keycode) = 0;
 
+	virtual float mouseWheel() = 0;
+
 	virtual glm::vec2 getCursorPos() = 0;
 };

@@ -3,9 +3,15 @@
 #include "../InputManager.hpp"
 #include "GLFW/glfw3.h"
 
+
+
 class GLFWInputManager : public InputManager
 {
 public:
+	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		wheel = yoffset;
+	}
 	static void initialize(GLFWwindow* window)
 	{
 		instanceImp(window);
@@ -23,6 +29,8 @@ public:
 	virtual bool wasKeyPressed(int keycode) override;
 	virtual bool wasMouseButtonPressed(int keycode) override;
 
+	virtual float mouseWheel() override;
+
 	virtual glm::vec2 getCursorPos() override;
 private:
 	GLFWInputManager(GLFWwindow* window);
@@ -38,4 +46,5 @@ private:
 
 	bool keyDown[No_Keys];
 	bool mouseKeyDown[No_MouseKeys];
+	static float wheel;
 };

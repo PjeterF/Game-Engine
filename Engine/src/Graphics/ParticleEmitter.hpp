@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../Managers/Entity.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
+#include "../Graphics/GeneralRenderer.hpp"
 #include <random>
 
 class ParticeEmitter

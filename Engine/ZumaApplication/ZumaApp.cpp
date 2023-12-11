@@ -8,6 +8,7 @@
 #include "../src/ECS/Systems/SystemsManager.hpp"
 
 
+
 ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 {
 	srand(time(0));
@@ -41,15 +42,15 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 	renderingAPI->instancedQuadRenderer = new InstancedQuadRenderer(ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/instancedQuad")->getContents()->getId(), mainCamera);
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
-	viewport = new Viewport(windowWidth / 4, 0, windowWidth * 3 / 4, windowHeight, viewportFramebuffer->getTextureID(), window, mainCamera);
 
 	view = new View(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight, viewportFramebuffer->getTextureID(), window, mainCamera, inputManager);
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
 	sceneMenu = new SceneMenu(windowWidth * 0.75, 0, windowWidth * 0.25, windowHeight * 0.5);
 
-	mainCamera->setFrustrumX(0, viewport->xmax - viewport->xmin);
-	mainCamera->setFrustrumY(0, viewport->ymax - viewport->ymin);
+	mainCamera->setFrustrumX(0, view->width);
+	mainCamera->setFrustrumY(0, view->height);
 }
+
 
 void ZumaApp::run()
 {
@@ -89,6 +90,21 @@ void ZumaApp::run()
 
 	InputMovementSystem* isys = new InputMovementSystem(inputManager);
 	isys->addEntity(ent1);
+
+	AnimatedSpriteSystem* aSpriteSys = new AnimatedSpriteSystem(renderingAPI);
+	Ent* animatedEnt = EntManager::getInstance().createEntity();
+	std::vector<TextureDivision> divisions;
+	divisions.push_back(TextureDivision(0, 0, 16, 8));
+	divisions.push_back(TextureDivision(0, 8, 16, 8));
+	AnimatedSpriteC* aSprite = new AnimatedSpriteC
+	(
+		ResourceManager::getInstance().getResource<Texture>("src/Textures/marble1.png"),
+		divisions,
+		10
+	);
+	animatedEnt->addComponent(aSprite);
+	animatedEnt->addComponent(new TransformC({ 200, 200 }, { 100, 100 }, 0));
+	aSpriteSys->addEntity(animatedEnt);
 
 	propertiesMenu->selectEntity(ent1);
 

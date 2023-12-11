@@ -3,11 +3,9 @@
 
 int SystemBase::nextID = 0;
 
-SystemBase::SystemBase()
+SystemBase::SystemBase() : EventObserver(ECS)
 {
-	EventManager::getInstance().addObserver(this, ObsBin::ECS);
 	ID = nextID++;
-
 	SystemsManager::getInstance().addSystem(this);
 	name = "Sys(" + std::to_string(ID) + ")";
 }

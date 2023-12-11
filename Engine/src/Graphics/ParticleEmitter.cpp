@@ -1,5 +1,4 @@
 #include "ParticleEmitter.hpp"
-#include "../Managers/TexturesManager.hpp"
 
 ParticeEmitter::Particle::Particle(float x, float y, float xV, float yV, float particleSize, float initialRot, float r, float g, float b, float w)
 {

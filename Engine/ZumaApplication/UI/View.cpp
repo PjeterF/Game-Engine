@@ -20,9 +20,37 @@ void View::draw()
 
 	if (ImGui::IsItemHovered())
 	{
+		float w = input->mouseWheel();
+		if (w)
+		{
+			camera->changeZoom(0.05f * w);
+		}
+		if (input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_MIDDLE))
+		{
+			panning = true;
+			panAnchor = input->getCursorPos();
+		}
+		if(!input->isMouseButtonPressed(ZE_MOUSE_BUTTON_MIDDLE))
+		{
+			panning = false;
+		}
+		if (panning)
+		{
+			glm::vec2 pan = (input->getCursorPos() - panAnchor) / camera->getZoom();
+			camera->pan(pan.x, pan.y);
+		}
 		if (input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_1))
 		{
-			std::cout << "WORKS";
+			glm::vec2 mousePos = input->getCursorPos();
+			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
+			EventManager::getInstance().notify(Event(Event::MouseClick, &conv), UI);
+			EventManager::getInstance().notify(Event(Event::MouseClick, &conv), ECS);
+		}
+		if (mouseMoved())
+		{
+			glm::vec2 mousePos = input->getCursorPos();
+			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
+			EventManager::getInstance().notify(Event(Event::MouseMove, &conv), UI);
 		}
 	}
 
@@ -44,4 +72,20 @@ glm::vec2 View::convertPos(float x, float y)
 	y = height / camera->getZoom() - y;
 
 	return glm::vec2(x, y);
+}
+
+bool View::mouseMoved()
+{
+	ImGuiIO& io = ImGui::GetIO();
+
+	if (prevMousePos.x != io.MousePos.x || prevMousePos.y != io.MousePos.y)
+	{
+		prevMousePos.x = io.MousePos.x;
+		prevMousePos.y = io.MousePos.y;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

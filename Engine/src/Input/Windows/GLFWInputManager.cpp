@@ -1,8 +1,11 @@
 #include "GLFWInputManager.hpp"
 
+float GLFWInputManager::wheel = 0;
+
 GLFWInputManager::GLFWInputManager(GLFWwindow* window)
 {
 	this->window = window;
+	glfwSetScrollCallback(window, scroll_callback);
 
 	for (int i = 0; i < No_Keys; i++)
 		keyDown[i] = false;
@@ -110,9 +113,21 @@ bool GLFWInputManager::wasMouseButtonPressed(int keycode)
 	return false;
 }
 
+float GLFWInputManager::mouseWheel()
+{
+	float temp = wheel;
+	wheel = 0;
+	return temp;
+}
+
 glm::vec2 GLFWInputManager::getCursorPos()
 {
+	glm::ivec2 wndSize = { 0, 0 };
+
+	glfwGetWindowSize(window, &wndSize.x, &wndSize.y);
+
 	glm::dvec2 pos = { 0, 0 };
 	glfwGetCursorPos(window, &pos.x, &pos.y);
+	pos.y = wndSize.y - pos.y;
 	return pos;
 }

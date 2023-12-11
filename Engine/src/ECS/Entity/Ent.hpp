@@ -3,6 +3,7 @@
 #include "../Components/ComponentBase.hpp"
 #include <unordered_map>
 #include <typeinfo>
+#include <typeindex>
 
 enum ETag
 {
@@ -28,8 +29,6 @@ public:
 	ComponentBase* getComponent(CType type);
 	void deleteAllComponents();
 private:
-
-
 	ETag tag = Default;
 	int ID;
 	bool deleted = false;

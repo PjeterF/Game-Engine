@@ -11,14 +11,9 @@
 #include "../src/ECS/Systems/SpriteRenderingSystem.hpp"
 #include "../src/ECS/Systems/TestCollisionResponse.hpp"
 #include "../src/ECS/Systems/InputMovementSystem.hpp"
+#include "../src/ECS/Systems/AnimatedSpriteSystem.hpp"
 
 #include "../src/OpenGL/FrameBuffer.hpp"
-
-#include "../src/GUI/Viewport.hpp"
-#include "../src/GUI/PropertiesMenu.hpp"
-#include "../src/GUI/EditMenu.hpp"
-#include "../src/GUI/Subcomponents/TextureLoader.hpp"
-#include "../src/GUI/Subcomponents/SegmentEditor.hpp"
 
 #include "../src/Input/Windows/GLFWInputManager.hpp"
 
@@ -51,8 +46,6 @@ private:
 	GLFWwindow* window;
 	float wndWidth;
 	float wndHeight;
-
-	Viewport* viewport;
 	EntityPropertiesMenu* propertiesMenu;
 	SceneMenu* sceneMenu;
 	View* view;

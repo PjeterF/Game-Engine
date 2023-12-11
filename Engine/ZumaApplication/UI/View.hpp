@@ -12,6 +12,8 @@ public:
 private:
 	glm::vec2 convertPos(float x, float y);
 
+	glm::vec2 windowToViewToWorldCoordConversion(float x, float y);
+
 	ImGuiIO& io = ImGui::GetIO();
 
 	bool mouseMoved();

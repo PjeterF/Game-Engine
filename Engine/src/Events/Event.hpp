@@ -37,7 +37,9 @@ public:
 		MarbleInsertion, // Ent*
 
 		//UI
-		EntitySelection //Ent*
+		EntitySelection, //Ent*
+		MouseClick, // glm::vec2 - pos
+		MoveCtrlPoints
 	};
 
 	Event(EventType type, void* payload) : type(type), payload(payload) {}
