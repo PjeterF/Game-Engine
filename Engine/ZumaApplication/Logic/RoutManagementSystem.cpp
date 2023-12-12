@@ -6,18 +6,20 @@
 
 std::vector<MarbleTemplate> RouteManagementSystem::marbleTemplates = std::vector<MarbleTemplate>();
 
-MarbleTemplate::MarbleTemplate(float size, int tag, std::string textureFilepath)
+MarbleTemplate::MarbleTemplate(float size, int tag, std::string textureFilepath, std::vector<TextureDivision> divisions, int frameDuration)
 {
 	this->size = size;
 	this->tag = tag;
 	this->textureFilepath = textureFilepath;
+	this->divisions = divisions;
+	this->frameDuration = frameDuration;
 }
 
-RouteManagementSystem::RouteManagementSystem(CollisionSystem* collisionSystem, SpriteRenderingSystem* srs, MarbleCollisionResolutionSystem* marblecollisionSystem, std::vector<glm::vec2> pathPoints)
+RouteManagementSystem::RouteManagementSystem(CollisionSystem* collisionSystem, AnimatedSpriteSystem* srs, MarbleCollisionResolutionSystem* marblecollisionSystem, std::vector<glm::vec2> pathPoints) : SystemBase(UNPAUSED)
 {
 	name = "RouteSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Velocity, Sprite, BoxCollider, RouteInfo };
+	requiredComponents = { Transform, Velocity, AnimatedSprite, BoxCollider, RouteInfo };
 	this->pathPoints = pathPoints;
 	this->collisionSystem = collisionSystem;
 	this->spriteRenderingSystem = srs;
@@ -93,20 +95,12 @@ void RouteManagementSystem::spawnRandomMarble()
 	auto routeInfo = new RouteInfoC(marbleTemplates[templateIndex].tag, 1);
 	routeInfo->route = this;
 	newMarble->addComponent(routeInfo);
-	newMarble->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>(marbleTemplates[templateIndex].textureFilepath)));
+	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(marbleTemplates[templateIndex].textureFilepath), marbleTemplates[templateIndex].divisions, 30));
 
 	marbles.push_front(newMarble);
 	spriteRenderingSystem->addEntity(newMarble);
 	collisionSystem->addEntity(newMarble);
 	marblecollisionSystem->addEntity(newMarble);
-}
-
-std::list<Ent*>::iterator RouteManagementSystem::deleteMarble(std::list<Ent*>::iterator it)
-{
-	spriteRenderingSystem->removeEntity((*it)->getID());
-	collisionSystem->removeEntity((*it)->getID());
-	delete* it;
-	return marbles.erase(it);
 }
 
 void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
@@ -195,6 +189,7 @@ void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
 		{
 			velocity->velocity = marbleSpeed * glm::normalize(pathPoints[routeInfo->targetSample] - transform->position);
 			transform->position = transform->position + velocity->velocity;
+			transform->rotation = 57.2958 * atan(velocity->velocity.y / velocity->velocity.x);
 		}
 
 

@@ -1,6 +1,6 @@
 #include "TestCollisionResponse.hpp"
 
-TestCollisionResponse::TestCollisionResponse(CollisionSystem* collisionSystem)
+TestCollisionResponse::TestCollisionResponse(CollisionSystem* collisionSystem) : SystemBase(UNPAUSED)
 {
 	this->requiredComponents = { Transform, BoxCollider, Velocity };
 	this->collisionSystem = collisionSystem;

@@ -83,6 +83,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Engine\Externals\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,6 +118,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Engine\Externals\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -485,6 +487,8 @@
     <ClInclude Include="Externals\includes\nlohmann\thirdparty\hedley\hedley_undef.hpp" />
     <ClInclude Include="Externals\stb_image.h" />
     <ClInclude Include="src\ECS\Components\AnimatedSpriteC.hpp" />
+    <ClInclude Include="src\ECS\Components\RenderingLayerC.hpp" />
+    <ClInclude Include="src\ECS\Systems\LayeredRenderingSystem.hpp" />
     <ClInclude Include="src\ECS\Systems\SystemsManager.hpp" />
     <ClInclude Include="src\Input\keyCodes.h" />
     <ClInclude Include="src\Serialization\serialization.hpp" />
@@ -534,6 +538,7 @@
     <ClInclude Include="src\OpenGL\VertexArray.hpp" />
     <ClInclude Include="src\OpenGL\VertexBuffer.hpp" />
     <ClInclude Include="src\Utility\Utility.hpp" />
+    <ClInclude Include="ZumaApplication\UI\AssetLoader.hpp" />
     <ClInclude Include="ZumaApplication\UI\EntityPropertiesMenu.hpp" />
     <ClInclude Include="ZumaApplication\UI\InterfaceWindow.hpp" />
     <ClInclude Include="ZumaApplication\UI\SceneMenu.hpp" />
@@ -553,9 +558,11 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\ECS\Components\AnimatedSpriteC.cpp" />
+    <ClCompile Include="src\ECS\Components\RenderingLayerC.cpp" />
     <ClCompile Include="src\ECS\Entity\EntManager.cpp" />
     <ClCompile Include="src\ECS\Systems\AnimatedSpriteSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\AnimatedSpriteSystem.hpp" />
+    <ClCompile Include="src\ECS\Systems\LayeredRenderingSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\SystemsManager.cpp" />
     <ClCompile Include="ZumaApplication\Logic\MarbleCollisionResolutionSystem.cpp" />
     <ClCompile Include="ZumaApplication\Logic\RouteInfoC.cpp" />
@@ -595,6 +602,7 @@
     <ClCompile Include="src\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\OpenGL\VertexBuffer.cpp" />
     <ClCompile Include="src\Utility\Utility.cpp" />
+    <ClCompile Include="ZumaApplication\UI\AssetLoader.cpp" />
     <ClCompile Include="ZumaApplication\UI\EntityPropertiesMenu.cpp" />
     <ClCompile Include="ZumaApplication\UI\InterfaceWindow.cpp" />
     <ClCompile Include="ZumaApplication\UI\SceneMenu.cpp" />

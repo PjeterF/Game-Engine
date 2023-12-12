@@ -13,6 +13,7 @@ enum CType
 	Sprite,
 	BoxCollider,
 	AnimatedSprite,
+	RenderingLayer,
 
 	//Zuma
 	RouteInfo,

@@ -37,6 +37,7 @@ void AnimatedSpriteC::to_json(nlohmann::json& j) const
 	j["frameDuration"] = frameDuration;
 	j["currentFrame"] = currentFrame;
 	j["divisions"] = nlohmann::json::array();
+	j["paused"] = paused;
 
 	for (auto& division : divisions)
 	{
@@ -48,6 +49,7 @@ void AnimatedSpriteC::from_json(nlohmann::json& j)
 {
 	this->frameDuration = j["frameDuration"];
 	this->currentFrame = j["currentFrame"];
+	this->paused = j["paused"];
 	
 	divisions.clear();
 	for (auto division : j["divisions"])

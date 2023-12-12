@@ -1,6 +1,6 @@
 #include "MovementSystem.hpp"
 
-MovementSystem::MovementSystem()
+MovementSystem::MovementSystem() : SystemBase(UNPAUSED)
 {
 	name = "MovementSys(" + std::to_string(ID) + ")";
 
@@ -32,5 +32,6 @@ void MovementSystem::update(float dt)
 		auto velocity = (VelocityC*)entity.second->getComponent(CType::Velocity);
 
 		transform->position = transform->position + velocity->velocity;
+		transform->rotation = 57.2958 * atan(velocity->velocity.y / (velocity->velocity.x + 0.00001));
 	}
 }

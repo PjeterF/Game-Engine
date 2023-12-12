@@ -1,6 +1,6 @@
 #include "SpriteRenderingSystem.hpp"
 
-SpriteRenderingSystem::SpriteRenderingSystem(RenderingAPI* API)
+SpriteRenderingSystem::SpriteRenderingSystem(RenderingAPI* API) : SystemBase(PAUSED)
 {
 	name = "SpriteRenderingSys(" + std::to_string(ID) + ")";
 

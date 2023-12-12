@@ -4,7 +4,7 @@
 #include <cmath>
 #include <glm/glm.hpp>
 
-InputMovementSystem::InputMovementSystem(InputManager* inputManager)
+InputMovementSystem::InputMovementSystem(InputManager* inputManager) : SystemBase(UNPAUSED)
 {
 	name = "InputMovementSys(" + std::to_string(ID) + ")";
 

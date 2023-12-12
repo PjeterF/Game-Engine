@@ -58,6 +58,9 @@ void EntityPropertiesMenu::draw()
 		case AnimatedSprite:
 			animatedSpriteProp((AnimatedSpriteC*)component.second);
 			break;
+		case RenderingLayer:
+			renderingLayerProp((RenderingLayerC*)component.second);
+			break;
 		}
 	}
 
@@ -97,7 +100,7 @@ void EntityPropertiesMenu::componentAdditionMenu()
 
 	if (ImGui::BeginCombo("Add component", nullptr, ImGuiComboFlags_NoPreview))
 	{
-		if (ImGui::Selectable("Transform"))
+		if (ImGui::Selectable("-Transform"))
 		{
 			auto newComponent = new TransformC({ 0, 0 }, { 1, 1 }, 0);
 			if (!selectedEntity->addComponent(newComponent))
@@ -106,7 +109,7 @@ void EntityPropertiesMenu::componentAdditionMenu()
 				delete newComponent;
 			}
 		}
-		if (ImGui::Selectable("Sprite"))
+		if (ImGui::Selectable("-Sprite"))
 		{
 			auto newComponent = new SpriteC(ResourceManager::getInstance().getResource<Texture>("default"));
 			if (!selectedEntity->addComponent(newComponent))
@@ -115,7 +118,7 @@ void EntityPropertiesMenu::componentAdditionMenu()
 				delete newComponent;
 			}
 		}
-		if (ImGui::Selectable("AnimatedSprite"))
+		if (ImGui::Selectable("-AnimatedSprite"))
 		{
 			auto newComponent = new AnimatedSpriteC
 			(
@@ -129,7 +132,7 @@ void EntityPropertiesMenu::componentAdditionMenu()
 				delete newComponent;
 			}
 		}
-		if (ImGui::Selectable("Velocity"))
+		if (ImGui::Selectable("-Velocity"))
 		{
 			auto newComponent = new VelocityC({ 0 ,0 });
 			if (!selectedEntity->addComponent(newComponent))
@@ -139,7 +142,7 @@ void EntityPropertiesMenu::componentAdditionMenu()
 			}
 
 		}
-		if (ImGui::Selectable("Collider"))
+		if (ImGui::Selectable("-Collider"))
 		{
 			BoxColliderC* newComponent;
 
@@ -173,14 +176,17 @@ void EntityPropertiesMenu::addToSystemMenu()
 
 	if (ImGui::BeginCombo("Add to system", nullptr, ImGuiComboFlags_NoPreview))
 	{
-		auto it = SystemsManager::getInstance().begin();
+		auto it = SystemsManager::getInstance().systemSets.begin();
 
-		while (it != SystemsManager::getInstance().end())
+		while (it != SystemsManager::getInstance().systemSets.end())
 		{
-			if (ImGui::Selectable((*it).second->getName().c_str()))
+			for (auto& system : (*it).second)
 			{
-				if (!(*it).second->addEntity(selectedEntity))
-					errorCounter = 200;
+				if (ImGui::Selectable(("-" + system.second->getName()).c_str()))
+				{
+					if (!system.second->addEntity(selectedEntity))
+						errorCounter = 200;
+				}
 			}
 
 			it++;
@@ -355,6 +361,8 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 
 		ImGui::InputInt("Frame duration", &component->frameDuration);
 
+		ImGui::Checkbox("pause", &component->paused);
+
 		if (ImGui::Button("Remove"))
 			selectedEntity->removeComponent(Sprite);
 
@@ -373,6 +381,23 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 			}
 			n++;
 		}
+
+		ImGui::Separator();
+		ImGui::TreePop();
+	}
+}
+
+void EntityPropertiesMenu::renderingLayerProp(RenderingLayerC* component)
+{
+	if (ImGui::TreeNode("Layer"))
+	{
+		if (ImGui::InputInt("layer", &component->layer))
+		{
+			EventManager::getInstance().notify(Event(Event::RenderingLayerChange, &component->entityID));
+		}
+
+		if (ImGui::Button("Remove"))
+			selectedEntity->removeComponent(Velocity);
 
 		ImGui::Separator();
 		ImGui::TreePop();

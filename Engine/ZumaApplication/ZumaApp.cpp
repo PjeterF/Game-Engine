@@ -46,6 +46,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 	view = new View(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight, viewportFramebuffer->getTextureID(), window, mainCamera, inputManager);
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
 	sceneMenu = new SceneMenu(windowWidth * 0.75, 0, windowWidth * 0.25, windowHeight * 0.5);
+	assetLoader = new AssetLoader(0, 0, windowWidth * 0.25, windowHeight * 0.5);
 
 	mainCamera->setFrustrumX(0, view->width);
 	mainCamera->setFrustrumY(0, view->height);
@@ -54,11 +55,16 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 
 void ZumaApp::run()
 {
+	LayeredRenderingSystem* layeredRenderingSys = new LayeredRenderingSystem(renderingAPI);
+
 	Ent* ent1 = EntManager::getInstance().createEntity();
 	ent1->addComponent(new TransformC({ 300, 0 }, { 10, 10 }, 0));
 	ent1->addComponent(new BoxColliderC(0, 0, 5, 10, ent1));
 	ent1->addComponent(new VelocityC({ -1, 0.05 }));
+	ent1->addComponent(new RenderingLayerC(0));
 	ent1->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/textures/marble1.png")));
+
+	layeredRenderingSys->addEntity(ent1);
 
 	auto transform = ent1->getComponent(Transform);
 
@@ -77,7 +83,7 @@ void ZumaApp::run()
 	msys->addEntity(ent2);
 
 	SpriteRenderingSystem* ssys = new SpriteRenderingSystem(renderingAPI);
-	ssys->addEntity(ent1);
+	//ssys->addEntity(ent1);
 	ssys->addEntity(ent2);
 
 	CollisionSystem* csys = new CollisionSystem(-2000, -2000, 80, 80, 50);
@@ -122,17 +128,17 @@ void ZumaApp::run()
 	auto points = spline1->getControlPoints();
 	points->at(1) = {300, 1000};
 	spline1->sample();
-	RouteManagementSystem* route1 = new RouteManagementSystem(csys, ssys, mcrs, *spline1->getSampledPoints());
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/marble1.png"));
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/marble2.png"));
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/marble3.png"));
+	RouteManagementSystem* route1 = new RouteManagementSystem(csys, aSpriteSys, mcrs, *spline1->getSampledPoints());
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/red_marble.png", divisions, 30));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/yellow_marble.png", divisions, 30));
 
 	Ent* shooter = EntManager::getInstance().createEntity();
 	shooter->addComponent(new TransformC({ 0, 0 }, { 40, 40 }, 0));
 	shooter->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/Textures/frog.png")));
 	shooter->addComponent(new ShooterC(5, 50));
 
-	ShooterManagementSystem* shooterSystem = new ShooterManagementSystem(csys, ssys, msys);
+	ShooterManagementSystem* shooterSystem = new ShooterManagementSystem(csys, aSpriteSys, msys);
 
 	shooterSystem->addEntity(shooter);
 	ssys->addEntity(shooter);
@@ -166,7 +172,7 @@ void ZumaApp::run()
 		if (!paused)
 		{
 			EntManager::getInstance().update();
-			SystemsManager::getInstance().update(0);
+			SystemsManager::getInstance().update(0, UNPAUSED);
 
 			emitter.update();
 			for (int i = 0; i < 1; i++)
@@ -185,20 +191,21 @@ void ZumaApp::run()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//csys->drawGrid(renderingAPI);
-		csys->drawColliders(renderingAPI);
-		ssys->update(0);
+		//csys->drawColliders(renderingAPI);
+
+		SystemsManager::getInstance().update(0, PAUSED);
+
 		emitter.draw(renderingAPI);
 		spline1->draw(renderingAPI);
-		aSpriteSys->update(0);
+
 
 		viewportFramebuffer->unbind();
 		glDisable(GL_DEPTH_TEST);
 
-		//viewport->render();
 		view->draw();
 		propertiesMenu->draw();
 		sceneMenu->draw();
-
+		assetLoader->draw();
 		
 
 		if (inputManager->isKeyPressed(GLFW_KEY_P))

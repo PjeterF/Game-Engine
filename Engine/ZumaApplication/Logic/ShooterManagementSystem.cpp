@@ -1,7 +1,7 @@
 #include "ShooterManagementSystem.hpp"
 #include "../../src/ECS/Entity/EntManager.hpp"
 
-ShooterManagementSystem::ShooterManagementSystem(CollisionSystem* collisionSystem, SpriteRenderingSystem* srs, MovementSystem* movementSystem)
+ShooterManagementSystem::ShooterManagementSystem(CollisionSystem* collisionSystem, AnimatedSpriteSystem* srs, MovementSystem* movementSystem) : SystemBase(UNPAUSED)
 {
 	name = "ShooterSys(" + std::to_string(ID) + ")";
 
@@ -100,7 +100,7 @@ void ShooterManagementSystem::shoot(glm::vec2 target, glm::vec2 startPos, Marble
 	newMarble->addComponent(new TransformC(startPos, { mTemplate.size, mTemplate.size }, 0));
 	newMarble->addComponent(new VelocityC({ shotVelocity * direction.x, shotVelocity * direction.y }));
 	newMarble->addComponent(new RouteInfoC(mTemplate.tag, -1));
-	newMarble->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath)));
+	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath), mTemplate.divisions, mTemplate.frameDuration));
 
 	collisionSystem->addEntity(newMarble);
 	spriteRenderingSystem->addEntity(newMarble);
@@ -114,7 +114,7 @@ Ent* ShooterManagementSystem::generateShot(MarbleTemplate mTemplate, glm::vec2 p
 	newMarble->addComponent(new TransformC(pos, { mTemplate.size, mTemplate.size }, 0));
 	newMarble->addComponent(new VelocityC({ 0, 0 }));
 	newMarble->addComponent(new RouteInfoC(mTemplate.tag, -1));
-	newMarble->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath)));
+	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath), mTemplate.divisions, mTemplate.frameDuration));
 
 	collisionSystem->addEntity(newMarble);
 	spriteRenderingSystem->addEntity(newMarble);

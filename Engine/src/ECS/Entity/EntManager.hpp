@@ -20,4 +20,5 @@ private:
 	std::vector<Ent*> toBeRemoved;
 
 	friend class SceneMenu;
+	friend class EntityPropertiesMenu;
 };

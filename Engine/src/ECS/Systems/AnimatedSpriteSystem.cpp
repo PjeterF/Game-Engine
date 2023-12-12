@@ -2,7 +2,7 @@
 #include "../Components/TransformC.hpp"
 #include "../Components/AnimatedSpriteC.hpp"
 
-AnimatedSpriteSystem::AnimatedSpriteSystem(RenderingAPI* API)
+AnimatedSpriteSystem::AnimatedSpriteSystem(RenderingAPI* API) : SystemBase(PAUSED)
 {
 	name = "AnimatedSpriteRenderingSys(" + std::to_string(ID) + ")";
 
@@ -25,6 +25,7 @@ void AnimatedSpriteSystem::update(float dt)
 
 		API->drawSpriteSampled(transform->position, transform->size, transform->rotation, aSprite->getTexture(), aSprite->divisions[aSprite->currentFrame]);
 
-		aSprite->counter++;
+		if(!aSprite->paused)
+			aSprite->counter++;
 	}
 }

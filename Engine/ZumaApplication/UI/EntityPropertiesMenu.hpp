@@ -5,6 +5,7 @@
 #include "../../src/ECS/Components/VelocityC.hpp"
 #include "../../src/ECS/Components/BoxColliderC.hpp"
 #include "../../src/ECS/Components/AnimatedSpriteC.hpp"
+#include "../../src/ECS/Components/RenderingLayerC.hpp"
 
 #include "InterfaceWindow.hpp"
 #include "../../src/Events/Event.hpp"
@@ -26,6 +27,7 @@ private:
 	void velocityProp(VelocityC* component);
 	void colliderProp(BoxColliderC* component);
 	void animatedSpriteProp(AnimatedSpriteC* component);
+	void renderingLayerProp(RenderingLayerC* component);
 
 	Ent* selectedEntity = nullptr;
 };

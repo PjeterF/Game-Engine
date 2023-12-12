@@ -21,4 +21,5 @@ public:
 	int frameDuration;
 	int currentFrame = 0;
 	int counter = 0;
+	bool paused = false;
 };

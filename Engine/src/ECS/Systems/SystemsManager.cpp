@@ -5,39 +5,32 @@ SystemsManager::SystemsManager()
 
 }
 
-void SystemsManager::update(float dt)
+void SystemsManager::update(float dt, SystemSet set)
 {
-	for (auto& system : systems)
+	for (auto& system : systemSets[set])
 		system.second->earlyUpdate(dt);
 
-	for (auto& system : systems)
+	for (auto& system : systemSets[set])
 		system.second->update(dt);
 
-	for (auto& system : systems)
+	for (auto& system : systemSets[set])
 		system.second->lateUpdate(dt);
 }
 
-bool SystemsManager::addSystem(SystemBase* system)
+bool SystemsManager::addSystem(SystemBase* system, SystemSet set)
 {
-	auto it = systems.find(system->getID());
-	if (it != systems.end())
+	auto it = systemSets[set].find(system->getID());
+	if (it != systemSets[set].end())
 		return false;
 
-	systems.insert({ system->getID(), system });
+	systemSets[set].insert({ system->getID(), system });
 	return true;
 }
 
 void SystemsManager::removeSystem(SystemBase* system)
 {
-	systems.erase(system->getID());
-}
-
-std::unordered_map<int, SystemBase*>::iterator SystemsManager::begin()
-{
-	return systems.begin();
-}
-
-std::unordered_map<int, SystemBase*>::iterator SystemsManager::end()
-{
-	return systems.end();
+	for (auto& set : systemSets)
+	{
+		set.second.erase(system->getID());
+	}
 }

@@ -5,10 +5,16 @@
 #include <string>
 #include "../../Events/EventManager.hpp"
 
+enum SystemSet
+{
+	PAUSED,
+	UNPAUSED
+};
+
 class SystemBase : public EventObserver
 {
 public:
-	SystemBase();
+	SystemBase(SystemSet set = UNPAUSED);
 	~SystemBase();
 
 	virtual void earlyUpdate(float dt);

@@ -12,6 +12,7 @@
 #include "../src/ECS/Systems/TestCollisionResponse.hpp"
 #include "../src/ECS/Systems/InputMovementSystem.hpp"
 #include "../src/ECS/Systems/AnimatedSpriteSystem.hpp"
+#include "../src/ECS/Systems/LayeredRenderingSystem.hpp"
 
 #include "../src/OpenGL/FrameBuffer.hpp"
 
@@ -26,6 +27,7 @@
 #include "UI/EntityPropertiesMenu.hpp"
 #include "UI/SceneMenu.hpp"
 #include "UI/View.hpp"
+#include "UI/AssetLoader.hpp"
 
 #include <string>
 
@@ -49,6 +51,7 @@ private:
 	EntityPropertiesMenu* propertiesMenu;
 	SceneMenu* sceneMenu;
 	View* view;
+	AssetLoader* assetLoader;
 
 	FrameBuffer* viewportFramebuffer;
 

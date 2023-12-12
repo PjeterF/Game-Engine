@@ -2,6 +2,7 @@
 
 #include "SystemBase.hpp"
 
+
 class SystemsManager
 {
 public:
@@ -10,12 +11,13 @@ public:
 		static SystemsManager instance;
 		return instance;
 	}
-	void update(float dt);
-	bool addSystem(SystemBase* system);
+	void update(float dt, SystemSet set);
+	bool addSystem(SystemBase* system, SystemSet set = UNPAUSED);
 	void removeSystem(SystemBase* system);
-	std::unordered_map<int, SystemBase*>::iterator begin();
-	std::unordered_map<int, SystemBase*>::iterator end();
 private:
 	SystemsManager();
 	std::unordered_map<int, SystemBase*> systems;
+	std::unordered_map<int, std::unordered_map<int, SystemBase*>> systemSets;
+
+	friend class EntityPropertiesMenu;
 };

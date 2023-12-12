@@ -19,7 +19,7 @@
 class ShooterManagementSystem : public SystemBase
 {
 public:
-	ShooterManagementSystem(CollisionSystem* collisionSystem, SpriteRenderingSystem* srs, MovementSystem* movementSystem);
+	ShooterManagementSystem(CollisionSystem* collisionSystem, AnimatedSpriteSystem* srs, MovementSystem* movementSystem);
 	virtual void update(float dt);
 	virtual bool addEntity(Ent* entity) override;
 	virtual void handleEvent(Event& event) override;
@@ -35,6 +35,6 @@ private:
 	bool onCooldown = false;
 
 	CollisionSystem* collisionSystem;
-	SpriteRenderingSystem* spriteRenderingSystem;
+	AnimatedSpriteSystem* spriteRenderingSystem;
 	MovementSystem* movementSystem;
 };

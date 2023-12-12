@@ -3,10 +3,10 @@
 
 int SystemBase::nextID = 0;
 
-SystemBase::SystemBase() : EventObserver(ECS)
+SystemBase::SystemBase(SystemSet set) : EventObserver(ECS)
 {
 	ID = nextID++;
-	SystemsManager::getInstance().addSystem(this);
+	SystemsManager::getInstance().addSystem(this, set);
 	name = "Sys(" + std::to_string(ID) + ")";
 }
 

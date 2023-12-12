@@ -35,6 +35,7 @@ public:
 		EntityRemoval, // Ent*
 		ComponentRemoval, // Ent*
 		MarbleInsertion, // Ent*
+		RenderingLayerChange, // Ent ID
 
 		//UI
 		EntitySelection, //Ent*
