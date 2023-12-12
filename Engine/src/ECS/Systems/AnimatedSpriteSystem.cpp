@@ -17,7 +17,7 @@ void AnimatedSpriteSystem::update(float dt)
 		auto transform = (TransformC*)entity.second->getComponent(Transform);
 		auto aSprite = (AnimatedSpriteC*)entity.second->getComponent(AnimatedSprite);
 
-		if (aSprite->counter == aSprite->frameDuration)
+		if (aSprite->counter >= aSprite->frameDuration)
 		{
 			aSprite->currentFrame = (aSprite->currentFrame + 1) % aSprite->divisions.size();
 			aSprite->counter = 0;

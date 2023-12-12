@@ -94,11 +94,13 @@ void ZumaApp::run()
 	AnimatedSpriteSystem* aSpriteSys = new AnimatedSpriteSystem(renderingAPI);
 	Ent* animatedEnt = EntManager::getInstance().createEntity();
 	std::vector<TextureDivision> divisions;
-	divisions.push_back(TextureDivision(0, 0, 16, 8));
-	divisions.push_back(TextureDivision(0, 8, 16, 8));
+	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
+	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
+	divisions.push_back(TextureDivision(2 * 112, 0, 112, 112));
+	divisions.push_back(TextureDivision(3 * 112, 0, 112, 112));
 	AnimatedSpriteC* aSprite = new AnimatedSpriteC
 	(
-		ResourceManager::getInstance().getResource<Texture>("src/Textures/marble1.png"),
+		ResourceManager::getInstance().getResource<Texture>("src/Textures/blue_marble.png"),
 		divisions,
 		10
 	);
@@ -187,6 +189,7 @@ void ZumaApp::run()
 		ssys->update(0);
 		emitter.draw(renderingAPI);
 		spline1->draw(renderingAPI);
+		aSpriteSys->update(0);
 
 		viewportFramebuffer->unbind();
 		glDisable(GL_DEPTH_TEST);

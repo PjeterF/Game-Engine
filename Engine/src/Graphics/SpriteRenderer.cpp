@@ -108,8 +108,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 		return;
 
 	glm::mat4 transform = glm::mat4(1.0f);
-
-	transform = glm::ortho(camera->getFrustrumX().x, camera->getFrustrumX().y, camera->getFrustrumY().x, camera->getFrustrumY().y, -1.0f, 1.0f);
+	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
 	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getOffset().x, camera->getZoom() * position.y + camera->getOffset().y, 0));
 	transform = glm::rotate(transform, glm::radians(angle + 0), glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(camera->getZoom() * scale.x, camera->getZoom() * scale.y, 1));
@@ -120,14 +119,9 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 	float yScale = division.height / texture->getHeight();
 
 	glm::mat4 texCoordTransform = glm::mat4(1.0f);
-
-	//glm::vec3 texOffset(xOffset, yOffset, 0);
-	//glm::vec3 texScale(xScale, yScale, 1);
-
-	glm::vec3 texOffset(0, 0, 0);
-	glm::vec3 texScale(1, 1, 1);
-
+	glm::vec3 texOffset(xOffset, yOffset, 0);
 	texCoordTransform = glm::translate(texCoordTransform, texOffset);
+	glm::vec3 texScale(xScale, yScale, 1);
 	texCoordTransform = glm::scale(texCoordTransform, texScale);
 
 	glUseProgram(shaderProgramID);
