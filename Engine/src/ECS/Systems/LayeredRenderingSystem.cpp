@@ -11,6 +11,16 @@ LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(P
 	this->API = API;
 }
 
+LayeredRenderingSystem& LayeredRenderingSystem::getInstance()
+{
+	return instanceInplementation();
+}
+
+void LayeredRenderingSystem::initialize(RenderingAPI* API)
+{
+	instanceInplementation(API);
+}
+
 void LayeredRenderingSystem::update(float dt)
 {
 	for (auto& entity : orderedEntities)
@@ -64,12 +74,15 @@ bool LayeredRenderingSystem::addEntity(Ent* entity)
 	{
 		auto layer = (RenderingLayerC*)(*it)->getComponent(RenderingLayer);
 
-		if (inserteeLayer->layer <= layer->layer)
+		if (inserteeLayer->layer <= layer->layer )
 		{
 			orderedEntities.insert(it, entity);
 			return true;
 		}
 	}
+
+	orderedEntities.push_back(entity);
+	return true;
 }
 
 void LayeredRenderingSystem::removeEntity(int ID)
@@ -98,4 +111,10 @@ void LayeredRenderingSystem::handleEvent(Event& event)
 	}
 
 	SystemBase::handleEvent(event);
+}
+
+LayeredRenderingSystem& LayeredRenderingSystem::instanceInplementation(RenderingAPI* API)
+{
+	static LayeredRenderingSystem system(API);
+	return system;
 }

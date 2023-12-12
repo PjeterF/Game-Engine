@@ -55,7 +55,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 
 void ZumaApp::run()
 {
-	LayeredRenderingSystem* layeredRenderingSys = new LayeredRenderingSystem(renderingAPI);
+	LayeredRenderingSystem::initialize(renderingAPI);
 
 	Ent* ent1 = EntManager::getInstance().createEntity();
 	ent1->addComponent(new TransformC({ 300, 0 }, { 10, 10 }, 0));
@@ -64,7 +64,7 @@ void ZumaApp::run()
 	ent1->addComponent(new RenderingLayerC(0));
 	ent1->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/textures/marble1.png")));
 
-	layeredRenderingSys->addEntity(ent1);
+	LayeredRenderingSystem::getInstance().addEntity(ent1);
 
 	auto transform = ent1->getComponent(Transform);
 
@@ -74,9 +74,12 @@ void ZumaApp::run()
 
 	Ent* ent2 = EntManager::getInstance().createEntity();
 	ent2->addComponent(new TransformC({ -300, 0 }, { 10, 10 }, 0));
-	ent2->addComponent(new BoxColliderC(0, 0, 10, 10, ent2));
+	//ent2->addComponent(new BoxColliderC(0, 0, 10, 10, ent2));
 	ent2->addComponent(new VelocityC({ 1, 0.05 }));
 	ent2->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/textures/marble2.png")));
+	ent2->addComponent(new RenderingLayerC(1));
+
+	LayeredRenderingSystem::getInstance().addEntity(ent2);
 
 	MovementSystem* msys = new MovementSystem();
 	msys->addEntity(ent1);
@@ -84,7 +87,7 @@ void ZumaApp::run()
 
 	SpriteRenderingSystem* ssys = new SpriteRenderingSystem(renderingAPI);
 	//ssys->addEntity(ent1);
-	ssys->addEntity(ent2);
+	//ssys->addEntity(ent2);
 
 	CollisionSystem* csys = new CollisionSystem(-2000, -2000, 80, 80, 50);
 	csys->addEntity(ent1);
@@ -137,6 +140,7 @@ void ZumaApp::run()
 	shooter->addComponent(new TransformC({ 0, 0 }, { 40, 40 }, 0));
 	shooter->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/Textures/frog.png")));
 	shooter->addComponent(new ShooterC(5, 50));
+	shooter->addComponent(new RenderingLayerC(0));
 
 	ShooterManagementSystem* shooterSystem = new ShooterManagementSystem(csys, aSpriteSys, msys);
 

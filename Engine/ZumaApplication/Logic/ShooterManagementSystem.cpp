@@ -5,7 +5,7 @@ ShooterManagementSystem::ShooterManagementSystem(CollisionSystem* collisionSyste
 {
 	name = "ShooterSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Sprite, ShooterInfo };
+	requiredComponents = { Transform, Sprite, ShooterInfo, RenderingLayer };
 	EventManager::getInstance().addObserver(this, ObsBin::Defualt);
 	this->collisionSystem = collisionSystem;
 	this->spriteRenderingSystem = srs;
@@ -57,10 +57,13 @@ void ShooterManagementSystem::handleEvent(Event& event)
 				continue;
 
 			auto transform = (TransformC*)entity.second->getComponent(Transform);
+			auto layer = (RenderingLayerC*)entity.second->getComponent(RenderingLayer);
 
 			Ent* shotFired = EntManager::getInstance().getEntity(shooterComponent->currShotEntID);
 			auto shotFired_Velocity = (VelocityC*)shotFired->getComponent(Velocity);
 			auto shotFired_Transform = (TransformC*)shotFired->getComponent(Transform);
+			auto shotFired_Layer = (RenderingLayerC*)shotFired->getComponent(RenderingLayer);
+			shotFired_Layer->layer = layer->layer;
 
 			transform->rotation = lookAtAngle(*targetPos, transform->position);
 			shotFired_Transform->position = transform->position + transform->size * glm::normalize(*targetPos - transform->position);
@@ -114,6 +117,7 @@ Ent* ShooterManagementSystem::generateShot(MarbleTemplate mTemplate, glm::vec2 p
 	newMarble->addComponent(new TransformC(pos, { mTemplate.size, mTemplate.size }, 0));
 	newMarble->addComponent(new VelocityC({ 0, 0 }));
 	newMarble->addComponent(new RouteInfoC(mTemplate.tag, -1));
+	newMarble->addComponent(new RenderingLayerC(0));
 	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath), mTemplate.divisions, mTemplate.frameDuration));
 
 	collisionSystem->addEntity(newMarble);

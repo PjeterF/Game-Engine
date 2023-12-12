@@ -3,6 +3,7 @@
 #include "RouteInfoC.hpp"
 #include <algorithm>
 #include "../../src/ECS/Entity/EntManager.hpp"
+#include "../../src/ECS/Systems/LayeredRenderingSystem.hpp"
 
 std::vector<MarbleTemplate> RouteManagementSystem::marbleTemplates = std::vector<MarbleTemplate>();
 
@@ -92,13 +93,16 @@ void RouteManagementSystem::spawnRandomMarble()
 	newMarble->addComponent(new BoxColliderC(pos.x, pos.y, 10, 10, newMarble));
 	newMarble->addComponent(new TransformC(pos, { marbleTemplates[templateIndex].size, marbleTemplates[templateIndex].size }, 0));
 	newMarble->addComponent(new VelocityC({ 0, 0 }));
+	newMarble->addComponent(new RenderingLayerC(this->layer));
 	auto routeInfo = new RouteInfoC(marbleTemplates[templateIndex].tag, 1);
 	routeInfo->route = this;
 	newMarble->addComponent(routeInfo);
 	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(marbleTemplates[templateIndex].textureFilepath), marbleTemplates[templateIndex].divisions, 30));
 
+	LayeredRenderingSystem::getInstance().addEntity(newMarble);
+
 	marbles.push_front(newMarble);
-	spriteRenderingSystem->addEntity(newMarble);
+	//spriteRenderingSystem->addEntity(newMarble);
 	collisionSystem->addEntity(newMarble);
 	marblecollisionSystem->addEntity(newMarble);
 }

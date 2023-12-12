@@ -393,7 +393,7 @@ void EntityPropertiesMenu::renderingLayerProp(RenderingLayerC* component)
 	{
 		if (ImGui::InputInt("layer", &component->layer))
 		{
-			EventManager::getInstance().notify(Event(Event::RenderingLayerChange, &component->entityID));
+			EventManager::getInstance().notify(Event(Event::RenderingLayerChange, &component->entityID), ECS);
 		}
 
 		if (ImGui::Button("Remove"))

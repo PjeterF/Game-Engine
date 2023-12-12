@@ -8,6 +8,7 @@
 #include "../../src/ECS/Components/VelocityC.hpp"
 #include "../../src/ECS/Components/BoxColliderC.hpp"
 #include "../../src/ECS/Components/AnimatedSpriteC.hpp"
+#include "../../src/ECS/Components/RenderingLayerC.hpp"
 #include "MarbleCollisionResolutionSystem.hpp"
 
 #include "Spline.hpp"
@@ -38,6 +39,7 @@ public:
 	float marbleSpeed = 1;
 	int popThreshold = 3;
 	int remainingMarblesToSpawn = 10;
+	int layer = 0;
 
 	static std::vector<MarbleTemplate> marbleTemplates;
 private:
