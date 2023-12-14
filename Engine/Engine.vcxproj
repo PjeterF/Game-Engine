@@ -543,6 +543,7 @@
     <ClInclude Include="ZumaApplication\UI\InterfaceWindow.hpp" />
     <ClInclude Include="ZumaApplication\UI\SceneMenu.hpp" />
     <ClInclude Include="ZumaApplication\UI\View.hpp" />
+    <ClInclude Include="ZumaApplication\UI\ZumaMenu.hpp" />
     <ClInclude Include="ZumaApplication\ZumaApp.hpp" />
     <ClInclude Include="ZumaGame\Game.hpp" />
   </ItemGroup>
@@ -607,6 +608,7 @@
     <ClCompile Include="ZumaApplication\UI\InterfaceWindow.cpp" />
     <ClCompile Include="ZumaApplication\UI\SceneMenu.cpp" />
     <ClCompile Include="ZumaApplication\UI\View.cpp" />
+    <ClCompile Include="ZumaApplication\UI\ZumaMenu.cpp" />
     <ClCompile Include="ZumaApplication\ZumaApp.cpp" />
   </ItemGroup>
   <ItemGroup>

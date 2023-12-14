@@ -1227,6 +1227,9 @@
     <ClInclude Include="src\ECS\Systems\LayeredRenderingSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ZumaApplication\UI\ZumaMenu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1410,6 +1413,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Systems\LayeredRenderingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ZumaApplication\UI\ZumaMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

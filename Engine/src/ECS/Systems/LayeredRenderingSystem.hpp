@@ -15,8 +15,9 @@ public:
 
 	virtual void handleEvent(Event& event) override;
 private:
-	LayeredRenderingSystem(RenderingAPI* API);
 	static LayeredRenderingSystem& instanceInplementation(RenderingAPI* API = nullptr);
+	LayeredRenderingSystem(RenderingAPI* API);
+
 	RenderingAPI* API;
 	std::list<Ent*> orderedEntities;
 };

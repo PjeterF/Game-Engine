@@ -25,6 +25,8 @@ RouteManagementSystem::RouteManagementSystem(CollisionSystem* collisionSystem, A
 	this->collisionSystem = collisionSystem;
 	this->spriteRenderingSystem = srs;
 	this->marblecollisionSystem = marblecollisionSystem;
+
+	EventManager::getInstance().notify(Event(Event::RouteCreation, this), UI);
 }
 
 void RouteManagementSystem::update(float dt)
@@ -105,6 +107,11 @@ void RouteManagementSystem::spawnRandomMarble()
 	//spriteRenderingSystem->addEntity(newMarble);
 	collisionSystem->addEntity(newMarble);
 	marblecollisionSystem->addEntity(newMarble);
+}
+
+void RouteManagementSystem::setLayer(int target)
+{
+	this->layer = target;
 }
 
 void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)

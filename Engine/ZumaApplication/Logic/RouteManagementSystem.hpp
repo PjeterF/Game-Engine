@@ -35,16 +35,18 @@ public:
 	virtual void handleEvent(Event& event) override;
 
 	void spawnRandomMarble();
+	void setLayer(int target);
 
 	float marbleSpeed = 1;
 	int popThreshold = 3;
-	int remainingMarblesToSpawn = 10;
-	int layer = 0;
+	int remainingMarblesToSpawn = 1000;
 
 	static std::vector<MarbleTemplate> marbleTemplates;
 private:
 	void moveRoutine(std::list<Ent*>::iterator startIterotor);
 	int popSame(std::list<Ent*>::iterator it, int threshold);
+
+	int layer = 0;
 
 	CollisionSystem* collisionSystem;
 	AnimatedSpriteSystem* spriteRenderingSystem;

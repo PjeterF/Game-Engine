@@ -28,6 +28,7 @@
 #include "UI/SceneMenu.hpp"
 #include "UI/View.hpp"
 #include "UI/AssetLoader.hpp"
+#include "UI/ZumaMenu.hpp"
 
 #include <string>
 
@@ -52,6 +53,7 @@ private:
 	SceneMenu* sceneMenu;
 	View* view;
 	AssetLoader* assetLoader;
+	ZumaMenu* zumaMenu;
 
 	FrameBuffer* viewportFramebuffer;
 

@@ -28,8 +28,12 @@ public:
 		GameOver,
 		ShooterCreation, //Shooter* - shooter address
 		ToggleCollisionGridVisibility,
-		Reinitialize,
+		ReinitializeRoutes,
 		CenterCamera,
+
+		//Zuma
+		RouteCreation, // RouteManagementSystem*
+		RouteDeletion, // RouteManagementSystem*
 
 		//ECS
 		EntityRemoval, // Ent*

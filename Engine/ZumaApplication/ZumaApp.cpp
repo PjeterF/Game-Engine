@@ -47,6 +47,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
 	sceneMenu = new SceneMenu(windowWidth * 0.75, 0, windowWidth * 0.25, windowHeight * 0.5);
 	assetLoader = new AssetLoader(0, 0, windowWidth * 0.25, windowHeight * 0.5);
+	zumaMenu = new ZumaMenu(0, windowHeight * 0.5, windowWidth * 0.25, windowHeight * 0.5);
 
 	mainCamera->setFrustrumX(0, view->width);
 	mainCamera->setFrustrumY(0, view->height);
@@ -210,7 +211,7 @@ void ZumaApp::run()
 		propertiesMenu->draw();
 		sceneMenu->draw();
 		assetLoader->draw();
-		
+		zumaMenu->draw();
 
 		if (inputManager->isKeyPressed(GLFW_KEY_P))
 		{
