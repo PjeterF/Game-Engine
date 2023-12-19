@@ -61,6 +61,15 @@ void EntityPropertiesMenu::draw()
 		case RenderingLayer:
 			renderingLayerProp((RenderingLayerC*)component.second);
 			break;
+		case Particle:
+			particleProp((ParticleC*)component.second);
+			break;
+		case ShooterInfo:
+			shooterProp((ShooterC*)component.second);
+			break;
+		case Counter:
+			counterProp((CounterC*)component.second);
+			break;
 		}
 	}
 
@@ -132,6 +141,20 @@ void EntityPropertiesMenu::componentAdditionMenu()
 				delete newComponent;
 			}
 		}
+		if (ImGui::Selectable("-RenderingLayer"))
+		{
+			auto newComponent = new RenderingLayerC();
+			(
+				ResourceManager::getInstance().getResource<Texture>("default"),
+				std::vector<TextureDivision>(),
+				10
+			);
+			if (!selectedEntity->addComponent(newComponent))
+			{
+				errorCounter = 200;
+				delete newComponent;
+			}
+		}
 		if (ImGui::Selectable("-Velocity"))
 		{
 			auto newComponent = new VelocityC({ 0 ,0 });
@@ -152,6 +175,33 @@ void EntityPropertiesMenu::componentAdditionMenu()
 			else
 				newComponent = new BoxColliderC(0, 0, 1, 1, selectedEntity);
 
+			if (!selectedEntity->addComponent(newComponent))
+			{
+				errorCounter = 200;
+				delete newComponent;
+			}
+		}
+		if (ImGui::Selectable("-Shooter"))
+		{
+			auto newComponent = new ShooterC();
+			if (!selectedEntity->addComponent(newComponent))
+			{
+				errorCounter = 200;
+				delete newComponent;
+			}
+		}
+		if (ImGui::Selectable("-ParticleEmitter"))
+		{
+			auto newComponent = new ParticleC();
+			if (!selectedEntity->addComponent(newComponent))
+			{
+				errorCounter = 200;
+				delete newComponent;
+			}
+		}
+		if (ImGui::Selectable("-Counter"))
+		{
+			auto newComponent = new CounterC();
 			if (!selectedEntity->addComponent(newComponent))
 			{
 				errorCounter = 200;
@@ -395,6 +445,86 @@ void EntityPropertiesMenu::renderingLayerProp(RenderingLayerC* component)
 		{
 			EventManager::getInstance().notify(Event(Event::RenderingLayerChange, &component->entityID), ECS);
 		}
+
+		if (ImGui::Button("Remove"))
+			selectedEntity->removeComponent(Velocity);
+
+		ImGui::Separator();
+		ImGui::TreePop();
+	}
+}
+
+void EntityPropertiesMenu::shooterProp(ShooterC* component)
+{
+	if (ImGui::TreeNode("Shooter"))
+	{
+		ImGui::InputFloat("shotSpeed", &component->shotSpeed);
+		ImGui::InputInt("cooldownTime", &component->cooldownTime);
+
+		if (ImGui::Button("Remove"))
+			selectedEntity->removeComponent(Velocity);
+
+		ImGui::Separator();
+		ImGui::TreePop();
+	}
+}
+
+void EntityPropertiesMenu::particleProp(ParticleC* component)
+{
+	if (ImGui::TreeNode("ParticleEmitter"))
+	{
+		ImGui::InputInt("emitPeriod", &component->emitPeriod);
+		ImGui::InputInt("emitCount", &component->emitCount);
+
+		static float lifetime[2] = { component->emitter.defaultProperties.particleLifetime.x, component->emitter.defaultProperties.particleLifetime.y };
+		if (ImGui::InputFloat2("lifetime", lifetime))
+		{
+			component->emitter.defaultProperties.particleLifetime.x = lifetime[0];
+			component->emitter.defaultProperties.particleLifetime.y = lifetime[1];
+		}
+		static float startColour[4] = {
+			component->emitter.defaultProperties.startColour.x,
+			component->emitter.defaultProperties.startColour.y,
+			component->emitter.defaultProperties.startColour.z,
+			component->emitter.defaultProperties.startColour.w
+		};
+		if (ImGui::InputFloat4("start color", startColour))
+		{
+			component->emitter.defaultProperties.startColour.x = startColour[0];
+			component->emitter.defaultProperties.startColour.y = startColour[1];
+			component->emitter.defaultProperties.startColour.z = startColour[2];
+			component->emitter.defaultProperties.startColour.w = startColour[3];
+		}
+		static float endColour[4] = {
+			component->emitter.defaultProperties.endColour.x,
+			component->emitter.defaultProperties.endColour.y,
+			component->emitter.defaultProperties.endColour.z,
+			component->emitter.defaultProperties.endColour.w
+		};
+		if (ImGui::InputFloat4("end color", endColour))
+		{
+			component->emitter.defaultProperties.endColour.x = endColour[0];
+			component->emitter.defaultProperties.endColour.y = endColour[1];
+			component->emitter.defaultProperties.endColour.z = endColour[2];
+			component->emitter.defaultProperties.endColour.w = endColour[3];
+		}
+		ImGui::InputFloat("start size", &component->emitter.defaultProperties.startSize);
+		ImGui::InputFloat("end size", &component->emitter.defaultProperties.endSize);
+
+		if (ImGui::Button("Remove"))
+			selectedEntity->removeComponent(Velocity);
+
+		ImGui::Separator();
+		ImGui::TreePop();
+	}
+}
+
+void EntityPropertiesMenu::counterProp(CounterC* component)
+{
+	if (ImGui::TreeNode("Counter"))
+	{
+		ImGui::InputInt("originalValue", &component->originalValue);
+		ImGui::InputInt("counter", &component->counter);
 
 		if (ImGui::Button("Remove"))
 			selectedEntity->removeComponent(Velocity);

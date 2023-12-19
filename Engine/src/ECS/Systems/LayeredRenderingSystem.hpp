@@ -9,6 +9,9 @@ public:
 	static LayeredRenderingSystem& getInstance();
 	static void initialize(RenderingAPI* API);
 
+	virtual void to_json(nlohmann::json& j) const override;
+	virtual void from_json(nlohmann::json& j) override;
+
 	virtual void update(float dt) override;
 	virtual bool addEntity(Ent* entity) override;
 	virtual void removeEntity(int ID) override;

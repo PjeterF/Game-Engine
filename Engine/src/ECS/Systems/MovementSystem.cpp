@@ -1,10 +1,35 @@
 #include "MovementSystem.hpp"
+#include "../Entity/EntManager.hpp"
 
-MovementSystem::MovementSystem() : SystemBase(UNPAUSED)
+MovementSystem::MovementSystem() : SystemBase(UNPAUSED, true, MovementSys)
 {
 	name = "MovementSys(" + std::to_string(ID) + ")";
 
 	requiredComponents = { Transform, Velocity };
+}
+
+MovementSystem& MovementSystem::getInstance()
+{
+	static MovementSystem system;
+	return system;
+}
+
+void MovementSystem::to_json(nlohmann::json& j) const
+{
+	j["type"] = type;
+	j["entIDs"] = nlohmann::json::array();
+	for (auto& ent : entities)
+		j["entIDs"].push_back(ent.second->getID());
+}
+
+void MovementSystem::from_json(nlohmann::json& j)
+{
+	for (auto& entID : j["entIDs"])
+	{
+		Ent* ent = EntManager::getInstance().getEntity(entID);
+		if (ent != nullptr)
+			MovementSystem::getInstance().addEntity(ent);
+	}
 }
 
 void MovementSystem::handleEvent(Event& event)

@@ -2,13 +2,14 @@
 
 #include "ComponentBase.hpp"
 
-class RenderingLayerC : public ComponentBase
+class CounterC : public ComponentBase
 {
 public:
-	RenderingLayerC(int layer = 0);
+	CounterC(int value = 0);
 
 	virtual void to_json(nlohmann::json& j) const;
 	virtual void from_json(nlohmann::json& j);
 
-	int layer = 0;
+	int originalValue;
+	int counter = 0;
 };

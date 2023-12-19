@@ -100,14 +100,21 @@ void ParticeEmitter::emit(ParticleProperties& particleProperties)
 	poolIndex = ++poolIndex % particlePool.size();
 }
 
-int ParticeEmitter::getParticleLimit()
+int ParticeEmitter::getParticleLimit() const
 {
 	return maxParticles;
 }
 
-int ParticeEmitter::getParticleCount()
+int ParticeEmitter::getParticleCount() const
 {
 	return poolIndex;
+}
+
+void ParticeEmitter::resize(int n)
+{
+	this->maxParticles = n;
+	particlePool.resize(n);
+	poolIndex = 0;
 }
 
 void ParticeEmitter::applyForceInverseToSize(float xF, float yF)

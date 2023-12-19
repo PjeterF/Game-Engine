@@ -1,7 +1,8 @@
 #include "ZumaMenu.hpp"
 
-ZumaMenu::ZumaMenu(int x, int y, int width, int height) : InterfaceWindow(x, y, width, height), EventObserver(UI)
+ZumaMenu::ZumaMenu(int x, int y, int width, int height, std::vector<RouteManagementSystem*>* routes) : InterfaceWindow(x, y, width, height), EventObserver(UI)
 {
+	this->routes = routes;
     name = "ZumaMenu";
 }
 
@@ -141,50 +142,83 @@ void ZumaMenu::draw()
 		}
 		if (ImGui::BeginTabItem("Route management"))
 		{
-			if (ImGui::BeginCombo("Texture", nullptr, ImGuiComboFlags_NoPreview))
+			if (ImGui::BeginCombo("Routes", nullptr, ImGuiComboFlags_NoPreview))
 			{
 				if (ImGui::Button("Add route"))
 				{
+					Spline* newSpline = new Spline
+					(
+						0,
+						0,
+						100,
+						ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"),
+						ResourceManager::getInstance().getResource<Texture>("src/textures/control_point2.png"),
+						5
+					);
 
+					newSpline->addSegment(1000, 1000);
+
+					auto newRoute = new RouteManagementSystem(newSpline);
+					
 				}
 
-				for (auto& route : routes)
+				auto it = routes->begin();
+				while (it != routes->end())
 				{
-					if(ImGui::Selectable(route->getName().c_str()))
+					if (ImGui::Selectable((*it)->getName().c_str()))
 					{
-						selectedRoute = route;
+						selectedRoute = *it;
 					}
+					it++;
 				}
+
 				ImGui::EndCombo();
 			}
 			ImGui::Separator();
 
-			if(selectedRoute!=nullptr)
+			if (selectedRoute != nullptr)
 				routeProperties(selectedRoute);
 
 			ImGui::EndTabItem();
-        }
-        ImGui::EndTabBar();
-    }
+		}
+		ImGui::EndTabBar();
+	}
 
-    ImGui::End();
-    ImGui::PopStyleVar(1);
+	ImGui::End();
+	ImGui::PopStyleVar(1);
 }
 
 void ZumaMenu::handleEvent(Event& event)
 {
 	switch (event.getType())
 	{
-	case Event::RouteCreation:
+	case Event::RouteSelection:
 	{
-		routes.push_back((RouteManagementSystem*)event.getPayload());
+		RouteManagementSystem* route = (RouteManagementSystem*)event.getPayload();
+		selectedRoute = route;
 	}
 	break;
 	case Event::RouteDeletion:
 	{
 		if (selectedRoute == event.getPayload())
 			selectedRoute = nullptr;
-		routes.erase(std::find(routes.begin(), routes.end(), event.getPayload()));
+	}
+	break;
+	case Event::PlacePoint:
+	{
+		if (selectedRoute != nullptr)
+		{
+			glm::vec2 pos = *(glm::vec2*)event.getPayload();
+			selectedRoute->addRoutePoint(pos);
+		}
+	}
+	break;
+	case Event::RemoveLastPoint:
+	{
+		if (selectedRoute != nullptr)
+		{
+			selectedRoute->removeLastRoutePoint();
+		}
 	}
 	break;
 	}
@@ -207,11 +241,15 @@ std::vector<TextureDivision> ZumaMenu::createDivisions(int dimX, int dimY, Textu
 void ZumaMenu::routeProperties(RouteManagementSystem* route)
 {
 	static int layer = 0;
-	if(ImGui::InputInt("layer", &layer))
+	if (ImGui::InputInt("layer", &layer))
 	{
 		route->setLayer(layer);
 	}
 
 	ImGui::InputFloat("speed", &route->marbleSpeed);
-	ImGui::InputInt("remaining marbles", &route->remainingMarblesToSpawn);
+	static int NoMarbles = 100;
+	if(ImGui::InputInt("remaining marbles", &NoMarbles))
+	{
+		route->setInitialMarbleCount(NoMarbles);
+	}
 }

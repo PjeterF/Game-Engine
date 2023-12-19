@@ -11,8 +11,9 @@
 #include "../src/ECS/Systems/SpriteRenderingSystem.hpp"
 #include "../src/ECS/Systems/TestCollisionResponse.hpp"
 #include "../src/ECS/Systems/InputMovementSystem.hpp"
-#include "../src/ECS/Systems/AnimatedSpriteSystem.hpp"
 #include "../src/ECS/Systems/LayeredRenderingSystem.hpp"
+#include "../src/ECS/Systems/ParticleSystem.hpp"
+#include "../src/ECS/Systems/CounterKillerSystem.hpp"
 
 #include "../src/OpenGL/FrameBuffer.hpp"
 
@@ -29,14 +30,18 @@
 #include "UI/View.hpp"
 #include "UI/AssetLoader.hpp"
 #include "UI/ZumaMenu.hpp"
+#include "UI/TopBar.hpp"
 
 #include <string>
 
-class ZumaApp
+class ZumaApp : public EventObserver
 {
 public:
 	ZumaApp(float windowWidth, float windowHeight, std::string windowName);
 	void run();
+
+	virtual void handleEvent(Event& event) override;
+
 private:
 	void initializeImGui();
 	void updateSystems(float dt);
@@ -49,11 +54,13 @@ private:
 	GLFWwindow* window;
 	float wndWidth;
 	float wndHeight;
+
 	EntityPropertiesMenu* propertiesMenu;
 	SceneMenu* sceneMenu;
 	View* view;
 	AssetLoader* assetLoader;
 	ZumaMenu* zumaMenu;
+	TopBar* bar;
 
 	FrameBuffer* viewportFramebuffer;
 
@@ -62,5 +69,7 @@ private:
 
 	InputManager* inputManager;
 
-	int paused = false;
+	std::vector<RouteManagementSystem*> routes;
+
+	bool paused = true;
 };

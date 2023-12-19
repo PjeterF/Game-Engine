@@ -2,6 +2,7 @@
 
 #include "SystemBase.hpp"
 
+class EntManager;
 
 class SystemsManager
 {
@@ -14,10 +15,15 @@ public:
 	void update(float dt, SystemSet set);
 	bool addSystem(SystemBase* system, SystemSet set = UNPAUSED);
 	void removeSystem(SystemBase* system);
+	void removeSystem(int sysID);
+	void deleteSystem(int sysID);
+
+	void deleteAllNonPermSystems();
+
+	std::unordered_map<int, std::unordered_map<int, SystemBase*>> systemSets;
 private:
 	SystemsManager();
-	std::unordered_map<int, SystemBase*> systems;
-	std::unordered_map<int, std::unordered_map<int, SystemBase*>> systemSets;
 
 	friend class EntityPropertiesMenu;
+	friend bool serializeScene(std::string filepath, EntManager& entityManager, SystemsManager& systemsManager);
 };

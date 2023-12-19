@@ -34,3 +34,44 @@ void SystemsManager::removeSystem(SystemBase* system)
 		set.second.erase(system->getID());
 	}
 }
+
+void SystemsManager::removeSystem(int sysID)
+{
+	for (auto& set : systemSets)
+	{
+		set.second.erase(sysID);
+	}
+}
+
+void SystemsManager::deleteSystem(int sysID)
+{
+	for (auto& set : systemSets)
+	{
+		for (auto& system : set.second)
+		{
+			if (system.second->getID() == sysID)
+			{
+				delete system.second;
+				set.second.erase(sysID);
+				break;
+			}
+		}
+	}
+}
+
+void SystemsManager::deleteAllNonPermSystems()
+{
+	std::vector<int> deleteIDs;
+	for (auto& set : this->systemSets)
+	{
+		for (auto& sys : set.second)
+		{
+			if (!sys.second->isPermanent())
+			{
+				deleteIDs.push_back(sys.first);
+			}
+		}
+	}
+	for (auto ID : deleteIDs)
+		this->deleteSystem(ID);
+}

@@ -10,6 +10,17 @@ void EventManager::notify(Event event, ObsBin obsBin)
 	}
 }
 
+void EventManager::notifyAllBins(Event event)
+{
+	for (auto& bin : observerBins)
+	{
+		for (auto& observer : bin.second)
+		{
+			observer->handleEvent(event);
+		}
+	}
+}
+
 void EventManager::addObserver(EventObserver* observer, ObsBin obsBin)
 {
 	observerBins[obsBin].push_back(observer);
@@ -17,6 +28,8 @@ void EventManager::addObserver(EventObserver* observer, ObsBin obsBin)
 }
 void EventManager::removeObserver(EventObserver* observer, ObsBin obsBin)
 {
+	auto it = std::find(observer->bins.begin(), observer->bins.end(), obsBin);
+	if(it!=observer->bins.end())
+		observer->bins.erase(it);
 	observerBins[obsBin].remove(observer);
-	observer->bins.erase(std::find(observer->bins.begin(), observer->bins.end(), obsBin));
 }

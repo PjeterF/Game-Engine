@@ -32,7 +32,7 @@ void AssetLoader::draw()
 	for (auto it = ResourceManager::getInstance().begin<Texture>(); it != ResourceManager::getInstance().end<Texture>(); it++)
 	{
 		Resource<Texture>* tex = (Resource<Texture>*)(*it).second;
-		if (tex->getContents() != nullptr)
+		if (tex->getContents() != nullptr && (*it).first!="defualt")
 		{
 			ImGui::Image((ImTextureID)tex->getContents()->getId(), ImVec2(100, 100));
 			ImGui::SameLine();

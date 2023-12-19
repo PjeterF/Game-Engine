@@ -50,6 +50,20 @@ Ent* EntManager::getEntity(int ID)
 		return (*it).second;
 }
 
+bool EntManager::addEntity(Ent* entity)
+{
+	auto it = entities.find(entity->getID());
+	if (it == entities.end())
+	{
+		entities.insert({ entity->getID(), entity });
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 std::unordered_map<int, Ent*>::iterator EntManager::begin()
 {
 	return entities.begin();
@@ -58,4 +72,18 @@ std::unordered_map<int, Ent*>::iterator EntManager::begin()
 std::unordered_map<int, Ent*>::iterator EntManager::end()
 {
 	return entities.end();
+}
+
+int EntManager::getNumberOfCreatedEntities()
+{
+	return nextID;
+}
+
+void EntManager::deleteAllEntities()
+{
+	for (auto& ent : entities)
+	{
+		ent.second->destroy();
+	}
+	this->update();
 }

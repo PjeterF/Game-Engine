@@ -2,22 +2,14 @@
 
 SpriteC::SpriteC(Resource<Texture>* texture) : ComponentBase(CType::Sprite)
 {
-	texture->subscribe();
+	if(texture!=nullptr)
+		texture->subscribe();
 	this->texture = texture;
 }
 
 SpriteC::~SpriteC()
 {
 	texture->unsubscribe();
-}
-
-nlohmann::json SpriteC::serialize()
-{
-	nlohmann::json j = ComponentBase::serialize();
-
-	j["filepath"] = this->getTexture()->getFilepath();
-
-	return j;
 }
 
 void SpriteC::to_json(nlohmann::json& j) const
@@ -33,7 +25,8 @@ void SpriteC::from_json(nlohmann::json& j)
 
 void SpriteC::setTexture(Resource<Texture>* texture)
 {
-	this->texture->unsubscribe();
+	if(this->texture!=nullptr)
+		this->texture->unsubscribe();
 
 	texture->subscribe();
 	this->texture = texture;

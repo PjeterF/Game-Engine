@@ -39,14 +39,15 @@ public:
 		glm::vec2 particleLifetime = glm::vec2(50, 100);
 		float velocityDecay = 1;
 	};
-	ParticeEmitter(float x, float y, int maxParticles);
+	ParticeEmitter(float x = 0, float y = 0, int maxParticles = 100);
 	virtual ~ParticeEmitter();
 	virtual void update();
 	virtual void draw(RenderingAPI* renderer);
 	void emit();
 	void emit(ParticleProperties& particleProperties);
-	int getParticleLimit();
-	int getParticleCount();
+	int getParticleLimit() const;
+	int getParticleCount() const;
+	void resize(int n);
 
 	void applyForceInverseToSize(float xF, float yF);
 

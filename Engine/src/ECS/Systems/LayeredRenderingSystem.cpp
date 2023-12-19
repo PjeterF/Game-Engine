@@ -1,9 +1,10 @@
 #include "LayeredRenderingSystem.hpp"
 #include "../Components/TransformC.hpp"
 #include "../Components/RenderingLayerC.hpp"
+#include "../Components/ParticleC.hpp"
 #include "../Entity/EntManager.hpp"
 
-LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(PAUSED)
+LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(PAUSED, true, LayeredRenderingSys)
 {
 	name = "LayeredRenderingSystem(" + std::to_string(ID) + ")";
 
@@ -21,6 +22,27 @@ void LayeredRenderingSystem::initialize(RenderingAPI* API)
 	instanceInplementation(API);
 }
 
+void LayeredRenderingSystem::to_json(nlohmann::json& j) const
+{
+	j["type"] = type;
+	j["entIDs"] = nlohmann::json::array();
+
+	for (auto& ent : orderedEntities)
+	{
+		j["entIDs"].push_back(ent->getID());
+	}
+}
+
+void LayeredRenderingSystem::from_json(nlohmann::json& j)
+{
+	for (auto& entID : j["entIDs"])
+	{
+		Ent* ent = EntManager::getInstance().getEntity(entID);
+		if (ent != nullptr)
+			LayeredRenderingSystem::getInstance().addEntity(ent);
+	}
+}
+
 void LayeredRenderingSystem::update(float dt)
 {
 	for (auto& entity : orderedEntities)
@@ -34,7 +56,7 @@ void LayeredRenderingSystem::update(float dt)
 
 			API->drawSprite(transform->position, transform->size, transform->rotation, sprite->getTexture());
 		}
-		else if (entity->hasComponent(AnimatedSprite))
+		if (entity->hasComponent(AnimatedSprite))
 		{
 			auto transform = (TransformC*)entity->getComponent(Transform);
 			auto aSprite = (AnimatedSpriteC*)entity->getComponent(AnimatedSprite);
@@ -49,6 +71,13 @@ void LayeredRenderingSystem::update(float dt)
 
 			if (!aSprite->paused)
 				aSprite->counter++;
+		}
+		if (entity->hasComponent(Particle))
+		{
+			auto transform = (TransformC*)entity->getComponent(Transform);
+			auto emitter = (ParticleC*)entity->getComponent(Particle);
+
+			emitter->emitter.draw(API);
 		}
 	}
 }

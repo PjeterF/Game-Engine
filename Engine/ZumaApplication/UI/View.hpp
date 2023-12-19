@@ -4,11 +4,13 @@
 #include "../../src/Graphics/Camera.hpp"
 #include "../../src/Input/InputManager.hpp"
 
-class View : public InterfaceWindow
+class View : public InterfaceWindow, public EventObserver
 {
 public:
 	View(int x, int y, int width, int height, unsigned int textureID, GLFWwindow* window, Camera* camera, InputManager* input);
 	virtual void draw() override;
+
+	virtual void handleEvent(Event& event) override;
 private:
 	glm::vec2 convertPos(float x, float y);
 
@@ -27,5 +29,5 @@ private:
 	bool panning = false;
 	glm::vec2 panAnchor = glm::vec2(0, 0);
 
-	bool paused = false;
+	bool paused = true;
 };

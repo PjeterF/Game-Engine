@@ -7,17 +7,6 @@ TransformC::TransformC(glm::vec2 position, glm::vec2 size, float rotation) : Com
 	this->rotation = rotation;
 }
 
-nlohmann::json TransformC::serialize()
-{
-	nlohmann::json j = ComponentBase::serialize();
-
-	j["position"] = { position.x, position.y };
-	j["size"] = { size.x, size.y };
-	j["rotation"] = rotation;
-
-	return j;
-}
-
 void TransformC::to_json(nlohmann::json& j) const
 {
 	ComponentBase::to_json(j);

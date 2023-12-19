@@ -19,22 +19,15 @@
 class ShooterManagementSystem : public SystemBase
 {
 public:
-	ShooterManagementSystem(CollisionSystem* collisionSystem, AnimatedSpriteSystem* srs, MovementSystem* movementSystem);
+	ShooterManagementSystem();
 	virtual void update(float dt);
+
+	virtual void to_json(nlohmann::json& j) const override;
+	virtual void from_json(nlohmann::json& j) override;
+
 	virtual bool addEntity(Ent* entity) override;
 	virtual void handleEvent(Event& event) override;
-
-	float shotVelocity = 5;
 private:
-	void shoot(glm::vec2 target, glm::vec2 startPos, MarbleTemplate mTemplate);
 	Ent* generateShot(MarbleTemplate mTemplate, glm::vec2 pos);
 	float lookAtAngle(glm::vec2 target, glm::vec2 position);
-
-	int cooldownTime = 30;
-	int counter = 0;
-	bool onCooldown = false;
-
-	CollisionSystem* collisionSystem;
-	AnimatedSpriteSystem* spriteRenderingSystem;
-	MovementSystem* movementSystem;
 };

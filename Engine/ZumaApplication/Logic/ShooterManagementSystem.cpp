@@ -1,15 +1,13 @@
 #include "ShooterManagementSystem.hpp"
 #include "../../src/ECS/Entity/EntManager.hpp"
+#include "../../src/ECS/Systems/LayeredRenderingSystem.hpp"
 
-ShooterManagementSystem::ShooterManagementSystem(CollisionSystem* collisionSystem, AnimatedSpriteSystem* srs, MovementSystem* movementSystem) : SystemBase(UNPAUSED)
+ShooterManagementSystem::ShooterManagementSystem() : SystemBase(UNPAUSED, false, ShooterManagementSys)
 {
 	name = "ShooterSys(" + std::to_string(ID) + ")";
 
 	requiredComponents = { Transform, Sprite, ShooterInfo, RenderingLayer };
 	EventManager::getInstance().addObserver(this, ObsBin::Defualt);
-	this->collisionSystem = collisionSystem;
-	this->spriteRenderingSystem = srs;
-	this->movementSystem = movementSystem;
 }
 
 void ShooterManagementSystem::update(float dt)
@@ -19,6 +17,24 @@ void ShooterManagementSystem::update(float dt)
 		auto shooterComponent = (ShooterC*)entity.second->getComponent(ShooterInfo);
 		if (shooterComponent->counter != 0)
 			shooterComponent->counter--;
+	}
+}
+
+void ShooterManagementSystem::to_json(nlohmann::json& j) const
+{
+	j["type"] = type;
+	j["entIDs"] = nlohmann::json::array();
+	for (auto& ent : entities)
+		j["entIDs"].push_back(ent.second->getID());
+}
+
+void ShooterManagementSystem::from_json(nlohmann::json& j)
+{
+	for (auto& entID : j["entIDs"])
+	{
+		Ent* ent = EntManager::getInstance().getEntity(entID);
+		if (ent != nullptr)
+			this->addEntity(ent);
 	}
 }
 
@@ -47,7 +63,7 @@ void ShooterManagementSystem::handleEvent(Event& event)
 {
 	switch (event.getType())
 	{
-	case Event::MouseClick:
+	case Event::Shoot:
 	{
 		auto targetPos = (glm::vec2*)event.getPayload();
 		for (auto& entity : entities)
@@ -94,22 +110,6 @@ void ShooterManagementSystem::handleEvent(Event& event)
 	SystemBase::handleEvent(event);
 }
 
-void ShooterManagementSystem::shoot(glm::vec2 target, glm::vec2 startPos, MarbleTemplate mTemplate)
-{
-	glm::vec2 direction = glm::normalize(target - startPos);
-
-	Ent* newMarble = EntManager::getInstance().createEntity();
-	newMarble->addComponent(new BoxColliderC(startPos.x, startPos.y, mTemplate.size, mTemplate.size, newMarble));
-	newMarble->addComponent(new TransformC(startPos, { mTemplate.size, mTemplate.size }, 0));
-	newMarble->addComponent(new VelocityC({ shotVelocity * direction.x, shotVelocity * direction.y }));
-	newMarble->addComponent(new RouteInfoC(mTemplate.tag, -1));
-	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath), mTemplate.divisions, mTemplate.frameDuration));
-
-	collisionSystem->addEntity(newMarble);
-	spriteRenderingSystem->addEntity(newMarble);
-	movementSystem->addEntity(newMarble);
-}
-
 Ent* ShooterManagementSystem::generateShot(MarbleTemplate mTemplate, glm::vec2 pos)
 {
 	Ent* newMarble = EntManager::getInstance().createEntity();
@@ -120,9 +120,9 @@ Ent* ShooterManagementSystem::generateShot(MarbleTemplate mTemplate, glm::vec2 p
 	newMarble->addComponent(new RenderingLayerC(0));
 	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(mTemplate.textureFilepath), mTemplate.divisions, mTemplate.frameDuration));
 
-	collisionSystem->addEntity(newMarble);
-	spriteRenderingSystem->addEntity(newMarble);
-	movementSystem->addEntity(newMarble);
+	CollisionSystem::getInstance().addEntity(newMarble);
+	LayeredRenderingSystem::getInstance().addEntity(newMarble);
+	MovementSystem::getInstance().addEntity(newMarble);
 
 	return newMarble;
 }

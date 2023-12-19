@@ -15,6 +15,7 @@ public:
 		return instance;
 	}
 	void notify(Event event, ObsBin obsBin = ObsBin::Defualt);
+	void notifyAllBins(Event event);
 	void addObserver(EventObserver* observer, ObsBin obsBin = ObsBin::Defualt);
 	void removeObserver(EventObserver* observer, ObsBin obsBin = ObsBin::Defualt);
 private:

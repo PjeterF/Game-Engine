@@ -4,16 +4,51 @@
 #include <string>
 #include <typeindex>
 
-#include "Resource.hpp"
 #include "../../OpenGL/ShaderProgram.hpp"
 #include "../../OpenGL/Texture.hpp"
+
+class ResourceManager;
+
+class ResourceBase
+{
+public:
+	ResourceBase() {}
+	virtual ~ResourceBase() {}
+};
+
+template <typename T>
+class Resource
+{
+public:
+	Resource(T* resource) : resource(resource) {}
+	T* getContents() { return resource; }
+	void unload();
+	int getSubscriberCount() { return subscriberCount; }
+	void subscribe() { subscriberCount++; }
+	void unsubscribe() { subscriberCount--; }
+	bool isDeleted() { return deleted; }
+private:
+	bool deleted = false;
+	T* resource;
+	int subscriberCount = 0;
+
+	friend ResourceManager;
+};
+
+template<typename T>
+inline void Resource<T>::unload()
+{
+	delete resource;
+	resource = nullptr;
+	deleted = true;
+}
 
 class ResourceManager
 {
 public:
 	ResourceManager()
 	{
-		createResource<Texture>("default", nullptr);
+		createResource<Texture>("default", new Texture("src/Textures/missing_textures.png"));
 		createResource<ShaderProgram>("default", nullptr);
 	}
 
@@ -109,6 +144,11 @@ inline bool ResourceManager::deleteResource(std::string name)
 
 	Resource<T>* resource = (Resource<T>*)(*it2).second;
 	resource->unload();
+
+	//Resource<T>* defaultRes = (Resource<T>*)this->getResource<T>("default");
+	//T* defaultContents = (T*)defaultRes->getContents();
+	//resource->resource = defaultContents;
+
 	return true;
 }
 

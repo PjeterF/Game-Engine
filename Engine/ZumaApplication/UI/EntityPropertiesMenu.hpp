@@ -6,6 +6,10 @@
 #include "../../src/ECS/Components/BoxColliderC.hpp"
 #include "../../src/ECS/Components/AnimatedSpriteC.hpp"
 #include "../../src/ECS/Components/RenderingLayerC.hpp"
+#include "../../src/ECS/Components/ParticleC.hpp"
+#include "../../src/ECS/Components/CounterC.hpp"
+
+#include "../Logic/ShooterInfoC.hpp"
 
 #include "InterfaceWindow.hpp"
 #include "../../src/Events/Event.hpp"
@@ -28,6 +32,9 @@ private:
 	void colliderProp(BoxColliderC* component);
 	void animatedSpriteProp(AnimatedSpriteC* component);
 	void renderingLayerProp(RenderingLayerC* component);
+	void shooterProp(ShooterC* component);
+	void particleProp(ParticleC* component);
+	void counterProp(CounterC* component);
 
 	Ent* selectedEntity = nullptr;
 };

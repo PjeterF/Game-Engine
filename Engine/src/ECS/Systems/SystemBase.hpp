@@ -11,11 +11,28 @@ enum SystemSet
 	UNPAUSED
 };
 
+enum SystemType
+{
+	DefaultSys = 0,
+	CollisionSys,
+	MovementSys,
+	LayeredRenderingSys,
+	ParticleSys,
+	CounterKillerSys,
+	
+	//Zuma
+	ShooterManagementSys,
+	RouteManagementSys
+};
+
 class SystemBase : public EventObserver
 {
 public:
-	SystemBase(SystemSet set = UNPAUSED);
-	~SystemBase();
+	SystemBase(SystemSet set = UNPAUSED, bool permanent = false, int type = DefaultSys);
+	virtual ~SystemBase();
+
+	virtual void to_json(nlohmann::json& j) const;
+	virtual void from_json(nlohmann::json& j);
 
 	virtual void earlyUpdate(float dt);
 	virtual void update(float dt) = 0;
@@ -27,12 +44,18 @@ public:
 
 	int getID();
 	std::string getName();
+	int getType();
+	bool isPermanent();
 protected:
 	bool validateComponents(Ent* entity);
 
 	std::string name;
+	bool permanent;
+
 	static int nextID;
 	int ID;
+	int type;
+
 	std::unordered_map<int, Ent*> entities;
 	std::vector<CType> requiredComponents;
 };

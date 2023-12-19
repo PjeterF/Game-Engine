@@ -31,9 +31,15 @@ public:
 		ReinitializeRoutes,
 		CenterCamera,
 
+		Pause,
+		Unpause,
+
 		//Zuma
 		RouteCreation, // RouteManagementSystem*
 		RouteDeletion, // RouteManagementSystem*
+		PlacePoint, // glm::vec2 - cursor position
+		RemoveLastPoint,
+		RouteSelection, // RouteManagementSystem*
 
 		//ECS
 		EntityRemoval, // Ent*
@@ -44,7 +50,7 @@ public:
 		//UI
 		EntitySelection, //Ent*
 		MouseClick, // glm::vec2 - pos
-		MoveCtrlPoints
+		MoveCtrlPoints // Spline*
 	};
 
 	Event(EventType type, void* payload) : type(type), payload(payload) {}

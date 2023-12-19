@@ -10,13 +10,6 @@ int ComponentBase::getType()
 	return type;
 }
 
-nlohmann::json ComponentBase::serialize()
-{
-	nlohmann::json j;
-	j["type"] = this->type;
-	return j;
-}
-
 void ComponentBase::to_json(nlohmann::json& j) const
 {
 	j["type"] = this->type;

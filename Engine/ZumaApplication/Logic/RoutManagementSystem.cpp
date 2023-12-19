@@ -16,32 +16,74 @@ MarbleTemplate::MarbleTemplate(float size, int tag, std::string textureFilepath,
 	this->frameDuration = frameDuration;
 }
 
-RouteManagementSystem::RouteManagementSystem(CollisionSystem* collisionSystem, AnimatedSpriteSystem* srs, MarbleCollisionResolutionSystem* marblecollisionSystem, std::vector<glm::vec2> pathPoints) : SystemBase(UNPAUSED)
+RouteManagementSystem::RouteManagementSystem(Spline* spline, int initialMarbleNumber) : SystemBase(UNPAUSED, false, RouteManagementSys)
 {
 	name = "RouteSys(" + std::to_string(ID) + ")";
 
 	requiredComponents = { Transform, Velocity, AnimatedSprite, BoxCollider, RouteInfo };
-	this->pathPoints = pathPoints;
-	this->collisionSystem = collisionSystem;
-	this->spriteRenderingSystem = srs;
-	this->marblecollisionSystem = marblecollisionSystem;
+	this->spline = spline;
+
+	setInitialMarbleCount(initialMarbleNumber);
 
 	EventManager::getInstance().notify(Event(Event::RouteCreation, this), UI);
 }
 
+RouteManagementSystem::~RouteManagementSystem()
+{
+	for (auto& marble : marbles)
+	{
+		marble->destroy();
+	}
+	EventManager::getInstance().notify(Event(Event::RouteDeletion, this), UI);
+}
+
+void RouteManagementSystem::to_json(nlohmann::json& j) const
+{
+	j["type"] = type;
+	j["controlPoints"] = nlohmann::json::array();
+	for (auto point : *spline->getControlPoints())
+		j["controlPoints"].push_back({ point.x, point.y });
+
+	j["marbleSpeed"] = marbleSpeed;
+	j["popThreshold"] = popThreshold;
+	j["maxMarbles"] = maxMarbles;
+	j["layer"] = layer;
+}
+
+void RouteManagementSystem::from_json(nlohmann::json& j)
+{
+	std::vector<glm::vec2> ctrlPoints;
+	for (auto& point : j["controlPoints"])
+		ctrlPoints.push_back({ point[0], point[1] });
+
+	delete spline;
+	spline = new Spline
+		(ctrlPoints, 100,
+			ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"),
+			ResourceManager::getInstance().getResource<Texture>("src/textures/control_point2.png"),
+			5
+		);
+
+	this->marbleSpeed = j["marbleSpeed"];
+	this->popThreshold = j["popThreshold"];
+	this->maxMarbles = j["maxMarbles"];
+	this->marblesLeftToSpawn = j["maxMarbles"];
+	this->maxMarbles = j["layer"];
+}
+
 void RouteManagementSystem::update(float dt)
 {
-	if (remainingMarblesToSpawn != 0)
+	if (marblesLeftToSpawn != 0)
 	{
 		if (marbles.empty())
 			spawnRandomMarble();
-		else
+		else if(marblesLeftToSpawn>0)
 		{
 			auto first = marbles.begin();
 			((RouteInfoC*)(*first)->getComponent(RouteInfo))->moving = true;
 			auto transform = (TransformC*)(*first)->getComponent(Transform);
 
-			if (glm::distance(pathPoints[0], transform->position) > 2 * transform->size.x && remainingMarblesToSpawn-- != 0)
+			if (glm::distance((*spline->getSampledPoints())[0], transform->position) > 2 * transform->size.x)
 				spawnRandomMarble();
 		}
 	}
@@ -74,8 +116,8 @@ void RouteManagementSystem::handleEvent(Event& event)
 	break;
 	case Event::MoveCtrlPoints:
 	{
-		std::vector<glm::vec2>* points = (std::vector<glm::vec2>*)event.getPayload();
-		pathPoints = *points;
+		if (spline == event.getPayload())
+			EventManager::getInstance().notify(Event(Event::RouteSelection, this), UI);
 	}
 	break;
 	}
@@ -83,12 +125,12 @@ void RouteManagementSystem::handleEvent(Event& event)
 
 void RouteManagementSystem::spawnRandomMarble()
 {
-	if (pathPoints.empty() || marbleTemplates.empty())
+	if ((*spline->getSampledPoints()).empty() || marbleTemplates.empty())
 		return;
 
 	int templateIndex = rand() % marbleTemplates.size();
 
-	glm::vec2 pos = pathPoints[0];
+	glm::vec2 pos = (*spline->getSampledPoints())[0];
 	int size = 10;
 
 	Ent* newMarble = EntManager::getInstance().createEntity();
@@ -102,16 +144,41 @@ void RouteManagementSystem::spawnRandomMarble()
 	newMarble->addComponent(new AnimatedSpriteC(ResourceManager::getInstance().getResource<Texture>(marbleTemplates[templateIndex].textureFilepath), marbleTemplates[templateIndex].divisions, 30));
 
 	LayeredRenderingSystem::getInstance().addEntity(newMarble);
+	CollisionSystem::getInstance().addEntity(newMarble);
 
 	marbles.push_front(newMarble);
-	//spriteRenderingSystem->addEntity(newMarble);
-	collisionSystem->addEntity(newMarble);
-	marblecollisionSystem->addEntity(newMarble);
+	marblesLeftToSpawn--;
 }
 
 void RouteManagementSystem::setLayer(int target)
 {
 	this->layer = target;
+}
+
+void RouteManagementSystem::setInitialMarbleCount(int n)
+{
+	maxMarbles = n;
+	marblesLeftToSpawn = n;
+}
+
+int RouteManagementSystem::getInitialMarbleCount()
+{
+	return maxMarbles;
+}
+
+void RouteManagementSystem::drawSpline(RenderingAPI* API)
+{
+	spline->draw(API);
+}
+
+void RouteManagementSystem::addRoutePoint(glm::vec2 pos)
+{
+	spline->addSegment(pos.x, pos.y);
+}
+
+void RouteManagementSystem::removeLastRoutePoint()
+{
+	spline->removeLastSegment();
 }
 
 void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
@@ -124,14 +191,14 @@ void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
 		auto routeInfo = (RouteInfoC*)(*it)->getComponent(RouteInfo);
 		auto currCollider = (BoxColliderC*)(*it)->getComponent(BoxCollider);
 
-		if (routeInfo->targetSample >= pathPoints.size())
+		if (routeInfo->targetSample >= (*spline->getSampledPoints()).size())
 			break;
 
 		float threshold = 1;
-		if (glm::distance(transform->position, pathPoints[routeInfo->targetSample]) < threshold)
+		if (glm::distance(transform->position, (*spline->getSampledPoints())[routeInfo->targetSample]) < threshold)
 		{
 			routeInfo->targetSample++;
-			if (routeInfo->targetSample >= pathPoints.size())
+			if (routeInfo->targetSample >= (*spline->getSampledPoints()).size())
 			{
 				(*it)->destroy();
 				break;
@@ -140,7 +207,7 @@ void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
 
 		for (auto collisionID : currCollider->collisionsIDs)
 		{
-			auto collision = collisionSystem->getCollision(collisionID);
+			auto collision = CollisionSystem::getInstance().getCollision(collisionID);
 			auto otherEntity = EntManager::getInstance().getEntity(collision->getOtherCollider(currCollider->ID)->entityID);
 			auto otherRouteInfo = (RouteInfoC*)otherEntity->getComponent(RouteInfo);
 
@@ -198,7 +265,7 @@ void RouteManagementSystem::moveRoutine(std::list<Ent*>::iterator oit)
 
 		if (routeInfo->moving)
 		{
-			velocity->velocity = marbleSpeed * glm::normalize(pathPoints[routeInfo->targetSample] - transform->position);
+			velocity->velocity = marbleSpeed * glm::normalize((*spline->getSampledPoints())[routeInfo->targetSample] - transform->position);
 			transform->position = transform->position + velocity->velocity;
 			transform->rotation = 57.2958 * atan(velocity->velocity.y / velocity->velocity.x);
 		}

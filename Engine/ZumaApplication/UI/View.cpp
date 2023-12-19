@@ -1,6 +1,6 @@
 #include "View.hpp"
 #include <iostream>
-View::View(int x, int y, int width, int height, unsigned int textureID, GLFWwindow* window, Camera* camera, InputManager* input) : InterfaceWindow(x, y, width, height)
+View::View(int x, int y, int width, int height, unsigned int textureID, GLFWwindow* window, Camera* camera, InputManager* input) : InterfaceWindow(x, y, width, height), EventObserver(Defualt)
 {
 	this->textureID = textureID;
 	this->window = window;
@@ -17,6 +17,21 @@ void View::draw()
 	ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
 	ImGui::Image((ImTextureID)textureID, ImVec2(width, height), ImVec2(0, 0), ImVec2(1, -1));
+
+	if (ImGui::BeginPopup("RouteMenu"))
+	{
+		if (ImGui::Selectable("Add route point"))
+		{
+			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
+			EventManager::getInstance().notify(Event(Event::PlacePoint, &conv), UI);
+		}
+		if (ImGui::Selectable("Remove last route segment"))
+		{
+			EventManager::getInstance().notify(Event(Event::RemoveLastPoint, nullptr), UI);
+		}
+
+		ImGui::EndPopup();
+	}
 
 	if (ImGui::IsItemHovered())
 	{
@@ -39,12 +54,23 @@ void View::draw()
 			glm::vec2 pan = (input->getCursorPos() - panAnchor) / camera->getZoom();
 			camera->pan(pan.x, pan.y);
 		}
-		if (input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_1))
+		bool btn1Press = input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_1);
+		if (btn1Press && paused == false)
+		{
+			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
+			EventManager::getInstance().notify(Event(Event::Shoot, &conv), ECS);
+		}
+		else if (btn1Press && paused == true)
 		{
 			glm::vec2 mousePos = input->getCursorPos();
 			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
 			EventManager::getInstance().notify(Event(Event::MouseClick, &conv), UI);
 			EventManager::getInstance().notify(Event(Event::MouseClick, &conv), ECS);
+		}
+		bool btn2Press = input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_2);
+		if(btn2Press)
+		{
+			ImGui::OpenPopup("RouteMenu");
 		}
 		if (mouseMoved())
 		{
@@ -52,10 +78,29 @@ void View::draw()
 			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
 			EventManager::getInstance().notify(Event(Event::MouseMove, &conv), UI);
 		}
+
+
 	}
 
 	ImGui::End();
 	ImGui::PopStyleVar(2);
+}
+
+void View::handleEvent(Event& event)
+{
+	switch (event.getType())
+	{
+	case Event::Pause:
+	{
+		paused = true;
+	}
+	break;
+	case Event::Unpause:
+	{
+		paused = false;
+	}
+	break;
+	}
 }
 
 glm::vec2 View::convertPos(float x, float y)

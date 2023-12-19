@@ -9,16 +9,6 @@ BoxColliderC::BoxColliderC(float x, float y, float xSize, float ySize, Ent* pare
 	this->parentEnt = parentEnt;
 }
 
-nlohmann::json BoxColliderC::serialize()
-{
-	nlohmann::json j = ComponentBase::serialize();
-
-	j["position"] = { colX, colY };
-	j["size"] = { colSizeX, colSizeY };
-
-	return j;
-}
-
 void BoxColliderC::to_json(nlohmann::json& j) const
 {
 	ComponentBase::to_json(j);

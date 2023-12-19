@@ -15,25 +15,10 @@ AnimatedSpriteC::AnimatedSpriteC(Resource<Texture>* texture, std::vector<Texture
 	this->type = AnimatedSprite;
 }
 
-nlohmann::json AnimatedSpriteC::serialize()
-{
-	nlohmann::json j = ComponentBase::serialize();
-
-	j["frameDuration"] = frameDuration;
-	j["currentFrame"] = currentFrame;
-	j["divisions"] = nlohmann::json::array();
-
-	for (auto& division : divisions)
-	{
-		j["divisions"].push_back({ division.x, division.y, division.width, division.height });
-	}
-
-	return j;
-}
-
 void AnimatedSpriteC::to_json(nlohmann::json& j) const
 {
 	ComponentBase::to_json(j);
+	SpriteC::to_json(j);
 	j["frameDuration"] = frameDuration;
 	j["currentFrame"] = currentFrame;
 	j["divisions"] = nlohmann::json::array();
@@ -47,6 +32,8 @@ void AnimatedSpriteC::to_json(nlohmann::json& j) const
 
 void AnimatedSpriteC::from_json(nlohmann::json& j)
 {
+	SpriteC::from_json(j);
+
 	this->frameDuration = j["frameDuration"];
 	this->currentFrame = j["currentFrame"];
 	this->paused = j["paused"];

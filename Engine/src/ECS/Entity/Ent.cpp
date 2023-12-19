@@ -5,6 +5,10 @@
 #include "../Components/SpriteC.hpp"
 #include "../Components/AnimatedSpriteC.hpp"
 #include "../Components/BoxColliderC.hpp"
+#include "../Components/RenderingLayerC.hpp"
+#include "../Components/ParticleC.hpp"
+#include "../Components/CounterC.hpp"
+#include "../../../ZumaApplication/Logic/ShooterInfoC.hpp"
 
 Ent::~Ent()
 {
@@ -34,7 +38,7 @@ void Ent::to_json(nlohmann::json& j) const
 void Ent::from_json(nlohmann::json& j)
 {
 	ID = j["ID"];
-	for (auto& component : j["components"])
+	for (auto component : j["components"])
 	{
 		int type = component["type"];
 		switch (type)
@@ -70,6 +74,34 @@ void Ent::from_json(nlohmann::json& j)
 		case AnimatedSprite:
 		{
 			AnimatedSpriteC* newC = new AnimatedSpriteC();
+			(*newC).from_json(component);
+			this->addComponent(newC);
+		}
+		break;
+		case RenderingLayer:
+		{
+			RenderingLayerC* newC = new RenderingLayerC();
+			(*newC).from_json(component);
+			this->addComponent(newC);
+		}
+		break;
+		case ShooterInfo:
+		{
+			ShooterC* newC = new ShooterC();
+			(*newC).from_json(component);
+			this->addComponent(newC);
+		}
+		break;
+		case Particle:
+		{
+			ParticleC* newC = new ParticleC();
+			(*newC).from_json(component);
+			this->addComponent(newC);
+		}
+		break;
+		case Counter:
+		{
+			CounterC* newC = new CounterC();
 			(*newC).from_json(component);
 			this->addComponent(newC);
 		}

@@ -1,6 +1,13 @@
 #include "CollisionSystem.hpp"
+#include "../Entity/EntManager.hpp"
 
-CollisionSystem::CollisionSystem(int x, int y, int dimX, int dimY, float cellSize)
+CollisionSystem& CollisionSystem::instanceInplementation(int x, int y, int dimX, int dimY, float cellSize)
+{
+	static CollisionSystem system(x, y, dimX, dimY, cellSize);
+	return system;
+}
+
+CollisionSystem::CollisionSystem(int x, int y, int dimX, int dimY, float cellSize) : SystemBase(UNPAUSED, true, CollisionSys)
 {
 	name = "ColisionSys(" + std::to_string(ID) + ")";
 
@@ -15,6 +22,66 @@ CollisionSystem::CollisionSystem(int x, int y, int dimX, int dimY, float cellSiz
 	for (int i = 0; i < gridDimX * gridDimY + 1; i++)
 	{
 		grid.push_back(std::list<BoxColliderC*>());
+	}
+}
+
+CollisionSystem& CollisionSystem::getInstance()
+{
+	return instanceInplementation();
+}
+
+void CollisionSystem::initialize(int x, int y, int dimX, int dimY, float cellSize)
+{
+	instanceInplementation(x, y, dimX, dimY, cellSize);
+}
+
+void CollisionSystem::reInitialize(int x, int y, int dimX, int dimY, float cellSize)
+{
+	CollisionSystem::getInstance().entities.clear();
+	CollisionSystem::getInstance().grid.clear();
+
+	for (auto& collision : CollisionSystem::getInstance().collisions)
+	{
+		delete collision.second;
+	}
+	CollisionSystem::getInstance().collisions.clear();
+
+	CollisionSystem::getInstance().x = x;
+	CollisionSystem::getInstance().y = y;
+	CollisionSystem::getInstance().gridDimX = dimX;
+	CollisionSystem::getInstance().gridDimY = dimY;
+	CollisionSystem::getInstance().cellSize = cellSize;
+
+	for (int i = 0; i < CollisionSystem::getInstance().gridDimX * CollisionSystem::getInstance().gridDimY + 1; i++)
+	{
+		CollisionSystem::getInstance().grid.push_back(std::list<BoxColliderC*>());
+	}
+}
+
+void CollisionSystem::to_json(nlohmann::json& j) const
+{
+	j["type"] = type;
+
+	j["cellSize"] = cellSize;
+	j["x"] = x;
+	j["y"] = y;
+	j["gridDimX"] = gridDimX;
+	j["gridDimY"] = gridDimY;
+
+	j["entIDs"] = nlohmann::json::array();
+	for (auto& ent : entities)
+		j["entIDs"].push_back(ent.second->getID());
+}
+
+void CollisionSystem::from_json(nlohmann::json& j)
+{
+	CollisionSystem::getInstance().reInitialize(j["x"], j["y"], j["gridDimX"], j["gridDimY"], j["cellSize"]);
+
+	for (auto& entID : j["entIDs"])
+	{
+		Ent* ent = EntManager::getInstance().getEntity(entID);
+		if(ent!=nullptr)
+			CollisionSystem::getInstance().addEntity(ent);
 	}
 }
 

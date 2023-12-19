@@ -29,7 +29,13 @@ private:
 class CollisionSystem : public SystemBase
 {
 public:
-	CollisionSystem(int x, int y, int dimX, int dimY, float cellSize);
+	static CollisionSystem& getInstance();
+	static void initialize(int x, int y, int dimX, int dimY, float cellSize);
+	static void reInitialize(int x, int y, int dimX, int dimY, float cellSize);
+
+	virtual void to_json(nlohmann::json& j) const override;
+	virtual void from_json(nlohmann::json& j) override;
+
 	virtual void removeEntity(int ID) override;
 	virtual void earlyUpdate(float dt) override;
 	virtual void update(float dt) override;
@@ -47,13 +53,15 @@ public:
 	void drawGrid(RenderingAPI* API);
 	void drawColliders(RenderingAPI* API);
 private:
+	static CollisionSystem& instanceInplementation(int x = 0, int y = 0, int dimX = 0, int dimY = 0, float cellSize = 0);
+	CollisionSystem(int x, int y, int dimX, int dimY, float cellSize);
+
 	bool checkCollision(BoxColliderC* c1, BoxColliderC* c2);
 	glm::ivec2 getIndex(float x, float y);
 	void insertToGrid(BoxColliderC* collider);
 	void removeFromGrid(BoxColliderC* collider);
 	void clearGrid();
 	void insertCollidersOfStoredEntities();
-
 
 	float cellSize;
 	int gridDimX, gridDimY;

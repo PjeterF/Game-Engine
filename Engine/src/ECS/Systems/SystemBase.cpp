@@ -3,16 +3,26 @@
 
 int SystemBase::nextID = 0;
 
-SystemBase::SystemBase(SystemSet set) : EventObserver(ECS)
+SystemBase::SystemBase(SystemSet set, bool permanent, int type) : EventObserver(ECS)
 {
 	ID = nextID++;
 	SystemsManager::getInstance().addSystem(this, set);
 	name = "Sys(" + std::to_string(ID) + ")";
+	this->permanent = permanent;
+	this->type = type;
 }
 
 SystemBase::~SystemBase()
 {
 	SystemsManager::getInstance().removeSystem(this);
+}
+
+void SystemBase::to_json(nlohmann::json& j) const
+{
+}
+
+void SystemBase::from_json(nlohmann::json& j)
+{
 }
 
 void SystemBase::earlyUpdate(float dt)
@@ -75,6 +85,16 @@ int SystemBase::getID()
 std::string SystemBase::getName()
 {
 	return name;
+}
+
+int SystemBase::getType()
+{
+	return type;
+}
+
+bool SystemBase::isPermanent()
+{
+	return permanent;
 }
 
 bool SystemBase::validateComponents(Ent* entity)

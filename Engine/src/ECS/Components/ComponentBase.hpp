@@ -14,6 +14,8 @@ enum CType
 	BoxCollider,
 	AnimatedSprite,
 	RenderingLayer,
+	Particle,
+	Counter,
 
 	//Zuma
 	RouteInfo,
@@ -27,7 +29,6 @@ public:
 	int getType();
 	int entityID = -1;
 
-	virtual nlohmann::json serialize();
 	virtual void to_json(nlohmann::json& j) const;
 	virtual void from_json(nlohmann::json& j);
 protected:

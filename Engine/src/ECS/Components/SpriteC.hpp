@@ -8,7 +8,7 @@ class SpriteC : public ComponentBase
 public:
 	SpriteC(Resource<Texture>* texture = nullptr);
 	~SpriteC();
-	virtual nlohmann::json serialize() override;
+
 	virtual void to_json(nlohmann::json& j) const;
 	virtual void from_json(nlohmann::json& j);
 

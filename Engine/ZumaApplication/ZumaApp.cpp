@@ -7,10 +7,14 @@
 #include "../src/ECS/Entity/EntManager.hpp"
 #include "../src/ECS/Systems/SystemsManager.hpp"
 
+#include "Serialization/serialization.hpp"
 
 
-ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
+
+ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
 {
+	EventManager::getInstance().addObserver(this, UI);
+
 	srand(time(0));
 
 	wndWidth = windowHeight;
@@ -43,11 +47,12 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
 
-	view = new View(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight, viewportFramebuffer->getTextureID(), window, mainCamera, inputManager);
+	view = new View(windowWidth * 0.25, windowHeight*0.1, windowWidth * 0.5, windowHeight * 0.9, viewportFramebuffer->getTextureID(), window, mainCamera, inputManager);
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
 	sceneMenu = new SceneMenu(windowWidth * 0.75, 0, windowWidth * 0.25, windowHeight * 0.5);
 	assetLoader = new AssetLoader(0, 0, windowWidth * 0.25, windowHeight * 0.5);
-	zumaMenu = new ZumaMenu(0, windowHeight * 0.5, windowWidth * 0.25, windowHeight * 0.5);
+	zumaMenu = new ZumaMenu(0, windowHeight * 0.5, windowWidth * 0.25, windowHeight * 0.5, &this->routes);
+	bar = new TopBar(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight * 0.1);
 
 	mainCamera->setFrustrumX(0, view->width);
 	mainCamera->setFrustrumY(0, view->height);
@@ -57,6 +62,9 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName)
 void ZumaApp::run()
 {
 	LayeredRenderingSystem::initialize(renderingAPI);
+	CollisionSystem::initialize(-2000, -2000, 80, 80, 50);
+	ParticleSystem::getInstance();
+	CounterKillerSystem::getInstance();
 
 	Ent* ent1 = EntManager::getInstance().createEntity();
 	ent1->addComponent(new TransformC({ 300, 0 }, { 10, 10 }, 0));
@@ -71,7 +79,7 @@ void ZumaApp::run()
 
 	nlohmann::json j;
 	transform->to_json(j);
-	std::cout << j.dump(4);
+	//std::cout << j.dump(4);
 
 	Ent* ent2 = EntManager::getInstance().createEntity();
 	ent2->addComponent(new TransformC({ -300, 0 }, { 10, 10 }, 0));
@@ -82,26 +90,21 @@ void ZumaApp::run()
 
 	LayeredRenderingSystem::getInstance().addEntity(ent2);
 
-	MovementSystem* msys = new MovementSystem();
-	msys->addEntity(ent1);
-	msys->addEntity(ent2);
+	MovementSystem::getInstance(). addEntity(ent1);
+	MovementSystem::getInstance(). addEntity(ent2);
 
-	SpriteRenderingSystem* ssys = new SpriteRenderingSystem(renderingAPI);
-	//ssys->addEntity(ent1);
-	//ssys->addEntity(ent2);
+	CollisionSystem::getInstance().addEntity(ent1);
+	CollisionSystem::getInstance().addEntity(ent2);
 
-	CollisionSystem* csys = new CollisionSystem(-2000, -2000, 80, 80, 50);
-	csys->addEntity(ent1);
-	csys->addEntity(ent2);
-
-	TestCollisionResponse* crsys = new TestCollisionResponse(csys);
+	TestCollisionResponse* crsys = new TestCollisionResponse(&CollisionSystem::getInstance());
 	crsys->addEntity(ent1);
 	crsys->addEntity(ent2);
 
 	InputMovementSystem* isys = new InputMovementSystem(inputManager);
 	isys->addEntity(ent1);
 
-	AnimatedSpriteSystem* aSpriteSys = new AnimatedSpriteSystem(renderingAPI);
+	//CollisionSystem::reInitialize(-2000, -2000, 40, 40, 100);
+
 	Ent* animatedEnt = EntManager::getInstance().createEntity();
 	std::vector<TextureDivision> divisions;
 	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
@@ -116,11 +119,10 @@ void ZumaApp::run()
 	);
 	animatedEnt->addComponent(aSprite);
 	animatedEnt->addComponent(new TransformC({ 200, 200 }, { 100, 100 }, 0));
-	aSpriteSys->addEntity(animatedEnt);
+	animatedEnt->addComponent(new RenderingLayerC(0));
+	LayeredRenderingSystem::getInstance().addEntity(animatedEnt);
 
 	propertiesMenu->selectEntity(ent1);
-
-	MarbleCollisionResolutionSystem* mcrs = new MarbleCollisionResolutionSystem(csys);
 
 	Spline* spline1 = new Spline
 		(-500, 300, 100,
@@ -132,7 +134,7 @@ void ZumaApp::run()
 	auto points = spline1->getControlPoints();
 	points->at(1) = {300, 1000};
 	spline1->sample();
-	RouteManagementSystem* route1 = new RouteManagementSystem(csys, aSpriteSys, mcrs, *spline1->getSampledPoints());
+	RouteManagementSystem* route1 = new RouteManagementSystem(spline1);
 	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30));
 	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/red_marble.png", divisions, 30));
 	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/yellow_marble.png", divisions, 30));
@@ -143,10 +145,10 @@ void ZumaApp::run()
 	shooter->addComponent(new ShooterC(5, 50));
 	shooter->addComponent(new RenderingLayerC(0));
 
-	ShooterManagementSystem* shooterSystem = new ShooterManagementSystem(csys, aSpriteSys, msys);
+	ShooterManagementSystem* shooterSystem = new ShooterManagementSystem();
 
 	shooterSystem->addEntity(shooter);
-	ssys->addEntity(shooter);
+	LayeredRenderingSystem::getInstance().addEntity(shooter);
 
 	ParticeEmitter emitter(300, 300, 10000);
 	emitter.defaultProperties.xPosVar = glm::vec2(-50, 50);
@@ -195,14 +197,15 @@ void ZumaApp::run()
 		glClearColor(0.2, 0.2, 0.2, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//csys->drawGrid(renderingAPI);
-		//csys->drawColliders(renderingAPI);
+		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
+		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
+
+		for (auto& route : routes)
+			route->drawSpline(renderingAPI);
 
 		SystemsManager::getInstance().update(0, PAUSED);
 
 		emitter.draw(renderingAPI);
-		spline1->draw(renderingAPI);
-
 
 		viewportFramebuffer->unbind();
 		glDisable(GL_DEPTH_TEST);
@@ -212,6 +215,7 @@ void ZumaApp::run()
 		sceneMenu->draw();
 		assetLoader->draw();
 		zumaMenu->draw();
+		bar->draw();
 
 		if (inputManager->isKeyPressed(GLFW_KEY_P))
 		{
@@ -238,6 +242,33 @@ void ZumaApp::run()
 	}
 
 	glfwTerminate();
+}
+
+void ZumaApp::handleEvent(Event& event)
+{
+	switch (event.getType())
+	{
+	case Event::Pause:
+	{
+		paused = true;
+	}
+	break;
+	case Event::Unpause:
+	{
+		paused = false;
+	}
+	break;
+	case Event::RouteCreation:
+	{
+		routes.push_back((RouteManagementSystem*)event.getPayload());
+	}
+	break;
+	case Event::RouteDeletion:
+	{
+		routes.erase(std::find(routes.begin(), routes.end(), event.getPayload()));
+	}
+	break;
+	}
 }
 
 void ZumaApp::initializeImGui()

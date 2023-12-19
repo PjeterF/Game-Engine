@@ -13,7 +13,7 @@ class AnimatedSpriteC : public SpriteC
 {
 public:
 	AnimatedSpriteC(Resource<Texture>* texture = nullptr, std::vector<TextureDivision> divisions = std::vector<TextureDivision>(), int frameDuration = 1);
-	virtual nlohmann::json serialize() override;
+
 	virtual void to_json(nlohmann::json& j) const;
 	virtual void from_json(nlohmann::json& j);
 
