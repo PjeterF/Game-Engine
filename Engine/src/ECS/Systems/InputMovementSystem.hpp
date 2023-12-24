@@ -8,7 +8,7 @@
 class InputMovementSystem : public SystemBase
 {
 public:
-	InputMovementSystem(InputManager* inputManager);
+	InputMovementSystem(InputManager* input);
 	virtual void update(float dt) override;
 private:
 	InputManager* input;

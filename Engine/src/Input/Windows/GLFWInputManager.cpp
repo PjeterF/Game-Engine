@@ -6,111 +6,57 @@ GLFWInputManager::GLFWInputManager(GLFWwindow* window)
 {
 	this->window = window;
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+
+	glfwSetWindowUserPointer(window, this);
 
 	for (int i = 0; i < No_Keys; i++)
 		keyDown[i] = false;
 	for (int i = 0; i < No_MouseKeys; i++)
 		mouseKeyDown[i] = false;
+	for (int i = 0; i < No_Keys; i++)
+		keyReleased[i] = false;
+	for (int i = 0; i < No_MouseKeys; i++)
+		mouseKeyReleased[i] = false;
+	for (int i = 0; i < No_Keys; i++)
+		keyClicked[i] = false;
+	for (int i = 0; i < No_MouseKeys; i++)
+		mouseKeyClicked[i] = false;
 }
 
-bool GLFWInputManager::isKeyPressed(int keycode)
+void GLFWInputManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	return !(glfwGetKey(window, keycode) - GLFW_PRESS);
+	GLFWInputManager* manager = (GLFWInputManager*)glfwGetWindowUserPointer(window);
+
+	if (action == GLFW_RELEASE)
+	{
+		manager->keyReleased[key] = true;
+		manager->keyDown[key] = false;
+	}
+	if (action == GLFW_PRESS)
+	{
+		if (!manager->keyDown[key])
+			manager->keyClicked[key] = true;
+		manager->keyDown[key] = true;
+	}
 }
 
-bool GLFWInputManager::isMouseButtonPressed(int keycode)
+void GLFWInputManager::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	return !(glfwGetMouseButton(window, keycode) - GLFW_PRESS);
-}
+	GLFWInputManager* manager = (GLFWInputManager*)glfwGetWindowUserPointer(window);
 
-bool GLFWInputManager::wasKeyReleased(int keycode)
-{
-	int action = glfwGetMouseButton(window, keycode);
-
-	if (keyDown[keycode])
+	if (action == GLFW_RELEASE)
 	{
-		if (action == GLFW_RELEASE)
-		{
-			keyDown[keycode] = false;
-			return true;
-		}
+		manager->mouseKeyReleased[button] = true;
+		manager->mouseKeyDown[button] = false;
 	}
-	else
+	if (action == GLFW_PRESS)
 	{
-		if (action == GLFW_PRESS)
-			keyDown[keycode] = true;
+		if(!manager->mouseKeyDown[button])
+			manager->mouseKeyClicked[button] = true;
+		manager->mouseKeyDown[button] = true;
 	}
-
-	return false;
-}
-
-bool GLFWInputManager::wasMouseButtonReleased(int keycode)
-{
-	int action = glfwGetMouseButton(window, keycode);
-
-	if (mouseKeyDown[keycode])
-	{
-		if (action == GLFW_RELEASE)
-		{
-			mouseKeyDown[keycode] = false;
-			return true;
-		}
-	}
-	else
-	{
-		if (action == GLFW_PRESS)
-			mouseKeyDown[keycode] = true;
-	}
-
-	return false;
-}
-
-bool GLFWInputManager::wasKeyPressed(int keycode)
-{
-	int action = glfwGetMouseButton(window, keycode);
-
-	if (keyDown[keycode])
-	{
-		if (action == GLFW_RELEASE)
-		{
-			keyDown[keycode] = false;
-		}
-	}
-	else
-	{
-		if (action == GLFW_PRESS)
-		{
-			keyDown[keycode] = true;
-			return true;
-		}
-
-	}
-
-	return false;
-}
-
-bool GLFWInputManager::wasMouseButtonPressed(int keycode)
-{
-	int action = glfwGetMouseButton(window, keycode);
-
-	if (mouseKeyDown[keycode])
-	{
-		if (action == GLFW_RELEASE)
-		{
-			mouseKeyDown[keycode] = false;
-		}
-	}
-	else
-	{
-		if (action == GLFW_PRESS)
-		{
-			mouseKeyDown[keycode] = true;
-			return true;
-		}
-
-	}
-
-	return false;
 }
 
 float GLFWInputManager::mouseWheel()
@@ -118,6 +64,20 @@ float GLFWInputManager::mouseWheel()
 	float temp = wheel;
 	wheel = 0;
 	return temp;
+}
+
+void GLFWInputManager::update()
+{
+	for (int i = 0; i < No_Keys; i++)
+		keyClicked[i] = false;
+	for (int i = 0; i < No_MouseKeys; i++)
+		mouseKeyClicked[i] = false;
+	for (int i = 0; i < No_Keys; i++)
+		keyReleased[i] = false;
+	for (int i = 0; i < No_MouseKeys; i++)
+		mouseKeyReleased[i] = false;
+
+	glfwPollEvents();
 }
 
 glm::vec2 GLFWInputManager::getCursorPos()

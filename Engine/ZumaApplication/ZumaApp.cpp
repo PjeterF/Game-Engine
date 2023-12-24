@@ -27,9 +27,9 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 	glViewport(0, 0, windowWidth, windowHeight);
 
-	initializeImGui();
 	GLFWInputManager::initialize(window);
-	inputManager = &GLFWInputManager::getInstance();
+	input = &GLFWInputManager::getInstance();
+	initializeImGui();
 
 	ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/sprite");
 	ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/quad");
@@ -47,7 +47,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
 
-	view = new View(windowWidth * 0.25, windowHeight*0.1, windowWidth * 0.5, windowHeight * 0.9, viewportFramebuffer->getTextureID(), window, mainCamera, inputManager);
+	view = new View(windowWidth * 0.25, windowHeight*0.1, windowWidth * 0.5, windowHeight * 0.9, viewportFramebuffer->getTextureID(), window, mainCamera, input);
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
 	sceneMenu = new SceneMenu(windowWidth * 0.75, 0, windowWidth * 0.25, windowHeight * 0.5);
 	assetLoader = new AssetLoader(0, 0, windowWidth * 0.25, windowHeight * 0.5);
@@ -72,35 +72,15 @@ void ZumaApp::run()
 	ent1->addComponent(new VelocityC({ -1, 0.05 }));
 	ent1->addComponent(new RenderingLayerC(0));
 	ent1->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/textures/marble1.png")));
+	ent1->addComponent(new ParticleC());
 
+	ParticleSystem::getInstance().addEntity(ent1);
 	LayeredRenderingSystem::getInstance().addEntity(ent1);
-
-	auto transform = ent1->getComponent(Transform);
-
-	nlohmann::json j;
-	transform->to_json(j);
-	//std::cout << j.dump(4);
-
-	Ent* ent2 = EntManager::getInstance().createEntity();
-	ent2->addComponent(new TransformC({ -300, 0 }, { 10, 10 }, 0));
-	//ent2->addComponent(new BoxColliderC(0, 0, 10, 10, ent2));
-	ent2->addComponent(new VelocityC({ 1, 0.05 }));
-	ent2->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/textures/marble2.png")));
-	ent2->addComponent(new RenderingLayerC(1));
-
-	LayeredRenderingSystem::getInstance().addEntity(ent2);
-
 	MovementSystem::getInstance(). addEntity(ent1);
-	MovementSystem::getInstance(). addEntity(ent2);
-
 	CollisionSystem::getInstance().addEntity(ent1);
-	CollisionSystem::getInstance().addEntity(ent2);
-
 	TestCollisionResponse* crsys = new TestCollisionResponse(&CollisionSystem::getInstance());
 	crsys->addEntity(ent1);
-	crsys->addEntity(ent2);
-
-	InputMovementSystem* isys = new InputMovementSystem(inputManager);
+	InputMovementSystem* isys = new InputMovementSystem(input);
 	isys->addEntity(ent1);
 
 	//CollisionSystem::reInitialize(-2000, -2000, 40, 40, 100);
@@ -197,19 +177,15 @@ void ZumaApp::run()
 		glClearColor(0.2, 0.2, 0.2, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
-		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
-
+		SystemsManager::getInstance().update(0, PAUSED);
+		emitter.draw(renderingAPI);
 		for (auto& route : routes)
 			route->drawSpline(renderingAPI);
-
-		SystemsManager::getInstance().update(0, PAUSED);
-
-		emitter.draw(renderingAPI);
 
 		viewportFramebuffer->unbind();
 		glDisable(GL_DEPTH_TEST);
 
+		// UI
 		view->draw();
 		propertiesMenu->draw();
 		sceneMenu->draw();
@@ -217,17 +193,13 @@ void ZumaApp::run()
 		zumaMenu->draw();
 		bar->draw();
 
-		if (inputManager->isKeyPressed(GLFW_KEY_P))
-		{
-			std::cout<<"True ";
-		}
-
 		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
-		glfwPollEvents();
+
+		input->update();
 
 		auto timeEnd = std::chrono::high_resolution_clock::now();
 
@@ -236,6 +208,7 @@ void ZumaApp::run()
 		int msDelay = (1000 / fpsCap) - frameDuration;
 		if (msDelay > 0)
 			std::this_thread::sleep_for(std::chrono::milliseconds(msDelay));
+
 
 		glfwSetWindowTitle(window, ("Frameduration: " + std::to_string(frameDuration) + " Delay: " + std::to_string(msDelay)).c_str());
 		iteration++;

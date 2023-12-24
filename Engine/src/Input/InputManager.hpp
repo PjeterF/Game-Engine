@@ -5,17 +5,20 @@
 
 class InputManager
 {
+protected:
+	static const int No_Keys = 512;
+	static const int No_MouseKeys = 10;
 public:
-	virtual bool isKeyPressed(int keycode) = 0;
-	virtual bool isMouseButtonPressed(int keycode) = 0;
-
-	virtual bool wasKeyReleased(int keycode) = 0;
-	virtual bool wasMouseButtonReleased(int keycode) = 0;
-
-	virtual bool wasKeyPressed(int keycode) = 0;
-	virtual bool wasMouseButtonPressed(int keycode) = 0;
-
 	virtual float mouseWheel() = 0;
-
+	virtual void update() = 0;
 	virtual glm::vec2 getCursorPos() = 0;
+
+	bool keyDown[No_Keys];
+	bool keyClicked[No_Keys];
+	bool keyReleased[No_Keys];
+
+	bool mouseKeyDown[No_MouseKeys];
+	bool mouseKeyClicked[No_MouseKeys];
+	bool mouseKeyReleased[No_MouseKeys];
+	static float wheel;
 };

@@ -67,7 +67,7 @@ private:
 	RenderingAPI* renderingAPI=nullptr;
 	Camera* mainCamera=nullptr;
 
-	InputManager* inputManager;
+	InputManager* input;
 
 	std::vector<RouteManagementSystem*> routes;
 

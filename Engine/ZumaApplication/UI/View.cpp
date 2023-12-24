@@ -40,12 +40,12 @@ void View::draw()
 		{
 			camera->changeZoom(0.05f * w);
 		}
-		if (input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_MIDDLE))
+		if (input->mouseKeyClicked[ZE_MOUSE_BUTTON_MIDDLE])
 		{
 			panning = true;
 			panAnchor = input->getCursorPos();
 		}
-		if(!input->isMouseButtonPressed(ZE_MOUSE_BUTTON_MIDDLE))
+		if(!input->mouseKeyDown[ZE_MOUSE_BUTTON_MIDDLE])
 		{
 			panning = false;
 		}
@@ -54,7 +54,7 @@ void View::draw()
 			glm::vec2 pan = (input->getCursorPos() - panAnchor) / camera->getZoom();
 			camera->pan(pan.x, pan.y);
 		}
-		bool btn1Press = input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_1);
+		bool btn1Press = input->mouseKeyClicked[ZE_MOUSE_BUTTON_1];
 		if (btn1Press && paused == false)
 		{
 			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
@@ -67,7 +67,7 @@ void View::draw()
 			EventManager::getInstance().notify(Event(Event::MouseClick, &conv), UI);
 			EventManager::getInstance().notify(Event(Event::MouseClick, &conv), ECS);
 		}
-		bool btn2Press = input->wasMouseButtonPressed(ZE_MOUSE_BUTTON_2);
+		bool btn2Press = input->mouseKeyClicked[ZE_MOUSE_BUTTON_2];
 		if(btn2Press)
 		{
 			ImGui::OpenPopup("RouteMenu");
@@ -78,8 +78,6 @@ void View::draw()
 			glm::vec2 conv = convertPos(io.MousePos.x, io.MousePos.y);
 			EventManager::getInstance().notify(Event(Event::MouseMove, &conv), UI);
 		}
-
-
 	}
 
 	ImGui::End();

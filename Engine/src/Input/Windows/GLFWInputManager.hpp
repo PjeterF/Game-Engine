@@ -3,15 +3,11 @@
 #include "../InputManager.hpp"
 #include "GLFW/glfw3.h"
 
-
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 class GLFWInputManager : public InputManager
 {
 public:
-	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-	{
-		wheel = yoffset;
-	}
 	static void initialize(GLFWwindow* window)
 	{
 		instanceImp(window);
@@ -20,18 +16,17 @@ public:
 	{
 		return instanceImp();
 	}
-	virtual bool isKeyPressed(int keycode) override;
-	virtual bool isMouseButtonPressed(int keycode) override;
-
-	virtual bool wasKeyReleased(int keycode) override;
-	virtual bool wasMouseButtonReleased(int keycode) override;
-
-	virtual bool wasKeyPressed(int keycode) override;
-	virtual bool wasMouseButtonPressed(int keycode) override;
 
 	virtual float mouseWheel() override;
-
+	virtual void update() override;
 	virtual glm::vec2 getCursorPos() override;
+
+	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		wheel = yoffset;
+	}
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 private:
 	GLFWInputManager(GLFWwindow* window);
 	static GLFWInputManager& instanceImp(GLFWwindow* window = nullptr)
@@ -41,10 +36,4 @@ private:
 	}
 	GLFWwindow* window;
 
-	static const int No_Keys = 512;
-	static const int No_MouseKeys = 10;
-
-	bool keyDown[No_Keys];
-	bool mouseKeyDown[No_MouseKeys];
-	static float wheel;
 };
