@@ -36,6 +36,22 @@ void ParticleC::to_json(nlohmann::json& j) const
 		emitter.defaultProperties.rotVar.x,
 		emitter.defaultProperties.rotVar.y,
 	};
+	j["emitter"]["defualtProperties"]["xPosVar"] = {
+		emitter.defaultProperties.xPosVar.x,
+		emitter.defaultProperties.xPosVar.y,
+	};
+	j["emitter"]["defualtProperties"]["yPosVar"] = {
+		emitter.defaultProperties.yPosVar.x,
+		emitter.defaultProperties.yPosVar.y,
+	};
+	j["emitter"]["defualtProperties"]["xVelVar"] = {
+		emitter.defaultProperties.xVelVar.x,
+		emitter.defaultProperties.xVelVar.y,
+	};
+	j["emitter"]["defualtProperties"]["yVelVar"] = {
+		emitter.defaultProperties.yVelVar.x,
+		emitter.defaultProperties.yVelVar.y,
+	};
 }
 
 void ParticleC::from_json(nlohmann::json& j)
@@ -65,5 +81,21 @@ void ParticleC::from_json(nlohmann::json& j)
 	emitter.defaultProperties.rotVar = {
 		j["emitter"]["defualtProperties"]["rotVar"][0],
 		j["emitter"]["defualtProperties"]["rotVar"][1],
+	};
+	emitter.defaultProperties.xPosVar = {
+		j["emitter"]["defualtProperties"]["xPosVar"][0],
+		j["emitter"]["defualtProperties"]["xPosVar"][1],
+	};
+	emitter.defaultProperties.yPosVar = {
+		j["emitter"]["defualtProperties"]["yPosVar"][0],
+		j["emitter"]["defualtProperties"]["yPosVar"][1],
+	};
+	emitter.defaultProperties.xVelVar = {
+		j["emitter"]["defualtProperties"]["xVelVar"][0],
+		j["emitter"]["defualtProperties"]["xVelVar"][1],
+	};
+	emitter.defaultProperties.yVelVar = {
+		j["emitter"]["defualtProperties"]["yVelVar"][0],
+		j["emitter"]["defualtProperties"]["yVelVar"][1],
 	};
 }

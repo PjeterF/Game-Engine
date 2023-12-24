@@ -37,4 +37,5 @@ private:
 	void counterProp(CounterC* component);
 
 	Ent* selectedEntity = nullptr;
+	bool compRemoved = false;
 };

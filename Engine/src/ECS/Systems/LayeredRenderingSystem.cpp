@@ -128,6 +128,8 @@ void LayeredRenderingSystem::removeEntity(int ID)
 
 void LayeredRenderingSystem::handleEvent(Event& event)
 {
+	SystemBase::handleEvent(event);
+
 	switch (event.getType())
 	{
 	case Event::RenderingLayerChange:
@@ -138,8 +140,6 @@ void LayeredRenderingSystem::handleEvent(Event& event)
 	}
 	break;
 	}
-
-	SystemBase::handleEvent(event);
 }
 
 LayeredRenderingSystem& LayeredRenderingSystem::instanceInplementation(RenderingAPI* API)

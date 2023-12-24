@@ -9,8 +9,6 @@
 
 #include "Serialization/serialization.hpp"
 
-
-
 ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
 {
 	EventManager::getInstance().addObserver(this, UI);
@@ -56,16 +54,16 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 	mainCamera->setFrustrumX(0, view->width);
 	mainCamera->setFrustrumY(0, view->height);
+
+	LayeredRenderingSystem::initialize(renderingAPI);
+	CollisionSystem::initialize(-2000, -2000, 80, 80, 50);
+	ParticleSystem::getInstance();
+	CounterKillerSystem::getInstance();
 }
 
 
 void ZumaApp::run()
 {
-	LayeredRenderingSystem::initialize(renderingAPI);
-	CollisionSystem::initialize(-2000, -2000, 80, 80, 50);
-	ParticleSystem::getInstance();
-	CounterKillerSystem::getInstance();
-
 	Ent* ent1 = EntManager::getInstance().createEntity();
 	ent1->addComponent(new TransformC({ 300, 0 }, { 10, 10 }, 0));
 	ent1->addComponent(new BoxColliderC(0, 0, 5, 10, ent1));
@@ -82,8 +80,6 @@ void ZumaApp::run()
 	crsys->addEntity(ent1);
 	InputMovementSystem* isys = new InputMovementSystem(input);
 	isys->addEntity(ent1);
-
-	//CollisionSystem::reInitialize(-2000, -2000, 40, 40, 100);
 
 	Ent* animatedEnt = EntManager::getInstance().createEntity();
 	std::vector<TextureDivision> divisions;
@@ -252,26 +248,4 @@ void ZumaApp::initializeImGui()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 300 es");
-}
-
-void ZumaApp::updateSystems(float dt)
-{
-	for (auto system : systems)
-	{
-		system->update(dt);
-	}
-}
-
-Ent* ZumaApp::getEntity(int id)
-{
-	auto it = entities.find(id);
-	if (it == entities.end())
-		return (*it).second;
-	else
-		return nullptr;
-}
-
-void ZumaApp::removeEntity(int id)
-{
-	entities.erase(id);
 }

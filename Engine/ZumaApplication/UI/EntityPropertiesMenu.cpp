@@ -71,6 +71,11 @@ void EntityPropertiesMenu::draw()
 			counterProp((CounterC*)component.second);
 			break;
 		}
+		if (compRemoved)
+		{
+			compRemoved = false;
+			break;
+		}
 	}
 
 	ImGui::End();
@@ -272,7 +277,10 @@ void EntityPropertiesMenu::transformProp(TransformC* component)
 		ImGui::InputFloat("rotation", &component->rotation);
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Transform);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -314,7 +322,10 @@ void EntityPropertiesMenu::spriteProp(SpriteC* component)
 		}
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Sprite);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -332,7 +343,10 @@ void EntityPropertiesMenu::velocityProp(VelocityC* component)
 			component->velocity = { velocity[0], velocity[1] };
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Velocity);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -364,7 +378,10 @@ void EntityPropertiesMenu::colliderProp(BoxColliderC* component)
 		ImGui::Text(("Collider ID: " + std::to_string(component->ID)).c_str());
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(BoxCollider);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -414,7 +431,10 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 		ImGui::Checkbox("pause", &component->paused);
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Sprite);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		int n = 0;
 		for (auto& division : component->divisions)
@@ -447,7 +467,10 @@ void EntityPropertiesMenu::renderingLayerProp(RenderingLayerC* component)
 		}
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Velocity);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -462,7 +485,10 @@ void EntityPropertiesMenu::shooterProp(ShooterC* component)
 		ImGui::InputInt("cooldownTime", &component->cooldownTime);
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Velocity);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -510,9 +536,36 @@ void EntityPropertiesMenu::particleProp(ParticleC* component)
 		}
 		ImGui::InputFloat("start size", &component->emitter.defaultProperties.startSize);
 		ImGui::InputFloat("end size", &component->emitter.defaultProperties.endSize);
+		static float xPosVar[2] = { component->emitter.defaultProperties.xPosVar.x, component->emitter.defaultProperties.xPosVar.y };
+		if (ImGui::InputFloat2("xPosVar", xPosVar))
+		{
+			component->emitter.defaultProperties.xPosVar.x = xPosVar[0];
+			component->emitter.defaultProperties.xPosVar.y = xPosVar[1];
+		}
+		static float yPosVar[2] = { component->emitter.defaultProperties.yPosVar.x, component->emitter.defaultProperties.yPosVar.y };
+		if (ImGui::InputFloat2("yPosVar", yPosVar))
+		{
+			component->emitter.defaultProperties.yPosVar.x = yPosVar[0];
+			component->emitter.defaultProperties.yPosVar.y = yPosVar[1];
+		}
+		static float xVelVar[2] = { component->emitter.defaultProperties.xVelVar.x, component->emitter.defaultProperties.xVelVar.y };
+		if (ImGui::InputFloat2("xVelVar", xVelVar))
+		{
+			component->emitter.defaultProperties.xVelVar.x = xVelVar[0];
+			component->emitter.defaultProperties.xVelVar.y = xVelVar[1];
+		}
+		static float yVelVar[2] = { component->emitter.defaultProperties.yVelVar.x, component->emitter.defaultProperties.yVelVar.y };
+		if (ImGui::InputFloat2("yVelVar", yVelVar))
+		{
+			component->emitter.defaultProperties.yVelVar.x = yVelVar[0];
+			component->emitter.defaultProperties.yVelVar.y = yVelVar[1];
+		}
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Velocity);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();
@@ -527,7 +580,10 @@ void EntityPropertiesMenu::counterProp(CounterC* component)
 		ImGui::InputInt("counter", &component->counter);
 
 		if (ImGui::Button("Remove"))
-			selectedEntity->removeComponent(Velocity);
+		{
+			compRemoved = true;
+			selectedEntity->removeComponent((CType)component->getType());
+		}
 
 		ImGui::Separator();
 		ImGui::TreePop();

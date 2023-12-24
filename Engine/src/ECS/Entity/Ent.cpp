@@ -129,8 +129,8 @@ void Ent::removeComponent(CType type)
 		return;
 
 	(*it).second->entityID = -1;
-	EventManager::getInstance().notify(Event(Event::ComponentRemoval, this), ObsBin::ECS);
 	components.erase(type);
+	EventManager::getInstance().notify(Event(Event::ComponentRemoval, this), ObsBin::ECS);
 }
 
 bool Ent::hasComponent(CType type)

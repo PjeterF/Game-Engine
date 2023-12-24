@@ -44,12 +44,6 @@ public:
 
 private:
 	void initializeImGui();
-	void updateSystems(float dt);
-	Ent* getEntity(int id);
-	void removeEntity(int id);
-
-	std::vector<SystemBase*> systems;
-	std::unordered_map<int, Ent*> entities;
 
 	GLFWwindow* window;
 	float wndWidth;
