@@ -14,7 +14,7 @@ void ShooterManagementSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto shooterComponent = (ShooterC*)entity.second->getComponent(ShooterInfo);
+		auto shooterComponent = (ShooterC*)entity->getComponent(ShooterInfo);
 		if (shooterComponent->counter != 0)
 			shooterComponent->counter--;
 	}
@@ -25,7 +25,7 @@ void ShooterManagementSystem::to_json(nlohmann::json& j) const
 	j["type"] = type;
 	j["entIDs"] = nlohmann::json::array();
 	for (auto& ent : entities)
-		j["entIDs"].push_back(ent.second->getID());
+		j["entIDs"].push_back(ent->getID());
 }
 
 void ShooterManagementSystem::from_json(nlohmann::json& j)
@@ -68,12 +68,12 @@ void ShooterManagementSystem::handleEvent(Event& event)
 		auto targetPos = (glm::vec2*)event.getPayload();
 		for (auto& entity : entities)
 		{
-			auto shooterComponent = (ShooterC*)entity.second->getComponent(ShooterInfo);
+			auto shooterComponent = (ShooterC*)entity->getComponent(ShooterInfo);
 			if (shooterComponent->counter != 0)
 				continue;
 
-			auto transform = (TransformC*)entity.second->getComponent(Transform);
-			auto layer = (RenderingLayerC*)entity.second->getComponent(RenderingLayer);
+			auto transform = (TransformC*)entity->getComponent(Transform);
+			auto layer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
 
 			Ent* shotFired = EntManager::getInstance().getEntity(shooterComponent->currShotEntID);
 			auto shotFired_Velocity = (VelocityC*)shotFired->getComponent(Velocity);

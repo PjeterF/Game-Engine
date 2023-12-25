@@ -13,7 +13,7 @@ void CounterKillerSystem::to_json(nlohmann::json& j) const
     j["type"] = type;
     j["entIDs"] = nlohmann::json::array();
     for (auto& ent : entities)
-        j["entIDs"].push_back(ent.second->getID());
+        j["entIDs"].push_back(ent->getID());
 }
 
 void CounterKillerSystem::from_json(nlohmann::json& j)
@@ -30,10 +30,10 @@ void CounterKillerSystem::update(float dt)
 {
     for (auto& entity : entities)
     {
-        auto counter = (CounterC*)entity.second->getComponent(Counter);
+        auto counter = (CounterC*)entity->getComponent(Counter);
 
         if (counter->counter++ >= counter->originalValue)
-            entity.second->destroy();
+            entity->destroy();
     }
 }
 

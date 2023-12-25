@@ -36,19 +36,29 @@ void SystemBase::lateUpdate(float dt)
 
 bool SystemBase::addEntity(Ent* entity)
 {
-	if (entities.find(entity->getID()) != entities.end())
+	auto it = std::find(entities.begin(), entities.end(), entity);
+	if (it != entities.end())
 		return false;
 
 	if (!validateComponents(entity))
 		return false;
 
-	entities.insert({ entity->getID(), entity });
+	entities.push_back(entity);
 	return true;
 }
 
 void SystemBase::removeEntity(int ID)
 {
-	entities.erase(ID);
+	auto it = entities.begin();
+	while (it != entities.end())
+	{
+		if ((*it)->getID() == ID)
+		{
+			entities.erase(it);
+			return;
+		}
+		it++;
+	}
 }
 
 void SystemBase::handleEvent(Event& event)
@@ -64,7 +74,7 @@ void SystemBase::handleEvent(Event& event)
 	case Event::ComponentRemoval:
 	{
 		Ent* entity = (Ent*)event.getPayload();
-		auto it = entities.find(entity->getID());
+		auto it = std::find(entities.begin(), entities.end(), entity);
 		if (it == entities.end())
 			break;
 

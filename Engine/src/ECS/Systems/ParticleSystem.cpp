@@ -23,7 +23,7 @@ void ParticleSystem::to_json(nlohmann::json& j) const
 	j["type"] = type;
 	j["entIDs"] = nlohmann::json::array();
 	for (auto& ent : entities)
-		j["entIDs"].push_back(ent.second->getID());
+		j["entIDs"].push_back(ent->getID());
 }
 
 void ParticleSystem::from_json(nlohmann::json& j)
@@ -40,8 +40,8 @@ void ParticleSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity.second->getComponent(Transform);
-		auto emitter = (ParticleC*)entity.second->getComponent(Particle);
+		auto transform = (TransformC*)entity->getComponent(Transform);
+		auto emitter = (ParticleC*)entity->getComponent(Particle);
 
 		if (emitter->counter++ >= emitter->emitPeriod)
 		{

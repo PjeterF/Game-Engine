@@ -12,8 +12,8 @@ void SpriteRenderingSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity.second->getComponent(CType::Transform);
-		auto sprite = (SpriteC*)entity.second->getComponent(CType::Sprite);
+		auto transform = (TransformC*)entity->getComponent(CType::Transform);
+		auto sprite = (SpriteC*)entity->getComponent(CType::Sprite);
 
 		API->drawSprite(transform->position, transform->size, transform->rotation, sprite->getTexture());
 	}

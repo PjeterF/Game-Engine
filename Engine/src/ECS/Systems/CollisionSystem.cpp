@@ -70,7 +70,7 @@ void CollisionSystem::to_json(nlohmann::json& j) const
 
 	j["entIDs"] = nlohmann::json::array();
 	for (auto& ent : entities)
-		j["entIDs"].push_back(ent.second->getID());
+		j["entIDs"].push_back(ent->getID());
 }
 
 void CollisionSystem::from_json(nlohmann::json& j)
@@ -113,8 +113,8 @@ void CollisionSystem::lateUpdate(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto collider = (BoxColliderC*)entity.second->getComponent(CType::BoxCollider);
-		auto transform = (TransformC*)entity.second->getComponent(CType::Transform);
+		auto collider = (BoxColliderC*)entity->getComponent(CType::BoxCollider);
+		auto transform = (TransformC*)entity->getComponent(CType::Transform);
 
 		collider->colX = transform->position.x;
 		collider->colY = transform->position.y;
@@ -164,7 +164,7 @@ void CollisionSystem::handleEvent(Event& event)
 	case Event::ComponentRemoval:
 	{
 		Ent* entity = (Ent*)event.getPayload();
-		auto it = entities.find(entity->getID());
+		auto it = std::find(entities.begin(), entities.end(), entity);
 		if (it == entities.end())
 			break;
 
@@ -400,7 +400,7 @@ void CollisionSystem::insertCollidersOfStoredEntities()
 {
 	for (auto& entity : entities)
 	{
-		auto collider = (BoxColliderC*)entity.second->getComponent(CType::BoxCollider);
+		auto collider = (BoxColliderC*)entity->getComponent(CType::BoxCollider);
 		this->insertToGrid(collider);
 	}
 }

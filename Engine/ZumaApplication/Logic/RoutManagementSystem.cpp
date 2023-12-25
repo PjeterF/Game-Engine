@@ -106,7 +106,7 @@ void RouteManagementSystem::handleEvent(Event& event)
 	case Event::ComponentRemoval:
 	{
 		Ent* entity = (Ent*)event.getPayload();
-		auto it = entities.find(entity->getID());
+		auto it = std::find(entities.begin(), entities.end(), entity);
 		if (it == entities.end())
 			break;
 

@@ -56,6 +56,6 @@ protected:
 	int ID;
 	int type;
 
-	std::unordered_map<int, Ent*> entities;
+	std::vector<Ent*> entities;
 	std::vector<CType> requiredComponents;
 };

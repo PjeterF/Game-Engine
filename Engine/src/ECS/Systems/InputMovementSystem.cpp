@@ -19,7 +19,7 @@ void InputMovementSystem::update(float dt)
 
 	for (auto& entity : entities)
 	{
-		auto velocity = (VelocityC*)entity.second->getComponent(CType::Velocity);
+		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity);
 
 		glm::vec2 acceleration = { 0, 0 };
 

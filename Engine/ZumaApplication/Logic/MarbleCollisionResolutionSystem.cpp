@@ -13,8 +13,8 @@ void MarbleCollisionResolutionSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto collider = (BoxColliderC*)entity.second->getComponent(BoxCollider);
-		auto routeInfo = (RouteInfoC*)entity.second->getComponent(RouteInfo);
+		auto collider = (BoxColliderC*)entity->getComponent(BoxCollider);
+		auto routeInfo = (RouteInfoC*)entity->getComponent(RouteInfo);
 
 		for (auto collisionID : collider->collisionsIDs)
 		{

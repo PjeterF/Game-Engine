@@ -10,9 +10,9 @@ void TestCollisionResponse::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity.second->getComponent(CType::Transform);
-		auto velocity = (VelocityC*)entity.second->getComponent(CType::Velocity);
-		auto collider = (BoxColliderC*)entity.second->getComponent(CType::BoxCollider);
+		auto transform = (TransformC*)entity->getComponent(CType::Transform);
+		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity);
+		auto collider = (BoxColliderC*)entity->getComponent(CType::BoxCollider);
 
 		for (auto& collisionID : collider->collisionsIDs)
 		{
