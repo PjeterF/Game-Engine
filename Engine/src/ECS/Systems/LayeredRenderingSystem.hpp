@@ -20,7 +20,5 @@ public:
 private:
 	static LayeredRenderingSystem& instanceInplementation(RenderingAPI* API = nullptr);
 	LayeredRenderingSystem(RenderingAPI* API);
-
 	RenderingAPI* API;
-	std::list<Ent*> orderedEntities;
 };

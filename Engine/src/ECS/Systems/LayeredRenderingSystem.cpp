@@ -27,7 +27,7 @@ void LayeredRenderingSystem::to_json(nlohmann::json& j) const
 	j["type"] = type;
 	j["entIDs"] = nlohmann::json::array();
 
-	for (auto& ent : orderedEntities)
+	for (auto& ent : entities)
 	{
 		j["entIDs"].push_back(ent->getID());
 	}
@@ -45,7 +45,7 @@ void LayeredRenderingSystem::from_json(nlohmann::json& j)
 
 void LayeredRenderingSystem::update(float dt)
 {
-	for (auto& entity : orderedEntities)
+	for (auto& entity : entities)
 	{
 		auto layer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
 
@@ -84,43 +84,43 @@ void LayeredRenderingSystem::update(float dt)
 
 bool LayeredRenderingSystem::addEntity(Ent* entity)
 {
-	 auto it = std::find(orderedEntities.begin(), orderedEntities.end(), entity);
-	 if (it != orderedEntities.end())
+	 auto it = std::find(entities.begin(), entities.end(), entity);
+	 if (it != entities.end())
 		 return false;
 
 	if (!validateComponents(entity))
 		return false;
 
-	if (orderedEntities.empty())
+	if (entities.empty())
 	{
-		orderedEntities.push_back(entity);
+		entities.push_back(entity);
 		return true;
 	}
 
 	auto inserteeLayer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
 
-	for (auto it = orderedEntities.begin(); it != orderedEntities.end(); it++)
+	for (auto it = entities.begin(); it != entities.end(); it++)
 	{
 		auto layer = (RenderingLayerC*)(*it)->getComponent(RenderingLayer);
 
 		if (inserteeLayer->layer <= layer->layer )
 		{
-			orderedEntities.insert(it, entity);
+			entities.insert(it, entity);
 			return true;
 		}
 	}
 
-	orderedEntities.push_back(entity);
+	entities.push_back(entity);
 	return true;
 }
 
 void LayeredRenderingSystem::removeEntity(int ID)
 {
-	for (auto it = orderedEntities.begin(); it != orderedEntities.end(); it++)
+	for (auto it = entities.begin(); it != entities.end(); it++)
 	{
 		if ((*it)->getID() == ID)
 		{
-			orderedEntities.erase(it);
+			entities.erase(it);
 			break;
 		}
 	}
