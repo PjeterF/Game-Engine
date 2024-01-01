@@ -11,5 +11,6 @@ public:
 	int targetSample;
 	bool moving = true;
 	bool inserting = false;
+	bool separated = false;
 	RouteManagementSystem* route = nullptr;
 };

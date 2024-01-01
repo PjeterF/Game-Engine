@@ -52,7 +52,8 @@ public:
 	static std::vector<MarbleTemplate> marbleTemplates;
 private:
 	void moveRoutine(std::list<Ent*>::iterator startIterotor);
-	int popSame(std::list<Ent*>::iterator it, int threshold);
+	void moveRoutine2(std::vector<Ent*>::iterator s_it);
+	int popSame(std::vector<Ent*>::iterator it, int threshold);
 
 	int layer = 0;
 	int marblesLeftToSpawn;
