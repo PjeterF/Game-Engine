@@ -5,7 +5,7 @@
 
 struct TextureDivision
 {
-	TextureDivision(float x, float y, float width, float height);
+	TextureDivision(float x = 0, float y = 0, float width = 1, float height = 1);
 	float x, y, width, height;
 };
 

@@ -10,11 +10,12 @@ TopBar::TopBar(int x, int y, int width, int height) : InterfaceWindow(x, y, widt
 void TopBar::draw()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(width, height));
 	ImGui::SetNextWindowPos(ImVec2(x, y));
-	ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
-	if (ImGui::Button(button1Name.c_str()))
+	if (ImGui::Button(button1Name.c_str(), ImVec2(width, height)))
 	{
 		if (button1Name == "Start")
 		{
@@ -28,18 +29,6 @@ void TopBar::draw()
 		}
 	}
 
-	ImGui::SameLine();
-
-	if (ImGui::Button("Serialize"))
-	{
-		serializeScene("ECS_serialize", EntManager::getInstance(), SystemsManager::getInstance());
-	}
-
-	if (ImGui::Button("DeSerialize"))
-	{
-		deSerializeScene("ECS_serialize", EntManager::getInstance(), SystemsManager::getInstance());
-	}
-
 	ImGui::End();
-	ImGui::PopStyleVar(1);
+	ImGui::PopStyleVar(2);
 }

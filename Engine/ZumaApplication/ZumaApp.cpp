@@ -45,12 +45,12 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
 
-	view = new View(windowWidth * 0.25, windowHeight*0.1, windowWidth * 0.5, windowHeight * 0.9, viewportFramebuffer->getTextureID(), window, mainCamera, input);
+	view = new View(windowWidth * 0.25, windowHeight*0.03, windowWidth * 0.5, windowHeight * 0.97, viewportFramebuffer->getTextureID(), window, mainCamera, input);
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
 	sceneMenu = new SceneMenu(windowWidth * 0.75, 0, windowWidth * 0.25, windowHeight * 0.5);
 	assetLoader = new AssetLoader(0, 0, windowWidth * 0.25, windowHeight * 0.5);
 	zumaMenu = new ZumaMenu(0, windowHeight * 0.5, windowWidth * 0.25, windowHeight * 0.5, &this->routes);
-	bar = new TopBar(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight * 0.1);
+	bar = new TopBar(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight * 0.03);
 
 	mainCamera->setFrustrumX(0, view->width);
 	mainCamera->setFrustrumY(0, view->height);
@@ -64,39 +64,6 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 void ZumaApp::run()
 {
-	/*Ent* ent1 = EntManager::getInstance().createEntity();
-	ent1->addComponent(new TransformC({ 300, 0 }, { 10, 10 }, 0));
-	ent1->addComponent(new BoxColliderC(0, 0, 5, 10, ent1));
-	ent1->addComponent(new VelocityC({ -1, 0.05 }));
-	ent1->addComponent(new RenderingLayerC(0));
-	ent1->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/textures/marble1.png")));
-	ent1->addComponent(new ParticleC());
-
-	ParticleSystem::getInstance().addEntity(ent1);
-	LayeredRenderingSystem::getInstance().addEntity(ent1);
-	MovementSystem::getInstance(). addEntity(ent1);
-	CollisionSystem::getInstance().addEntity(ent1);
-	TestCollisionResponse* crsys = new TestCollisionResponse(&CollisionSystem::getInstance());
-	crsys->addEntity(ent1);
-	InputMovementSystem* isys = new InputMovementSystem(input);
-	isys->addEntity(ent1);
-
-	Ent* animatedEnt = EntManager::getInstance().createEntity();
-
-
-	AnimatedSpriteC* aSprite = new AnimatedSpriteC
-	(
-		ResourceManager::getInstance().getResource<Texture>("src/Textures/blue_marble.png"),
-		divisions,
-		10
-	);
-	animatedEnt->addComponent(aSprite);
-	animatedEnt->addComponent(new TransformC({ 200, 200 }, { 100, 100 }, 0));
-	animatedEnt->addComponent(new RenderingLayerC(0));
-	LayeredRenderingSystem::getInstance().addEntity(animatedEnt);
-
-	propertiesMenu->selectEntity(ent1);*/
-
 	std::vector<TextureDivision> divisions;
 	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
 	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
@@ -143,7 +110,7 @@ void ZumaApp::run()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	int fpsCap = 120;
+	int fpsCap = 60;
 	int iteration = 0;
 
 	while (!glfwWindowShouldClose(window))

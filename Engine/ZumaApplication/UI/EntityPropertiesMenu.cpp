@@ -436,6 +436,9 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 			selectedEntity->removeComponent((CType)component->getType());
 		}
 
+		if (ImGui::Button("Add division"))
+			component->divisions.push_back(TextureDivision());
+
 		int n = 0;
 		for (auto& division : component->divisions)
 		{
@@ -446,6 +449,15 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 
 				ImGui::InputFloat2("pos", *pos);
 				ImGui::InputFloat2("size", *size);
+
+				if (ImGui::Button("Delete"))
+				{
+					auto i = component->divisions.begin();
+					std::advance(i, n);
+					component->divisions.erase(i);
+					ImGui::TreePop();
+					break;
+				}
 
 				ImGui::TreePop();
 			}

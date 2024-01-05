@@ -61,16 +61,19 @@ void LayeredRenderingSystem::update(float dt)
 			auto transform = (TransformC*)entity->getComponent(Transform);
 			auto aSprite = (AnimatedSpriteC*)entity->getComponent(AnimatedSprite);
 
-			if (aSprite->counter >= aSprite->frameDuration)
+			if (!aSprite->divisions.empty())
 			{
-				aSprite->currentFrame = (aSprite->currentFrame + 1) % aSprite->divisions.size();
-				aSprite->counter = 0;
+				if (aSprite->counter >= aSprite->frameDuration)
+				{
+					aSprite->currentFrame = (aSprite->currentFrame + 1) % aSprite->divisions.size();
+					aSprite->counter = 0;
+				}
+
+				API->drawSpriteSampled(transform->position, transform->size, transform->rotation, aSprite->getTexture(), aSprite->divisions[aSprite->currentFrame]);
+
+				if (!aSprite->paused)
+					aSprite->counter++;
 			}
-
-			API->drawSpriteSampled(transform->position, transform->size, transform->rotation, aSprite->getTexture(), aSprite->divisions[aSprite->currentFrame]);
-
-			if (!aSprite->paused)
-				aSprite->counter++;
 		}
 		if (entity->hasComponent(Particle))
 		{

@@ -1,4 +1,5 @@
 #include "ZumaMenu.hpp"
+#include "../Serialization/serialization.hpp"
 
 ZumaMenu::ZumaMenu(int x, int y, int width, int height, std::vector<RouteManagementSystem*>* routes) : InterfaceWindow(x, y, width, height), EventObserver(UI)
 {
@@ -180,6 +181,24 @@ void ZumaMenu::draw()
 
 			if (selectedRoute != nullptr)
 				routeProperties(selectedRoute);
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Export/Import"))
+		{
+			static char buf[100] = "";
+			ImGui::InputText("Filepath", buf, 99);
+
+			if (ImGui::Button("Save"))
+			{
+				serializeScene(buf, EntManager::getInstance(), SystemsManager::getInstance());
+			}
+
+			if (ImGui::Button("Load"))
+			{
+				deSerializeScene(buf, EntManager::getInstance(), SystemsManager::getInstance());
+			}
 
 			ImGui::EndTabItem();
 		}
