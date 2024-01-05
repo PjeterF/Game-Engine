@@ -17,12 +17,13 @@
 struct MarbleTemplate
 {
 public:
-	MarbleTemplate(float size, int tag, std::string textureFilepath, std::vector<TextureDivision> divisions, int frameDuration);
+	MarbleTemplate(float size, int tag, std::string textureFilepath, std::vector<TextureDivision> divisions, int frameDuration, glm::vec3 explosionColor);
 	float size;
 	int tag;
 	std::string textureFilepath;
 	std::vector<TextureDivision> divisions;
 	int frameDuration;
+	glm::vec3 explosionColor;
 };
 
 class RouteManagementSystem : public SystemBase
@@ -38,6 +39,7 @@ public:
 	virtual void handleEvent(Event& event) override;
 
 	void spawnRandomMarble();
+	void spawnExplosion(float x, float y, glm::vec3 startColor, glm::vec3 endColor);
 	void setLayer(int target);
 	void setInitialMarbleCount(int n);
 	int getInitialMarbleCount();
@@ -51,8 +53,7 @@ public:
 
 	static std::vector<MarbleTemplate> marbleTemplates;
 private:
-	void moveRoutine(std::list<Ent*>::iterator startIterotor);
-	void moveRoutine2(std::vector<Ent*>::iterator s_it);
+	void moveRoutine(std::vector<Ent*>::iterator s_it);
 	int popSame(std::vector<Ent*>::iterator it, int threshold);
 
 	int layer = 0;

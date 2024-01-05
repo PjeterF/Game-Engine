@@ -56,6 +56,7 @@ bool serializeScene(std::string filepath, EntManager& entityManager, SystemsMana
         j["tag"] = mTemplate.tag;
         j["textureFilepath"] = mTemplate.textureFilepath;
         j["frameDuration"] = mTemplate.frameDuration;
+        j["explosionColor"] = { mTemplate.explosionColor.x, mTemplate.explosionColor.y, mTemplate.explosionColor.z };
         
         j["divisions"] = nlohmann::json::array();
         for (auto& division : mTemplate.divisions)
@@ -77,6 +78,7 @@ bool deSerializeScene(std::string filepath, EntManager& entityManager, SystemsMa
 {
     entityManager.deleteAllEntities();
     systemsManager.deleteAllNonPermSystems();
+    RouteManagementSystem::marbleTemplates.clear();
 
     nlohmann::json j;
     std::ifstream file(filepath);
@@ -94,6 +96,26 @@ bool deSerializeScene(std::string filepath, EntManager& entityManager, SystemsMa
         Ent* newEntity = new Ent(-1);
         newEntity->from_json(j_ent);
         entityManager.addEntity(newEntity);
+    }
+
+    for (auto& j_temp : j["marbleTemplates"])
+    {
+        std::vector<TextureDivision> divisions;
+        for (auto& division : j_temp["divisions"])
+            divisions.push_back(TextureDivision(division[0], division[1], division[2], division[3]));
+
+        RouteManagementSystem::marbleTemplates.push_back
+        (
+            MarbleTemplate
+            (
+                j_temp["size"],
+                j_temp["tag"],
+                j_temp["textureFilepath"],
+                divisions,
+                j_temp["frameDuration"],
+                { j_temp["explosionColor"][0], j_temp["explosionColor"][1], j_temp["explosionColor"][2] }
+            )
+        );
     }
 
     for (auto j_sys : j["systems"])

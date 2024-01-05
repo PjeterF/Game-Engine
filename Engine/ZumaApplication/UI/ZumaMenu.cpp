@@ -23,7 +23,7 @@ void ZumaMenu::draw()
 			{
 				TextureDivision division(0, 0, 1, 1);
 
-				MarbleTemplate newTemplate = MarbleTemplate(10, -1, "src/Textures/marble1.png", { division }, 30);
+				MarbleTemplate newTemplate = MarbleTemplate(10, -1, "src/Textures/marble1.png", { division }, 30, { 1, 1, 1 });
 
 				RouteManagementSystem::marbleTemplates.push_back(newTemplate);
 				EventManager::getInstance().notify(Event(Event::ReinitializeRoutes, nullptr));
@@ -67,6 +67,8 @@ void ZumaMenu::draw()
 				ImGui::InputInt("Frame duration", &frameDuration);
 				static int dimensions[2] = { 1, 1 };
 				ImGui::InputInt2("Sprite sheet dimensions", dimensions);
+				static float explosionColor[3] = { 1, 1, 1 };
+				ImGui::InputFloat3("Explosion color", explosionColor);
 
 				static Resource<Texture>* texture = ResourceManager::getInstance().getResource<Texture>("default");
 				if (texture->getContents() != nullptr)
@@ -102,7 +104,7 @@ void ZumaMenu::draw()
 
 				if (ImGui::Button("Commit changes"))
 				{
-					RouteManagementSystem::marbleTemplates[templateIndex] = MarbleTemplate(size, tag, texture->getContents()->getFilepath(), createDivisions(dimensions[0], dimensions[1], texture->getContents()), frameDuration);
+					RouteManagementSystem::marbleTemplates[templateIndex] = MarbleTemplate(size, tag, texture->getContents()->getFilepath(), createDivisions(dimensions[0], dimensions[1], texture->getContents()), frameDuration, { explosionColor[0], explosionColor[1] , explosionColor[2] });
 					EventManager::getInstance().notify(Event(Event::ReinitializeRoutes, nullptr));
 					ImGui::CloseCurrentPopup();
 				}

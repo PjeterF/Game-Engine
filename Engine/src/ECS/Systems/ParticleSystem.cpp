@@ -43,12 +43,12 @@ void ParticleSystem::update(float dt)
 		auto transform = (TransformC*)entity->getComponent(Transform);
 		auto emitter = (ParticleC*)entity->getComponent(Particle);
 
-		if (emitter->counter++ >= emitter->emitPeriod)
+		if (emitter->counter++==0)
 		{
 			for (int i = 0; i < emitter->emitCount; i++)
 				emitter->emitter.emit();
 
-			emitter->counter = 0;
+			emitter->counter = emitter->emitPeriod;
 		}
 
 		emitter->emitter.pos = transform->position;

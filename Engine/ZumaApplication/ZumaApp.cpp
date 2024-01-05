@@ -64,7 +64,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 void ZumaApp::run()
 {
-	Ent* ent1 = EntManager::getInstance().createEntity();
+	/*Ent* ent1 = EntManager::getInstance().createEntity();
 	ent1->addComponent(new TransformC({ 300, 0 }, { 10, 10 }, 0));
 	ent1->addComponent(new BoxColliderC(0, 0, 5, 10, ent1));
 	ent1->addComponent(new VelocityC({ -1, 0.05 }));
@@ -82,11 +82,8 @@ void ZumaApp::run()
 	isys->addEntity(ent1);
 
 	Ent* animatedEnt = EntManager::getInstance().createEntity();
-	std::vector<TextureDivision> divisions;
-	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
-	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
-	divisions.push_back(TextureDivision(2 * 112, 0, 112, 112));
-	divisions.push_back(TextureDivision(3 * 112, 0, 112, 112));
+
+
 	AnimatedSpriteC* aSprite = new AnimatedSpriteC
 	(
 		ResourceManager::getInstance().getResource<Texture>("src/Textures/blue_marble.png"),
@@ -98,7 +95,13 @@ void ZumaApp::run()
 	animatedEnt->addComponent(new RenderingLayerC(0));
 	LayeredRenderingSystem::getInstance().addEntity(animatedEnt);
 
-	propertiesMenu->selectEntity(ent1);
+	propertiesMenu->selectEntity(ent1);*/
+
+	std::vector<TextureDivision> divisions;
+	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
+	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
+	divisions.push_back(TextureDivision(2 * 112, 0, 112, 112));
+	divisions.push_back(TextureDivision(3 * 112, 0, 112, 112));
 
 	Spline* spline1 = new Spline
 		(-500, 300, 100,
@@ -111,9 +114,9 @@ void ZumaApp::run()
 	points->at(1) = {300, 1000};
 	spline1->sample();
 	RouteManagementSystem* route1 = new RouteManagementSystem(spline1);
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30));
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/red_marble.png", divisions, 30));
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/yellow_marble.png", divisions, 30));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30, { 0, 0.9, 1 }));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/red_marble.png", divisions, 30, { 1, 0, 0 }));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/yellow_marble.png", divisions, 30, { 1, 1, 0 }));
 
 	Ent* shooter = EntManager::getInstance().createEntity();
 	shooter->addComponent(new TransformC({ 0, 0 }, { 40, 40 }, 0));
