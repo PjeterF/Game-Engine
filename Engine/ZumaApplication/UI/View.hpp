@@ -12,6 +12,8 @@ public:
 
 	virtual void handleEvent(Event& event) override;
 private:
+	enum state { def, drag };
+
 	glm::vec2 convertPos(float x, float y);
 
 	glm::vec2 windowToViewToWorldCoordConversion(float x, float y);
@@ -27,7 +29,10 @@ private:
 	InputManager* input;
 
 	bool panning = false;
+	bool dragging = false;
 	glm::vec2 panAnchor = glm::vec2(0, 0);
+
+	state st = drag;
 
 	bool paused = true;
 };

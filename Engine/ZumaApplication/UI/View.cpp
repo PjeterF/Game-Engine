@@ -49,7 +49,16 @@ void View::draw()
 		{
 			panning = false;
 		}
-		if (panning)
+		if (input->mouseKeyClicked[ZE_MOUSE_BUTTON_1] && st == drag)
+		{
+			dragging = true;
+			panAnchor = input->getCursorPos();
+		}
+		if (!input->mouseKeyDown[ZE_MOUSE_BUTTON_1])
+		{
+			dragging = false;
+		}
+		if (panning || dragging)
 		{
 			glm::vec2 pan = (input->getCursorPos() - panAnchor) / camera->getZoom();
 			camera->pan(pan.x, pan.y);
