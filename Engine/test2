@@ -1,5 +1,5 @@
 {
-    "entManager_nextID": 1118,
+    "entManager_nextID": 1122,
     "entities": [
         {
             "ID": 0,
@@ -53,6 +53,144 @@
                     "cooldownTime": 0,
                     "shotSpeed": 10.0,
                     "type": 9
+                }
+            ]
+        },
+        {
+            "ID": 1118,
+            "components": [
+                {
+                    "emitCount": 1,
+                    "emitPeriod": 10,
+                    "emitter": {
+                        "defualtProperties": {
+                            "endColour": [
+                                0.6000000238418579,
+                                0.20000000298023224,
+                                0.10000000149011612,
+                                0.0
+                            ],
+                            "endSize": 3.0,
+                            "lifetime": [
+                                50.0,
+                                100.0
+                            ],
+                            "rotVar": [
+                                0.0,
+                                360.0
+                            ],
+                            "startColour": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.699999988079071
+                            ],
+                            "startSize": 10.0,
+                            "xPosVar": [
+                                0.0,
+                                0.0
+                            ],
+                            "xVelVar": [
+                                0.5,
+                                1.0
+                            ],
+                            "yPosVar": [
+                                0.0,
+                                0.0
+                            ],
+                            "yVelVar": [
+                                0.5,
+                                1.0
+                            ]
+                        },
+                        "maxParticles": 100
+                    },
+                    "type": 6
+                },
+                {
+                    "position": [
+                        365.0,
+                        486.0
+                    ],
+                    "rotation": 0.0,
+                    "size": [
+                        1.0,
+                        1.0
+                    ],
+                    "type": 0
+                },
+                {
+                    "layer": 0,
+                    "type": 5
+                }
+            ]
+        },
+        {
+            "ID": 1119,
+            "components": [
+                {
+                    "position": [
+                        -387.0,
+                        -480.0
+                    ],
+                    "rotation": 0.0,
+                    "size": [
+                        1.0,
+                        1.0
+                    ],
+                    "type": 0
+                },
+                {
+                    "emitCount": 1,
+                    "emitPeriod": 10,
+                    "emitter": {
+                        "defualtProperties": {
+                            "endColour": [
+                                0.6000000238418579,
+                                0.20000000298023224,
+                                0.10000000149011612,
+                                0.699999988079071
+                            ],
+                            "endSize": 0.0,
+                            "lifetime": [
+                                50.0,
+                                100.0
+                            ],
+                            "rotVar": [
+                                0.0,
+                                360.0
+                            ],
+                            "startColour": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.699999988079071
+                            ],
+                            "startSize": 3.0,
+                            "xPosVar": [
+                                0.0,
+                                0.0
+                            ],
+                            "xVelVar": [
+                                -0.5,
+                                0.5
+                            ],
+                            "yPosVar": [
+                                0.0,
+                                0.0
+                            ],
+                            "yVelVar": [
+                                -0.5,
+                                0.5
+                            ]
+                        },
+                        "maxParticles": 100
+                    },
+                    "type": 6
+                },
+                {
+                    "layer": 0,
+                    "type": 5
                 }
             ]
         }
@@ -174,44 +312,13 @@
         {
             "entIDs": [
                 0,
-                1117,
-                1116,
-                1
+                1121,
+                1120,
+                1,
+                1118,
+                1119
             ],
             "type": 3
-        },
-        {
-            "cellSize": 40.0,
-            "entIDs": [
-                1116,
-                1117
-            ],
-            "gridDimX": 80,
-            "gridDimY": 80,
-            "type": 1,
-            "x": -2000.0,
-            "y": -2000.0
-        },
-        {
-            "entIDs": [],
-            "type": 4
-        },
-        {
-            "entIDs": [],
-            "type": 5
-        },
-        {
-            "entIDs": [
-                1
-            ],
-            "type": 6
-        },
-        {
-            "entIDs": [
-                1116,
-                1117
-            ],
-            "type": 2
         },
         {
             "controlPoints": [
@@ -306,9 +413,21 @@
             ],
             "layer": 0,
             "marbleSpeed": 0.5,
-            "maxMarbles": 0,
+            "maxMarbles": 100,
             "popThreshold": 3,
             "type": 7
+        },
+        {
+            "cellSize": 40.0,
+            "entIDs": [
+                1120,
+                1121
+            ],
+            "gridDimX": 80,
+            "gridDimY": 80,
+            "type": 1,
+            "x": -2000.0,
+            "y": -2000.0
         },
         {
             "controlPoints": [
@@ -403,9 +522,33 @@
             ],
             "layer": 0,
             "marbleSpeed": 0.5,
-            "maxMarbles": 0,
+            "maxMarbles": 100,
             "popThreshold": 3,
             "type": 7
+        },
+        {
+            "entIDs": [
+                1118,
+                1119
+            ],
+            "type": 4
+        },
+        {
+            "entIDs": [],
+            "type": 5
+        },
+        {
+            "entIDs": [
+                1
+            ],
+            "type": 6
+        },
+        {
+            "entIDs": [
+                1120,
+                1121
+            ],
+            "type": 2
         }
     ]
 }

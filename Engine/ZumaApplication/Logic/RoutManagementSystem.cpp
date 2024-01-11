@@ -30,7 +30,8 @@ RouteManagementSystem::RouteManagementSystem(Spline* spline, int initialMarbleNu
 	requiredComponents = { Transform, Velocity, AnimatedSprite, BoxCollider, RouteInfo };
 	this->spline = spline;
 
-	setInitialMarbleCount(initialMarbleNumber);
+	maxMarbles = initialMarbleNumber;
+	marblesLeftToSpawn = initialMarbleNumber;
 
 	EventManager::getInstance().notify(Event(Event::RouteCreation, this), UI);
 }
@@ -263,7 +264,7 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 			{
 				if (routeInfo->separated == true && prev_routeInfo->separated == false)
 				{
-					auto it2 = it;
+					auto& it2 = it;
 					while (1)
 					{
 						auto routeInfo = (RouteInfoC*)(*it2)->getComponent(RouteInfo);
@@ -317,10 +318,16 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 
 				EventManager::getInstance().notify(Event(Event::MarbleInsertion, otherEntity), ECS);
 
-				if(forwardLength<backwardsLength)
+				if (forwardLength < backwardsLength)
+				{
 					it = entities.insert(it, otherEntity);
+					otherRouteInfo->separated = routeInfo->separated;
+				}
 				else
+				{
 					it = entities.insert(++it, otherEntity);
+					otherRouteInfo->separated = routeInfo->separated;
+				}
 
 				otherRouteInfo->inserting = true;
 				popSame(it, 3);
@@ -333,9 +340,6 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 			velocity->velocity = marbleSpeed * glm::normalize((*spline->getSampledPoints())[routeInfo->targetSample] - transform->position);
 			transform->position = transform->position +  velocity->velocity;
 			transform->rotation = 57.2958 * atan(velocity->velocity.y / velocity->velocity.x);
-
-			if (routeInfo->separated)
-				transform->rotation = 0;
 		}
 
 		if (routeInfo->inserting)
@@ -347,15 +351,8 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 			auto it_prev = it;
 			it_prev++;
 
-			auto it_next = it;
-			if (it_next != entities.begin());
-				it_next--;
-
 			auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform);
 			auto prev_velocity = (VelocityC*)(*it_prev)->getComponent(Velocity);
-
-			auto next_transform = (TransformC*)(*it_next)->getComponent(Transform);
-			auto next_velocity = (VelocityC*)(*it_next)->getComponent(Velocity);
 
 			if (it_prev == entities.end())
 			{

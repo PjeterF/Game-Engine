@@ -1,5 +1,5 @@
 {
-    "entManager_nextID": 5,
+    "entManager_nextID": 7,
     "entities": [
         {
             "ID": 0,
@@ -30,14 +30,6 @@
                     "type": 5
                 }
             ]
-        },
-        {
-            "ID": 3,
-            "components": []
-        },
-        {
-            "ID": 4,
-            "components": []
         }
     ],
     "marbleTemplates": [
@@ -151,11 +143,34 @@
             "size": 10.0,
             "tag": 3,
             "textureFilepath": "src/Textures/yellow_marble.png"
+        },
+        {
+            "divisions": [
+                [
+                    0.0,
+                    16.0,
+                    16.0,
+                    16.0
+                ]
+            ],
+            "explosionColor": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "frameDuration": 10,
+            "size": 30.0,
+            "tag": -1,
+            "textureFilepath": "src/Textures/marble1.png"
         }
     ],
     "systems": [
         {
             "entIDs": [
+                6,
+                5,
+                4,
+                3,
                 0,
                 2,
                 1
@@ -166,7 +181,11 @@
             "cellSize": 40.0,
             "entIDs": [
                 1,
-                2
+                2,
+                3,
+                4,
+                5,
+                6
             ],
             "gridDimX": 80,
             "gridDimY": 80,
