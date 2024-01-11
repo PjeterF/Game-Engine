@@ -34,9 +34,11 @@ void AssetLoader::draw()
 		Resource<Texture>* tex = (Resource<Texture>*)(*it).second;
 		if (tex->getContents() != nullptr && (*it).first!="defualt")
 		{
+			std::string str = std::to_string(tex->getContents()->getWidth()) + "x" + std::to_string(tex->getContents()->getHeight());
+			ImGui::Text(str.c_str());
 			ImGui::Image((ImTextureID)tex->getContents()->getId(), ImVec2(100, 100));
 			ImGui::SameLine();
-			if(ImGui::Button(("Delete" + n).c_str(), ImVec2(100, 30)))
+			if(ImGui::Button(("Delete" + n).c_str(), ImVec2(100, 100)))
 			{
 				ResourceManager::getInstance().deleteResource<Texture>(tex->getContents()->getFilepath());
 			}

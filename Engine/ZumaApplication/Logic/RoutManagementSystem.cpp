@@ -80,6 +80,15 @@ void RouteManagementSystem::from_json(nlohmann::json& j)
 
 void RouteManagementSystem::update(float dt)
 {
+	if (selfDestruct && entities.size()>0)
+	{
+		auto it = entities.begin();
+		auto transform = (TransformC*)(*it)->getComponent(Transform);
+
+		spawnExplosion(transform->position.x, transform->position.y, { 1, 0.8, 0 }, { 1, 0.8, 0 }, 10, 5, 1, 0.5, 3, 10);
+		(*it)->destroy();
+	}
+
 	if (marblesLeftToSpawn != 0)
 	{
 		if (entities.empty())
@@ -99,7 +108,7 @@ void RouteManagementSystem::update(float dt)
 	if (entities.empty())
 		return;
 
-	moveRoutine(--entities.end());
+	moveRoutine(--entities.end(), dt);
 }
 
 void RouteManagementSystem::handleEvent(Event& event)
@@ -112,6 +121,11 @@ void RouteManagementSystem::handleEvent(Event& event)
 	{
 		if (spline == event.getPayload())
 			EventManager::getInstance().notify(Event(Event::RouteSelection, this), UI);
+	}
+	break;
+	case Event::GameOver:
+	{
+		selfDestruct = true;
 	}
 	break;
 	}
@@ -144,20 +158,20 @@ void RouteManagementSystem::spawnRandomMarble()
 	marblesLeftToSpawn--;
 }
 
-void RouteManagementSystem::spawnExplosion(float x, float y, glm::vec3 startColor, glm::vec3 endColor)
+void RouteManagementSystem::spawnExplosion(float x, float y, glm::vec3 startColor, glm::vec3 endColor, float startSize, float endSize, float startAlpha, float endAlpha, float vel, int count)
 {
 	Ent* explosion = EntManager::getInstance().createEntity();
 
-	int maxLifetime = 50;
+	int maxLifetime = 100;
 
-	ParticleC* emitter = new ParticleC(x, y, 15, 100000, 15);
-	emitter->emitter.defaultProperties.startColour = { startColor.r, startColor.g, startColor.b, 1 };
-	emitter->emitter.defaultProperties.endColour = { endColor.r, endColor.g, endColor.b, 1 };
-	emitter->emitter.defaultProperties.startSize = 3;
-	emitter->emitter.defaultProperties.endSize = 0;
-	emitter->emitter.defaultProperties.xVelVar = { -5, 5 };
-	emitter->emitter.defaultProperties.yVelVar = { -5, 5 };
-	emitter->emitter.defaultProperties.velocityDecay = 0.9;
+	ParticleC* emitter = new ParticleC(x, y, count, 100000, count);
+	emitter->emitter.defaultProperties.startColour = { startColor.r, startColor.g, startColor.b, startAlpha };
+	emitter->emitter.defaultProperties.endColour = { endColor.r, endColor.g, endColor.b, endAlpha };
+	emitter->emitter.defaultProperties.startSize = startSize;
+	emitter->emitter.defaultProperties.endSize = endSize;
+	emitter->emitter.defaultProperties.xVelVar = { -vel, vel };
+	emitter->emitter.defaultProperties.yVelVar = { -vel, vel };
+	emitter->emitter.defaultProperties.velocityDecay = 0.95;
 	emitter->emitter.defaultProperties.particleLifetime = { maxLifetime * 0.9, maxLifetime };
 
 	explosion->addComponent(emitter);
@@ -173,6 +187,10 @@ void RouteManagementSystem::spawnExplosion(float x, float y, glm::vec3 startColo
 void RouteManagementSystem::setLayer(int target)
 {
 	this->layer = target;
+	for (auto& entity : entities)
+	{
+		LayeredRenderingSystem::getInstance().moveToLayer(entity->getID(), target);
+	}
 }
 
 void RouteManagementSystem::setInitialMarbleCount(int n)
@@ -184,6 +202,11 @@ void RouteManagementSystem::setInitialMarbleCount(int n)
 int RouteManagementSystem::getInitialMarbleCount()
 {
 	return maxMarbles;
+}
+
+Spline* RouteManagementSystem::getSpline()
+{
+	return spline;
 }
 
 void RouteManagementSystem::drawSpline(RenderingAPI* API)
@@ -201,7 +224,7 @@ void RouteManagementSystem::removeLastRoutePoint()
 	spline->removeLastSegment();
 }
 
-void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it)
+void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float dt)
 {
 	auto it = s_it;
 	while(1)
@@ -220,7 +243,8 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it)
 			routeInfo->targetSample++;
 			if (routeInfo->targetSample >= (*spline->getSampledPoints()).size())
 			{
-				(*it)->destroy();
+				EventManager::getInstance().notify(Event(Event::GameOver, nullptr), ECS);
+				//(*it)->destroy();
 				break;
 			}
 		}
@@ -293,8 +317,12 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it)
 
 				EventManager::getInstance().notify(Event(Event::MarbleInsertion, otherEntity), ECS);
 
+				if(forwardLength<backwardsLength)
+					it = entities.insert(it, otherEntity);
+				else
+					it = entities.insert(++it, otherEntity);
+
 				otherRouteInfo->inserting = true;
-				it = entities.insert(++it, otherEntity);
 				popSame(it, 3);
 				return;
 			}
@@ -303,7 +331,7 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it)
 		if (routeInfo->moving)
 		{
 			velocity->velocity = marbleSpeed * glm::normalize((*spline->getSampledPoints())[routeInfo->targetSample] - transform->position);
-			transform->position = transform->position + velocity->velocity;
+			transform->position = transform->position +  velocity->velocity;
 			transform->rotation = 57.2958 * atan(velocity->velocity.y / velocity->velocity.x);
 
 			if (routeInfo->separated)
@@ -319,21 +347,33 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it)
 			auto it_prev = it;
 			it_prev++;
 
+			auto it_next = it;
+			if (it_next != entities.begin());
+				it_next--;
+
+			auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform);
+			auto prev_velocity = (VelocityC*)(*it_prev)->getComponent(Velocity);
+
+			auto next_transform = (TransformC*)(*it_next)->getComponent(Transform);
+			auto next_velocity = (VelocityC*)(*it_next)->getComponent(Velocity);
+
 			if (it_prev == entities.end())
 			{
 				n_iterations = 1;
 			}
 			else
 			{
-				auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform);
-				auto prev_velocity = (VelocityC*)(*it_prev)->getComponent(Velocity);
 				glm::vec2 nextPos = prev_transform->position + 2 * (prev_transform->size.x + transform->size.x) * glm::normalize(prev_velocity->velocity);
 				float distance = glm::distance(transform->position, nextPos);
 				n_iterations = distance / marbleSpeed;
 			}
 
 			for (int i = 0; i < n_iterations; i++)
-				moveRoutine(it);
+			{
+				if (glm::distance(prev_transform->position, transform->position) > (prev_transform->size.x + transform->size.x))
+					break;
+				moveRoutine(it, dt);
+			}
 		}
 
 		if (it == entities.begin())
@@ -419,8 +459,23 @@ int RouteManagementSystem::popSame(std::vector<Ent*>::iterator it, int threshold
 			{
 				if (temp.tag == routeInfo->tag)
 				{
-					spawnExplosion(transform->position.x, transform->position.y, temp.explosionColor, 0.2f * temp.explosionColor);
-					spawnExplosion(transform->position.x, transform->position.y, { 0.1, 0.1, 0.1 }, { 0, 0, 0 });
+					spawnExplosion(transform->position.x, transform->position.y,
+						temp.explosionColor, temp.explosionColor,
+						5,
+						2,
+						0.8, 0.8,
+						3,
+						10
+					);
+					spawnExplosion(transform->position.x, transform->position.y, 
+						{ 0.41, 0.41, 0.41 },
+						{ 0.41, 0.41, 0.41 },
+						6,
+						3,
+						0.2, 0.1,
+						5,
+						30
+					);
 					break;
 				}
 			}

@@ -129,6 +129,23 @@ void LayeredRenderingSystem::removeEntity(int ID)
 	}
 }
 
+void LayeredRenderingSystem::moveToLayer(int entID, int targetLayer)
+{
+	Ent* ent = EntManager::getInstance().getEntity(entID);
+
+	if (ent == nullptr)
+		return;
+
+	if (!ent->hasComponent(RenderingLayer))
+		return;
+
+	this->removeEntity(entID);
+
+	auto layer = (RenderingLayerC*)ent->getComponent(RenderingLayer);
+	layer->layer = targetLayer;
+	this->addEntity(ent);
+}
+
 void LayeredRenderingSystem::handleEvent(Event& event)
 {
 	SystemBase::handleEvent(event);

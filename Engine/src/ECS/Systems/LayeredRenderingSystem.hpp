@@ -16,6 +16,8 @@ public:
 	virtual bool addEntity(Ent* entity) override;
 	virtual void removeEntity(int ID) override;
 
+	void moveToLayer(int entID, int targetLayer);
+
 	virtual void handleEvent(Event& event) override;
 private:
 	static LayeredRenderingSystem& instanceInplementation(RenderingAPI* API = nullptr);

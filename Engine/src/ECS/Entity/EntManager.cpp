@@ -86,4 +86,5 @@ void EntManager::deleteAllEntities()
 		ent.second->destroy();
 	}
 	this->update();
+	nextID = 0;
 }

@@ -56,7 +56,8 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 	mainCamera->setFrustrumY(0, view->height);
 
 	LayeredRenderingSystem::initialize(renderingAPI);
-	CollisionSystem::initialize(-2000, -2000, 80, 80, 50);
+	CollisionSystem::initialize(-2000, -2000, 80, 80, 40);
+	//CollisionSystem::initialize(-2000, -2000, 1, 1, 4000);
 	ParticleSystem::getInstance();
 	CounterKillerSystem::getInstance();
 }
@@ -81,7 +82,7 @@ void ZumaApp::run()
 	points->at(1) = {300, 1000};
 	spline1->sample();
 	RouteManagementSystem* route1 = new RouteManagementSystem(spline1);
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30, { 0, 0.9, 1 }));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30, { 0.2, 0.2, 1 }));
 	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/red_marble.png", divisions, 30, { 1, 0, 0 }));
 	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/yellow_marble.png", divisions, 30, { 1, 1, 0 }));
 
@@ -91,12 +92,10 @@ void ZumaApp::run()
 	shooter->addComponent(new ShooterC(5, 50));
 	shooter->addComponent(new RenderingLayerC(0));
 
-	ShooterManagementSystem* shooterSystem = new ShooterManagementSystem();
-
-	shooterSystem->addEntity(shooter);
+	ShooterManagementSystem::getInstance().addEntity(shooter);
 	LayeredRenderingSystem::getInstance().addEntity(shooter);
 
-	ParticeEmitter emitter(300, 300, 10000);
+	ParticeEmitter emitter(0, 3000, 10000);
 	emitter.defaultProperties.xPosVar = glm::vec2(-50, 50);
 	emitter.defaultProperties.yPosVar = glm::vec2(-10, 30);
 	emitter.defaultProperties.yVelVar = glm::vec2(1, 3);
@@ -110,8 +109,10 @@ void ZumaApp::run()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	int fpsCap = 60;
+	int fpsCap = 90;
 	int iteration = 0;
+
+	float dt = 1;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -125,28 +126,46 @@ void ZumaApp::run()
 		if (!paused)
 		{
 			EntManager::getInstance().update();
-			SystemsManager::getInstance().update(0, UNPAUSED);
+			SystemsManager::getInstance().update(dt, UNPAUSED);
+
+			/*if (iteration < 2200)
+			{
+				int r = rand() % 100;
+
+				Ent* newEnt = EntManager::getInstance().createEntity();
+				newEnt->addComponent(new TransformC({ 0, r }, { 10, 10 }));
+				newEnt->addComponent(new VelocityC({ 10, (float)r/1000 }));
+				newEnt->addComponent(new RenderingLayerC(0));
+				newEnt->addComponent(new BoxColliderC(0, r, 10, 10, newEnt));
+				newEnt->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/Textures/marble1.png")));
+
+				LayeredRenderingSystem::getInstance().addEntity(newEnt);
+				MovementSystem::getInstance().addEntity(newEnt);
+				CollisionSystem::getInstance().addEntity(newEnt);
+			}*/
 
 			emitter.update();
-			for (int i = 0; i < 1; i++)
+			for (int i = 0; i < 10; i++)
 				emitter.emit();
 			emitter.applyForceInverseToSize(0.1, 0);
 		}
 
-		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.2, 0.2, 0.2, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		// Drawing
 		viewportFramebuffer->bind();
 		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.2, 0.2, 0.2, 1.0);
+		glClearColor(0.3, 0.3, 0.3, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		SystemsManager::getInstance().update(0, PAUSED);
+		//CollisionSystem::getInstance().drawGrid(renderingAPI);
+
+		SystemsManager::getInstance().update(dt, PAUSED);
 		emitter.draw(renderingAPI);
-		for (auto& route : routes)
-			route->drawSpline(renderingAPI);
+
+		if (paused)
+		{
+			for (auto& route : routes)
+				route->drawSpline(renderingAPI);
+		}
 
 		viewportFramebuffer->unbind();
 		glDisable(GL_DEPTH_TEST);
@@ -171,12 +190,14 @@ void ZumaApp::run()
 
 		// Framerate delay 
 		auto frameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart).count();
+		dt = (float)(frameDuration/16);
+		//std::cout << dt<<"\n";
 		int msDelay = (1000 / fpsCap) - frameDuration;
 		if (msDelay > 0)
 			std::this_thread::sleep_for(std::chrono::milliseconds(msDelay));
 
 
-		glfwSetWindowTitle(window, ("Frameduration: " + std::to_string(frameDuration) + " Delay: " + std::to_string(msDelay)).c_str());
+		glfwSetWindowTitle(window, ("Frameduration: " + std::to_string(frameDuration) + " dt: " + std::to_string(dt)).c_str());
 		iteration++;
 	}
 

@@ -1,6 +1,7 @@
 #include "SceneMenu.hpp"
 
 #include "../../src/ECS/Entity/EntManager.hpp"
+#include "../../src/ECS/Systems/SystemsManager.hpp"
 
 SceneMenu::SceneMenu(int x, int y, int width, int height) : InterfaceWindow(x, y, width, height), EventObserver(UI)
 {
@@ -17,6 +18,13 @@ void SceneMenu::draw()
 	if (ImGui::Button("Create entity"))
 	{
 		EntManager::getInstance().createEntity();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Clear scene"))
+	{
+		EntManager::getInstance().deleteAllEntities();
+		EntManager::getInstance().update();
+		SystemsManager::getInstance().deleteAllNonPermSystems();
 	}
 	ImGui::Separator();
 

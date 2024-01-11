@@ -19,7 +19,7 @@
 class ShooterManagementSystem : public SystemBase
 {
 public:
-	ShooterManagementSystem();
+	static ShooterManagementSystem& getInstance();
 	virtual void update(float dt);
 
 	virtual void to_json(nlohmann::json& j) const override;
@@ -28,6 +28,7 @@ public:
 	virtual bool addEntity(Ent* entity) override;
 	virtual void handleEvent(Event& event) override;
 private:
+	ShooterManagementSystem();
 	Ent* generateShot(MarbleTemplate mTemplate, glm::vec2 pos);
 	float lookAtAngle(glm::vec2 target, glm::vec2 position);
 };

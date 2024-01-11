@@ -413,9 +413,9 @@ void EntityPropertiesMenu::animatedSpriteProp(AnimatedSpriteC* component)
 				else
 					ImGui::Image((ImTextureID)res->getContents()->getId(), ImVec2(10, 10), ImVec2(0, 1), ImVec2(1, 0));
 
-				ImGui::SameLine();
-				ImGui::Text(" ");
-				it++;
+ImGui::SameLine();
+ImGui::Text(" ");
+it++;
 			}
 			ImGui::EndCombo();
 		}
@@ -511,6 +511,12 @@ void EntityPropertiesMenu::particleProp(ParticleC* component)
 {
 	if (ImGui::TreeNode("ParticleEmitter"))
 	{
+		static int maxParticles = component->emitter.getParticleLimit();
+		if(ImGui::InputInt("Max particles", &maxParticles))
+		{
+			component->emitter.resize(maxParticles);
+		}
+
 		ImGui::InputInt("emitPeriod", &component->emitPeriod);
 		ImGui::InputInt("emitCount", &component->emitCount);
 

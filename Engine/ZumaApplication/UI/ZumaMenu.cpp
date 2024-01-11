@@ -261,6 +261,12 @@ std::vector<TextureDivision> ZumaMenu::createDivisions(int dimX, int dimY, Textu
 
 void ZumaMenu::routeProperties(RouteManagementSystem* route)
 {
+	float* pt[2] = { &route->getSpline()->getControlPoints()->at(0).x, &route->getSpline()->getControlPoints()->at(0).y };
+	if (ImGui::InputFloat2("Origin point", *pt))
+	{
+		route->getSpline()->sample();
+	}
+
 	static int layer = 0;
 	if (ImGui::InputInt("layer", &layer))
 	{
@@ -268,6 +274,7 @@ void ZumaMenu::routeProperties(RouteManagementSystem* route)
 	}
 
 	ImGui::InputFloat("speed", &route->marbleSpeed);
+
 	static int NoMarbles = 100;
 	if(ImGui::InputInt("remaining marbles", &NoMarbles))
 	{

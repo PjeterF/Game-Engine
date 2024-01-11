@@ -1,5 +1,5 @@
 {
-    "entManager_nextID": 5,
+    "entManager_nextID": 12,
     "entities": [
         {
             "ID": 0,
@@ -33,11 +33,75 @@
         },
         {
             "ID": 3,
-            "components": []
+            "components": [
+                {
+                    "position": [
+                        300.0,
+                        0.0
+                    ],
+                    "rotation": 0.0,
+                    "size": [
+                        10.0,
+                        10.0
+                    ],
+                    "type": 0
+                },
+                {
+                    "filepath": "src/Textures/marble1.png",
+                    "type": 2
+                },
+                {
+                    "position": [
+                        300.0,
+                        0.0
+                    ],
+                    "size": [
+                        10.0,
+                        10.0
+                    ],
+                    "type": 3
+                },
+                {
+                    "layer": 0,
+                    "type": 5
+                }
+            ]
         },
         {
             "ID": 4,
-            "components": []
+            "components": [
+                {
+                    "position": [
+                        320.0,
+                        20.0
+                    ],
+                    "rotation": 0.0,
+                    "size": [
+                        10.0,
+                        10.0
+                    ],
+                    "type": 0
+                },
+                {
+                    "filepath": "src/Textures/marble2.png",
+                    "type": 2
+                },
+                {
+                    "layer": 0,
+                    "type": 5
+                },
+                {
+                    "position": [
+                        320.0,
+                        20.0
+                    ],
+                    "size": [
+                        10.0,
+                        10.0
+                    ],
+                    "type": 3
+                }
+            ]
         }
     ],
     "marbleTemplates": [
@@ -156,6 +220,15 @@
     "systems": [
         {
             "entIDs": [
+                11,
+                10,
+                9,
+                8,
+                4,
+                7,
+                6,
+                5,
+                3,
                 0,
                 2,
                 1
@@ -166,7 +239,16 @@
             "cellSize": 40.0,
             "entIDs": [
                 1,
-                2
+                2,
+                3,
+                5,
+                6,
+                7,
+                4,
+                8,
+                9,
+                10,
+                11
             ],
             "gridDimX": 80,
             "gridDimY": 80,

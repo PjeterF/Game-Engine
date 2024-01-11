@@ -2,12 +2,18 @@
 #include "../../src/ECS/Entity/EntManager.hpp"
 #include "../../src/ECS/Systems/LayeredRenderingSystem.hpp"
 
-ShooterManagementSystem::ShooterManagementSystem() : SystemBase(UNPAUSED, false, ShooterManagementSys)
+ShooterManagementSystem::ShooterManagementSystem() : SystemBase(UNPAUSED, true, ShooterManagementSys)
 {
 	name = "ShooterSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Sprite, ShooterInfo, RenderingLayer };
+	requiredComponents = { Transform, ShooterInfo, RenderingLayer };
 	EventManager::getInstance().addObserver(this, ObsBin::Defualt);
+}
+
+ShooterManagementSystem& ShooterManagementSystem::getInstance()
+{
+	static ShooterManagementSystem sys;
+	return sys;
 }
 
 void ShooterManagementSystem::update(float dt)
@@ -123,7 +129,7 @@ Ent* ShooterManagementSystem::generateShot(MarbleTemplate mTemplate, glm::vec2 p
 	CollisionSystem::getInstance().addEntity(newMarble);
 	LayeredRenderingSystem::getInstance().addEntity(newMarble);
 	MovementSystem::getInstance().addEntity(newMarble);
-
+	
 	return newMarble;
 }
 

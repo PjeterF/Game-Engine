@@ -91,6 +91,8 @@ bool deSerializeScene(std::string filepath, EntManager& entityManager, SystemsMa
     file >> j;
     std::cout<< j.dump(4);
 
+    entityManager.nextID = j["entManager_nextID"];
+
     for (auto j_ent : j["entities"])
     {
         Ent* newEntity = new Ent(-1);
@@ -131,8 +133,7 @@ bool deSerializeScene(std::string filepath, EntManager& entityManager, SystemsMa
         break;
         case ShooterManagementSys:
         {
-            ShooterManagementSystem* newSys = new ShooterManagementSystem();
-            newSys->from_json(j_sys);
+            ShooterManagementSystem::getInstance().from_json(j_sys);
         }
         break;
         case CollisionSys:

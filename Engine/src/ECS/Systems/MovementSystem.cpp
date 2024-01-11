@@ -53,10 +53,10 @@ void MovementSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity->getComponent(CType::Transform);
-		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity);
+		auto transC = (TransformC*)entity->getComponent(CType::Transform);
+		auto velC = (VelocityC*)entity->getComponent(CType::Velocity);
 
-		transform->position = transform->position + velocity->velocity;
-		transform->rotation = 57.2958 * atan(velocity->velocity.y / (velocity->velocity.x + 0.00001));
+		transC->position = transC->position + velC->velocity;
+		transC->rotation = 57.2958 * atan(velC->velocity.y / (velC->velocity.x + 0.00001));
 	}
 }

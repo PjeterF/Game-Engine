@@ -39,10 +39,11 @@ public:
 	virtual void handleEvent(Event& event) override;
 
 	void spawnRandomMarble();
-	void spawnExplosion(float x, float y, glm::vec3 startColor, glm::vec3 endColor);
+	void spawnExplosion(float x, float y, glm::vec3 startColor, glm::vec3 endColor, float startSize, float endSize, float startAlpha, float endAlpha, float vel, int count);
 	void setLayer(int target);
 	void setInitialMarbleCount(int n);
 	int getInitialMarbleCount();
+	Spline* getSpline();
 
 	float marbleSpeed = 1;
 	int popThreshold = 3;
@@ -53,12 +54,14 @@ public:
 
 	static std::vector<MarbleTemplate> marbleTemplates;
 private:
-	void moveRoutine(std::vector<Ent*>::iterator s_it);
+	void moveRoutine(std::vector<Ent*>::iterator s_it, float dt);
 	int popSame(std::vector<Ent*>::iterator it, int threshold);
 
 	int layer = 0;
 	int marblesLeftToSpawn;
 	int maxMarbles;
+
+	bool selfDestruct = false;
 
 	std::list<Ent*> marbles;
 	Spline* spline;
