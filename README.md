@@ -1,7 +1,5 @@
 ## Description
 
-## Website link
-https://nutritionapp20240415093752.azurewebsites.net
 ## Features
 - Entity Component System object model
 - 2D rendering system
