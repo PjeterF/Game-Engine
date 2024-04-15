@@ -6,6 +6,8 @@
 - 2D rendering system
   - Batch quad rendering
   - Sprite renderer capable of sampling texture atalases
+- Multiplatform capabilities
+  - Tested on Android and Windows
 - Resource management system
 - Event system
 - Level editor
