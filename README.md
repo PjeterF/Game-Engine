@@ -8,6 +8,8 @@
 - Resource management system
 - Event system
 - Level editor
+- Collision detection system
+- Particle emitter
 ## Technologies used
 - OpenGL
 - ImGUI
