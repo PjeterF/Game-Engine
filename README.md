@@ -1,5 +1,5 @@
 ## Description
-
+Basic game engine capable of supporting creation of 2D games.
 ## Features
 - Entity Component System object model
   - Systems for managing animations, particle emitters, movement etc.
@@ -11,7 +11,7 @@
 - Resource management system
 - Event system
 - Level editor
-- Collision detection system
+- Collision detection and response system
 - Particle emitter
 ## Technologies used
 - OpenGL
