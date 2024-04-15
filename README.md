@@ -6,10 +6,11 @@
   - Batch quad rendering
   - Sprite renderer capable of sampling texture atalases
 - Resource management system
--Event system
+- Event system
+- Level editor
 ## Technologies used
 - OpenGL
 - ImGUI
-- nlohmann json
+- Nlohmann Json
 ## Showcase
 ![showcase](pic.png)
