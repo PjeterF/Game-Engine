@@ -2,6 +2,7 @@
 
 ## Features
 - Entity Component System object model
+  - Systems for managing animations, particle emitters, movement etc.
 - 2D rendering system
   - Batch quad rendering
   - Sprite renderer capable of sampling texture atalases
