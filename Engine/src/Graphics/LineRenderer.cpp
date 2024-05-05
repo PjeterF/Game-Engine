@@ -14,7 +14,7 @@ LineRenderer::LineRenderer(GLuint shaderProgramID, Camera* camera)
 	VAO = new VertexArray;
 	VAO->bind();
 
-	VBO = new VertexBuffer(vertices);
+	VBO = new ArrayBuffer(vertices);
 	VBO->bind();
 
 	VAO->setAttributePointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);

@@ -1,10 +1,10 @@
 #include <gladES/glad.h>
 #include <vector>
 
-	class ElementBuffer
+	class ElementArrayBuffer
 	{
 	public:
-		ElementBuffer(std::vector<int>& indices);
+		ElementArrayBuffer(std::vector<int>& indices);
 		void bind();
 		void unbind();
 		void bufferIndices(std::vector<int>& indices);

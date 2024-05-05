@@ -118,36 +118,20 @@ void ZumaApp::run()
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
 		// Logic Update
 		if (!paused)
 		{
 			EntManager::getInstance().update();
 			SystemsManager::getInstance().update(dt, UNPAUSED);
 
-			/*if (iteration < 2200)
-			{
-				int r = rand() % 100;
-
-				Ent* newEnt = EntManager::getInstance().createEntity();
-				newEnt->addComponent(new TransformC({ 0, r }, { 10, 10 }));
-				newEnt->addComponent(new VelocityC({ 10, (float)r/1000 }));
-				newEnt->addComponent(new RenderingLayerC(0));
-				newEnt->addComponent(new BoxColliderC(0, r, 10, 10, newEnt));
-				newEnt->addComponent(new SpriteC(ResourceManager::getInstance().getResource<Texture>("src/Textures/marble1.png")));
-
-				LayeredRenderingSystem::getInstance().addEntity(newEnt);
-				MovementSystem::getInstance().addEntity(newEnt);
-				CollisionSystem::getInstance().addEntity(newEnt);
-			}*/
-
 			emitter.update();
 			for (int i = 0; i < 10; i++)
 				emitter.emit();
 			emitter.applyForceInverseToSize(0.1, 0);
+		}
+		else
+		{
+			SystemsManager::getInstance().update(dt, PAUSED);
 		}
 
 		// Drawing
@@ -156,9 +140,10 @@ void ZumaApp::run()
 		glClearColor(0.3, 0.3, 0.3, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//CollisionSystem::getInstance().drawGrid(renderingAPI);
+		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
+		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
 
-		SystemsManager::getInstance().update(dt, PAUSED);
+		SystemsManager::getInstance().update(dt, DRAWING);
 		emitter.draw(renderingAPI);
 
 		if (paused)
@@ -167,10 +152,16 @@ void ZumaApp::run()
 				route->drawSpline(renderingAPI);
 		}
 
+	
 		viewportFramebuffer->unbind();
 		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		// UI
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		view->draw();
 		propertiesMenu->draw();
 		sceneMenu->draw();
@@ -178,7 +169,6 @@ void ZumaApp::run()
 		zumaMenu->draw();
 		bar->draw();
 
-		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -190,12 +180,11 @@ void ZumaApp::run()
 
 		// Framerate delay 
 		auto frameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart).count();
-		dt = (float)(frameDuration/16);
-		//std::cout << dt<<"\n";
+		dt = (float)(frameDuration/1000);
+
 		int msDelay = (1000 / fpsCap) - frameDuration;
 		if (msDelay > 0)
 			std::this_thread::sleep_for(std::chrono::milliseconds(msDelay));
-
 
 		glfwSetWindowTitle(window, ("Frameduration: " + std::to_string(frameDuration) + " dt: " + std::to_string(dt)).c_str());
 		iteration++;

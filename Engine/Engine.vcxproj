@@ -494,6 +494,7 @@
     <ClInclude Include="src\ECS\Systems\LayeredRenderingSystem.hpp" />
     <ClInclude Include="src\ECS\Systems\ParticleSystem.hpp" />
     <ClInclude Include="src\ECS\Systems\SystemsManager.hpp" />
+    <ClInclude Include="src\Graphics\InstancedSpriteRenderer.hpp" />
     <ClInclude Include="src\Input\keyCodes.h" />
     <ClInclude Include="src\Serialization\serialization.hpp" />
     <ClInclude Include="ZumaApplication\Logic\MarbleCollisionResolutionSystem.hpp" />

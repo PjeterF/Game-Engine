@@ -4,7 +4,7 @@
 #include "../Components/ParticleC.hpp"
 #include "../Entity/EntManager.hpp"
 
-LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(PAUSED, true, LayeredRenderingSys)
+LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(DRAWING, true, LayeredRenderingSys)
 {
 	name = "LayeredRenderingSystem(" + std::to_string(ID) + ")";
 

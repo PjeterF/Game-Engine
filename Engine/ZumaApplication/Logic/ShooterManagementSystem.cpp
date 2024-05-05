@@ -4,6 +4,8 @@
 
 ShooterManagementSystem::ShooterManagementSystem() : SystemBase(UNPAUSED, true, ShooterManagementSys)
 {
+	EventManager::getInstance().addObserver(this, UI);
+
 	name = "ShooterSys(" + std::to_string(ID) + ")";
 
 	requiredComponents = { Transform, ShooterInfo, RenderingLayer };
@@ -107,6 +109,17 @@ void ShooterManagementSystem::handleEvent(Event& event)
 	{
 		Ent* entity = (Ent*)event.getPayload();
 		removeEntity(entity->getID());
+	}
+	break;
+	case Event::MouseMove:
+	{
+		/*auto targetPos = (glm::vec2*)event.getPayload();
+		for (auto& entity : entities)
+		{
+			auto transform = (TransformC*)entity->getComponent(Transform);
+
+			transform->rotation = lookAtAngle(*targetPos, transform->position);
+		}*/
 	}
 	break;
 	default:

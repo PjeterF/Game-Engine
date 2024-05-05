@@ -8,7 +8,8 @@
 enum SystemSet
 {
 	PAUSED,
-	UNPAUSED
+	UNPAUSED,
+	DRAWING
 };
 
 enum SystemType

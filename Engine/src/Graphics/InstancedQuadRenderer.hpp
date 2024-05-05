@@ -43,9 +43,9 @@ private:
 		int bufferSize = 50000;
 	};
 
-	VertexBuffer* VBO;
+	ArrayBuffer* VBO;
 	VertexArray* VAO;
-	ElementBuffer* EBO;
+	ElementArrayBuffer* EBO;
 	GLuint shaderProgramID;
 
 	INSTANCES_DATA instanceData;

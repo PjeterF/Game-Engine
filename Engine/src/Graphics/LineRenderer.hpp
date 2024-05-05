@@ -19,7 +19,7 @@ public:
 
 	Camera* camera;
 protected:
-	VertexBuffer* VBO;
+	ArrayBuffer* VBO;
 	VertexArray* VAO;
 	GLuint shaderProgramID;
 

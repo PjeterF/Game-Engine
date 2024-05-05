@@ -19,9 +19,9 @@ public:
 	void draw(float x, float y, float size, std::string str);
 	void setColor(float r, float g, float b);
 private:
-	VertexBuffer* VBO;
+	ArrayBuffer* VBO;
 	VertexArray* VAO;
-	ElementBuffer* EBO;
+	ElementArrayBuffer* EBO;
 	GLuint shaderProgramID;
 	Camera* camera;
 	Texture* bitmapFont;
