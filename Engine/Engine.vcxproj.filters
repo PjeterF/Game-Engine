@@ -1451,6 +1451,9 @@
     <ClCompile Include="src\ECS\Systems\CounterKillerSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\InstancedSpriteRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Externals\includes\glm\detail\func_common.inl">
@@ -1874,5 +1877,7 @@
     <None Include="w" />
     <None Include="WaterLava" />
     <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
+    <None Include="src\Shaders\instancedSprite.vert" />
+    <None Include="src\Shaders\instancedSprite.frag" />
   </ItemGroup>
 </Project>

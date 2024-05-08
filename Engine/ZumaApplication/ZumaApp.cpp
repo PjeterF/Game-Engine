@@ -8,6 +8,7 @@
 #include "../src/ECS/Systems/SystemsManager.hpp"
 
 #include "Serialization/serialization.hpp"
+#include "../src/Graphics/InstancedSpriteRenderer.hpp"
 
 ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
 {
@@ -65,6 +66,8 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 void ZumaApp::run()
 {
+	InstancedSpriteRenderer spriteRenderer(ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/instancedSprite")->getContents()->getId(), mainCamera);
+
 	std::vector<TextureDivision> divisions;
 	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
 	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
@@ -142,6 +145,16 @@ void ZumaApp::run()
 
 		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
 		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
+
+		/*if(iteration%2)
+			spriteRenderer.addInstance({ 100, 100 }, { 10, 10 });
+		else
+			spriteRenderer.addInstance({ 200, 100 }, { 10, 10 });*/
+
+		/*spriteRenderer.addInstance({ 100, 100 }, { 10, 10 });
+		spriteRenderer.addInstance({ 200, 100 }, { 10, 10 });
+
+		spriteRenderer.drawInstances();*/
 
 		SystemsManager::getInstance().update(dt, DRAWING);
 		emitter.draw(renderingAPI);

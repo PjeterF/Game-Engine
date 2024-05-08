@@ -574,6 +574,7 @@
     <ClCompile Include="src\ECS\Systems\LayeredRenderingSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\ParticleSystem.cpp" />
     <ClCompile Include="src\ECS\Systems\SystemsManager.cpp" />
+    <ClCompile Include="src\Graphics\InstancedSpriteRenderer.cpp" />
     <ClCompile Include="ZumaApplication\Logic\MarbleCollisionResolutionSystem.cpp" />
     <ClCompile Include="ZumaApplication\Logic\RouteInfoC.cpp" />
     <ClCompile Include="ZumaApplication\Logic\RoutManagementSystem.cpp" />
@@ -768,6 +769,8 @@
     <None Include="s1.json" />
     <None Include="s2.json" />
     <None Include="Scene1" />
+    <None Include="src\Shaders\instancedSprite.frag" />
+    <None Include="src\Shaders\instancedSprite.vert" />
     <None Include="t" />
     <None Include="Test" />
     <None Include="w" />

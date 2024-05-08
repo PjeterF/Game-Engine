@@ -45,7 +45,7 @@ public:
 	int getInitialMarbleCount();
 	Spline* getSpline();
 
-	float marbleSpeed = 1;
+	float marbleSpeed = 2;
 	int popThreshold = 3;
 
 	void drawSpline(RenderingAPI* API);
