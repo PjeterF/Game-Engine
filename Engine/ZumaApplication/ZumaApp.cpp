@@ -82,9 +82,9 @@ void ZumaApp::run()
 	points->at(1) = {300, 1000};
 	spline1->sample();
 	RouteManagementSystem* route1 = new RouteManagementSystem(spline1);
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 1, "src/Textures/blue_marble.png", divisions, 30, { 0.2, 0.2, 1 }));
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 2, "src/Textures/red_marble.png", divisions, 30, { 1, 0, 0 }));
-	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(10, 3, "src/Textures/yellow_marble.png", divisions, 30, { 1, 1, 0 }));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(20, 1, "src/Textures/blue_marble.png", divisions, 30, { 0.2, 0.2, 1 }));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(20, 2, "src/Textures/red_marble.png", divisions, 30, { 1, 0, 0 }));
+	RouteManagementSystem::marbleTemplates.push_back(MarbleTemplate(20, 3, "src/Textures/yellow_marble.png", divisions, 30, { 1, 1, 0 }));
 
 	Ent* shooter = EntManager::getInstance().createEntity();
 	shooter->addComponent(new TransformC({ 0, 0 }, { 40, 40 }, 0));
