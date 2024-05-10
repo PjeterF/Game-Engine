@@ -132,6 +132,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 	unsigned int transformLocation = glGetUniformLocation(shaderProgramID, "transform");
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(transform));
 
+	glActiveTexture(GL_TEXTURE0);
 	texture->bind();
 	VAO->bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

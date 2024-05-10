@@ -40,9 +40,10 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 		mainCamera,
 		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/line")->getContents()->getId(),
 		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/sprite")->getContents()->getId(),
-		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/quad")->getContents()->getId()
+		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/quad")->getContents()->getId(),
+		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/instancedQuad")->getContents()->getId(),
+		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/instancedSprite")->getContents()->getId()
 	);
-	renderingAPI->instancedQuadRenderer = new InstancedQuadRenderer(ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/instancedQuad")->getContents()->getId(), mainCamera);
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
 
@@ -66,8 +67,6 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 void ZumaApp::run()
 {
-	InstancedSpriteRenderer spriteRenderer(ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/instancedSprite")->getContents()->getId(), mainCamera);
-
 	std::vector<TextureDivision> divisions;
 	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
 	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
@@ -146,15 +145,26 @@ void ZumaApp::run()
 		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
 		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
 
-		/*if(iteration%2)
-			spriteRenderer.addInstance({ 100, 100 }, { 10, 10 });
-		else
-			spriteRenderer.addInstance({ 200, 100 }, { 10, 10 });*/
-
-		/*spriteRenderer.addInstance({ 100, 100 }, { 10, 10 });
-		spriteRenderer.addInstance({ 200, 100 }, { 10, 10 });
-
-		spriteRenderer.drawInstances();*/
+		int n = 120;
+		static float rot = 0;
+		for (int i = 0; i < n; i++)
+		{
+			for (int j= 0; j < n; j++)
+			{
+				if(i%2)
+					renderingAPI->addSpriteInstance({ i * 10 + iteration, j* 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
+				else
+					renderingAPI->addSpriteInstance({ i * 10 + iteration, j* 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());
+				
+					/*if (i % 2)
+					renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
+				else
+					renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());*/
+			}
+		}
+		rot +=0.01;
+			
+		renderingAPI->drawSpriteInstances();
 
 		SystemsManager::getInstance().update(dt, DRAWING);
 		emitter.draw(renderingAPI);

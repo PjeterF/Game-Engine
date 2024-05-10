@@ -26,7 +26,7 @@ public:
 	glm::vec2 getFrustrumY() { return zoom * frustumY_original; }
 private:
 	float zoom = 1;
-	float panningSpeedScale = 0.05;
+	float panningSpeedScale = 0.2;
 	glm::vec2 offset=glm::vec2(0,0);
 	glm::vec2 frustumX_original;
 	glm::vec2 frustumY_original;

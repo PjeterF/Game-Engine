@@ -1,10 +1,12 @@
 #include "GeneralRenderer.hpp"
 
-RenderingAPI::RenderingAPI(Camera* camera, GLuint lineShaderID, GLuint spriteShaderID, GLuint quadShaderID)
+RenderingAPI::RenderingAPI(Camera* camera, GLuint lineShaderID, GLuint spriteShaderID, GLuint quadShaderID, GLuint instancedQuadShaderId, GLuint instancedSpriteShaderId) : camera(camera)
 {
 	lineRenderer = new LineRenderer(lineShaderID, camera);
 	spriteRenderer = new SpriteRenderer(spriteShaderID, camera);
 	quadRenderer = new QuadRenderer(quadShaderID, camera);
+	instancedQuadRenderer = new InstancedQuadRenderer(instancedQuadShaderId, camera);
+	instancedSpriteRenderer = new InstancedSpriteRenderer(instancedSpriteShaderId, camera);
 }
 
 Camera* RenderingAPI::getCamera()
@@ -19,6 +21,7 @@ void RenderingAPI::setCamera(Camera* camera)
 	spriteRenderer->camera = camera;
 	quadRenderer->camera = camera;
 	instancedQuadRenderer->camera = camera;
+	instancedSpriteRenderer->setCamera(camera);
 }
 
 void RenderingAPI::drawSprite(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture)
@@ -49,4 +52,14 @@ void RenderingAPI::addQuadInstance(glm::vec2 position, glm::vec2 scale, float an
 void RenderingAPI::drawQuadInstances()
 {
 	instancedQuadRenderer->drawInstances();
+}
+
+void RenderingAPI::addSpriteInstance(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture)
+{
+	instancedSpriteRenderer->addInstance(position, scale, angle, texture);
+}
+
+void RenderingAPI::drawSpriteInstances()
+{
+	instancedSpriteRenderer->drawInstances();
 }
