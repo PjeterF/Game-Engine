@@ -9,5 +9,19 @@ uniform mat4 projection;
 
 void main()
 {
-	gl_Position = projection * vec4(dimensions.x * modelPos + position, 0.0, 1.0);
+	mat2 rot = mat2
+	(
+		rotation.xy,
+		rotation.zw
+	);
+
+	int test = texUnit;
+
+	vec2 finalPos = modelPos;
+	finalPos = rot * finalPos;
+	finalPos = (dimensions + 0. * float(texUnit)) * finalPos;
+	finalPos = position + finalPos;
+
+	gl_Position = projection * vec4(finalPos, 0.0, 1.0);
+	finalTexCoord = texCoord;
 }
