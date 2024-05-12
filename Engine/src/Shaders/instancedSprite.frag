@@ -6,7 +6,7 @@ out vec4 finalColor;
 in vec2 finalTexCoord;
 flat in float texIndex;
 
-uniform sampler2D samplers[8];
+uniform sampler2D samplers[32];
 
 void main()
 {

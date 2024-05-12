@@ -192,13 +192,6 @@ void InstancedSpriteRenderer::setCamera(Camera* camera)
 	this->camera = camera;
 }
 
-void InstancedSpriteRenderer::assignTextureToUnit(int texId, int unit)
-{
-	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(GL_TEXTURE_2D, texId);
-	texUnitMap[texId] = unit;
-}
-
 InstancedSpriteRenderer::Batch::Batch(int index) : index(index)
 {
 }

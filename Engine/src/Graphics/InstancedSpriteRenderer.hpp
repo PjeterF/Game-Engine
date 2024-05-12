@@ -40,8 +40,6 @@ private:
 		std::vector<glm::vec4> texTransforms;
 	};
 
-	void assignTextureToUnit(int texId, int unit);
-
 	Camera* camera;
 	GLuint shaderProgramID;
 
@@ -49,9 +47,6 @@ private:
 
 	std::unordered_map<int, int> texBatchMap;
 	std::vector<Batch> batches;
-
-	std::unordered_map<int, int> texUnitMap;
-	int currentFreeUnit = 0;
 
 	GLuint vertexArray;
 	GLuint vertexBuffer;
