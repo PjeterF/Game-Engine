@@ -7,6 +7,7 @@ layout(location = 2) in vec2 position;
 layout(location = 3) in vec2 dimensions;
 layout(location = 4) in vec4 rotation;
 layout(location = 5) in float texUnit;
+layout(location = 6) in vec4 texTransform;
 
 out vec2 finalTexCoord;
 flat out float texIndex;
@@ -29,5 +30,5 @@ void main()
 	finalPos = position + finalPos;
 
 	gl_Position = projection * vec4(finalPos, 0.0, 1.0);
-	finalTexCoord = texCoord;
+	finalTexCoord = vec2(texCoord.x*texTransform.z + texTransform.x, texCoord.y*texTransform.w + texTransform.y);
 }

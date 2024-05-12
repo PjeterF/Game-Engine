@@ -145,24 +145,24 @@ void ZumaApp::run()
 		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
 		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
 
-		//int n = 120;
-		//static float rot = 0;
-		//for (int i = 0; i < n; i++)
-		//{
-		//	for (int j= 0; j < n; j++)
-		//	{
-		//		if(i%2)
-		//			renderingAPI->addSpriteInstance({ i * 10 + iteration, j* 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
-		//		else
-		//			renderingAPI->addSpriteInstance({ i * 10 + iteration, j* 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());
-		//		
-		//			/*if (i % 2)
-		//			renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
-		//		else
-		//			renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());*/
-		//	}
-		//}
-		//rot +=0.01;
+		int n = 120;
+		static float rot = 0;
+		for (int i = 0; i < n; i++)
+		{
+			for (int j= 0; j < n; j++)
+			{
+				if((i+j)%2)
+					renderingAPI->addSpriteInstance({ i * 10, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents(), {0, 0, 128, 256});
+				else
+					renderingAPI->addSpriteInstance({ i * 10, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents(), { 128, 128, 128, 128});
+				
+					/*if (i % 2)
+					renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
+				else
+					renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());*/
+			}
+		}
+		rot +=0.01;
 			
 		renderingAPI->drawSpriteInstances();
 

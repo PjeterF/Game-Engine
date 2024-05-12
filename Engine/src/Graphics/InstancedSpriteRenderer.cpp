@@ -36,6 +36,7 @@ InstancedSpriteRenderer::InstancedSpriteRenderer(GLuint shaderProgramID, Camera*
 	glGenBuffers(1, &dimBuf);
 	glGenBuffers(1, &rotBuf);
 	glGenBuffers(1, &texUnitBuf);
+	glGenBuffers(1, &texTransBuf);
 
 	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -57,20 +58,25 @@ InstancedSpriteRenderer::InstancedSpriteRenderer(GLuint shaderProgramID, Camera*
 	glEnableVertexAttribArray(5);
 	glVertexAttribDivisor(5, 1);
 
+	glBindBuffer(GL_ARRAY_BUFFER, texTransBuf);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+	glEnableVertexAttribArray(6);
+	glVertexAttribDivisor(6, 1);
+
 	glBindVertexArray(0);
 
 	for (int i = 0; i < SPRITE_RENDERER_MAX_TEX_SLOTS; i++)
 		unitIndices.push_back(i);
 }
 
-void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture)
+void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample)
 {
 	if (texture == nullptr)
 		return;
 
 	this->positions.push_back({ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y });
 	this->dimensions.push_back(camera->getZoom() * dimensions);
-	this->rotations.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
+	this->rotTransforms.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
 
 	int texId = texture->getId();
 	auto mapEntry = texUnitMap.find(texId);
@@ -91,6 +97,23 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 	{
 		this->texUnits.push_back((*mapEntry).second);
 	}
+
+	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1))==0)
+	{
+		texTransforms.push_back({ 0, 0, 1, 1 });
+	}
+	else
+	{
+		texTransforms.push_back
+		({
+			textureSample.x / texture->getWidth(),
+			textureSample.y / texture->getHeight(),
+			textureSample.z / texture->getWidth(),
+			textureSample.w / texture->getHeight()
+			});
+	}
+
+	
 }
 
 void InstancedSpriteRenderer::drawInstances()
@@ -105,10 +128,13 @@ void InstancedSpriteRenderer::drawInstances()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * dimensions.size(), &dimensions[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, rotBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * rotations.size(), &rotations[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * rotTransforms.size(), &rotTransforms[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, texUnitBuf);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texUnits.size(), &texUnits[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, texTransBuf);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * texTransforms.size(), &texTransforms[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -136,8 +162,9 @@ void InstancedSpriteRenderer::reset()
 {
 	positions.clear();
 	dimensions.clear();
-	rotations.clear();
+	rotTransforms.clear();
 	texUnits.clear();
+	texTransforms.clear();
 
 	currentFreeUnit = 0;
 	texUnitMap.clear();
@@ -153,4 +180,53 @@ void InstancedSpriteRenderer::assignTextureToUnit(int texId, int unit)
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, texId);
 	texUnitMap[texId] = unit;
+}
+
+InstancedSpriteRenderer::Batch::Batch(int index) : index(index)
+{
+}
+
+void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample)
+{
+	if (texture == nullptr)
+		return;
+
+	this->positions.push_back(position);
+	this->dimensions.push_back(dimensions);
+	this->rotTransforms.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
+
+	int texId = texture->getId();
+	auto mapEntry = texUnitMap.find(texId);
+	if (mapEntry == texUnitMap.end())
+	{
+		if (texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
+		{
+			texUnitMap[texId] = currentFreeUnit;
+			this->texUnits.push_back(currentFreeUnit);
+			currentFreeUnit++;
+		}
+		else
+		{
+			throw "No more slots";
+		}
+	}
+	else
+	{
+		this->texUnits.push_back((*mapEntry).second);
+	}
+
+	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1)) == 0)
+	{
+		texTransforms.push_back({ 0, 0, 1, 1 });
+	}
+	else
+	{
+		texTransforms.push_back
+		({
+			textureSample.x / texture->getWidth(),
+			textureSample.y / texture->getHeight(),
+			textureSample.z / texture->getWidth(),
+			textureSample.w / texture->getHeight()
+			});
+	}
 }

@@ -18,18 +18,39 @@ class InstancedSpriteRenderer
 {
 public:
 	InstancedSpriteRenderer(GLuint shaderProgramID, Camera* camera);
-	void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture);
+	void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
 	void drawInstances();
 	void reset();
 
 	void setCamera(Camera* camera);
 private:
+	class Batch
+	{
+	public:
+		Batch(int index);
+		void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
+
+		int index;
+		std::unordered_map<int, int> texUnitMap;
+		int currentFreeUnit = 0;
+
+		std::vector<glm::vec2> positions;
+		std::vector<glm::vec2> dimensions;
+		std::vector<glm::vec4> rotTransforms;
+		std::vector<float> texUnits;
+		std::vector<glm::vec4> texTransforms;
+	};
+
 	void assignTextureToUnit(int texId, int unit);
 
 	Camera* camera;
 	GLuint shaderProgramID;
 
 	std::vector<int> unitIndices;
+
+	std::unordered_map<int, int> texBatchMap;
+	std::vector<Batch> batches;
+
 	std::unordered_map<int, int> texUnitMap;
 	int currentFreeUnit = 0;
 
@@ -41,9 +62,11 @@ private:
 	GLuint dimBuf;
 	GLuint rotBuf;
 	GLuint texUnitBuf;
+	GLuint texTransBuf;
 
 	std::vector<glm::vec2> positions;
 	std::vector<glm::vec2> dimensions;
-	std::vector<glm::vec4> rotations;
+	std::vector<glm::vec4> rotTransforms;
 	std::vector<float> texUnits;
+	std::vector<glm::vec4> texTransforms;
 };
