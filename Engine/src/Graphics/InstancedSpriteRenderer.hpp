@@ -20,7 +20,6 @@ public:
 	InstancedSpriteRenderer(GLuint shaderProgramID, Camera* camera);
 	void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
 	void drawInstances();
-	void reset();
 
 	void setCamera(Camera* camera);
 private:
@@ -63,10 +62,4 @@ private:
 	GLuint rotBuf;
 	GLuint texUnitBuf;
 	GLuint texTransBuf;
-
-	std::vector<glm::vec2> positions;
-	std::vector<glm::vec2> dimensions;
-	std::vector<glm::vec4> rotTransforms;
-	std::vector<float> texUnits;
-	std::vector<glm::vec4> texTransforms;
 };

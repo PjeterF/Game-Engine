@@ -76,163 +76,114 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 	if (texture == nullptr)
 		return;
 
-	int texId = texture->getId();
-	auto mapEntry = texUnitMap.find(texId);
-	if (mapEntry == texUnitMap.end())
+	glm::vec4 texSample;
+	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1)) == 0)
 	{
-		if (texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
-		{
-			assignTextureToUnit(texId, currentFreeUnit);
-			this->texUnits.push_back(currentFreeUnit);
-			currentFreeUnit++;
-		}
-		else
-		{
-			throw "No more slots";
-		}
+		texSample = { 0, 0, 1, 1 };
 	}
 	else
 	{
-		this->texUnits.push_back((*mapEntry).second);
-	}
-
-	//glm::vec4 texSample;
-	//if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1)) == 0)
-	//{
-	//	texSample = { 0, 0, 1, 1 };
-	//}
-	//else
-	//{
-	//	texSample =
-	//	{
-	//		textureSample.x / texture->getWidth(),
-	//		textureSample.y / texture->getHeight(),
-	//		textureSample.z / texture->getWidth(),
-	//		textureSample.w / texture->getHeight()
-	//	};
-	//}
-
-	//auto batch_it = texBatchMap.find(texture->getId());
-	//if (batch_it == texBatchMap.end())
-	//{
-	//	//tex belongs to no batch
-	//	if (batches.back().texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
-	//	{
-	//		//add to current batch;
-	//		batches.back().addInstance
-	//		(
-	//			{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
-	//			camera->getZoom() * dimensions,
-	//			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
-	//			texture,
-	//			texSample
-	//		);
-	//		texBatchMap[texture->getId()] = batches.back().index;
-	//	}
-	//	else
-	//	{
-	//		//create new batch and add
-	//		batches.push_back(Batch(batches.size()));
-	//		batches.back().addInstance
-	//		(
-	//			{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
-	//			camera->getZoom() * dimensions,
-	//			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
-	//			texture,
-	//			texSample
-	//		);
-	//		texBatchMap[texture->getId()] = batches.back().index;
-	//	}
-	//}
-	//else
-	//{
-	//	//tex belongs to a batch
-	//	int batchIndex = (*batch_it).second;
-	//	batches[batchIndex].addInstance
-	//	(
-	//		{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
-	//		camera->getZoom() * dimensions,
-	//		{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
-	//		texture,
-	//		texSample
-	//	);
-	//}
-
-	this->positions.push_back({ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y });
-	this->dimensions.push_back(camera->getZoom() * dimensions);
-	this->rotTransforms.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
-
-	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1))==0)
-	{
-		texTransforms.push_back({ 0, 0, 1, 1 });
-	}
-	else
-	{
-		texTransforms.push_back
-		({
+		texSample =
+		{
 			textureSample.x / texture->getWidth(),
 			textureSample.y / texture->getHeight(),
 			textureSample.z / texture->getWidth(),
 			textureSample.w / texture->getHeight()
-			});
+		};
+	}
+
+	auto batch_it = texBatchMap.find(texture->getId());
+	if (batch_it == texBatchMap.end())
+	{
+		//tex belongs to no batch
+		if (batches.back().texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
+		{
+			//add to current batch;
+			batches.back().addInstance
+			(
+				{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+				camera->getZoom() * dimensions,
+				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
+				texture,
+				texSample
+			);
+			texBatchMap[texture->getId()] = batches.back().index;
+		}
+		else
+		{
+			//create new batch and add
+			batches.push_back(Batch(batches.size()));
+			batches.back().addInstance
+			(
+				{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+				camera->getZoom() * dimensions,
+				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
+				texture,
+				texSample
+			);
+			texBatchMap[texture->getId()] = batches.back().index;
+		}
+	}
+	else
+	{
+		//tex belongs to a batch
+		int batchIndex = (*batch_it).second;
+		batches[batchIndex].addInstance
+		(
+			{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+			camera->getZoom() * dimensions,
+			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
+			texture,
+			texSample
+		);
 	}
 }
 
 void InstancedSpriteRenderer::drawInstances()
 {
-	if (positions.empty())
-		return;
-
-	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * positions.size(), &positions[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, dimBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * dimensions.size(), &dimensions[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, rotBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * rotTransforms.size(), &rotTransforms[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, texUnitBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texUnits.size(), &texUnits[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, texTransBuf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * texTransforms.size(), &texTransforms[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glUseProgram(shaderProgramID);
-
-	glm::mat4 projection = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-	for (auto var : texUnitMap)
+	for (auto& batch : batches)
 	{
-		glActiveTexture(GL_TEXTURE0 + var.second);
-		glBindTexture(GL_TEXTURE_2D, var.first);
+		if (batch.positions.empty())
+			continue;
+
+		glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * batch.positions.size(), &batch.positions[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, dimBuf);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * batch.dimensions.size(), &batch.dimensions[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, rotBuf);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * batch.rotTransforms.size(), &batch.rotTransforms[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, texUnitBuf);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * batch.texUnits.size(), &batch.texUnits[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, texTransBuf);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * batch.texTransforms.size(), &batch.texTransforms[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(shaderProgramID);
+
+		glm::mat4 projection = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		for (auto var : batch.texUnitMap)
+		{
+			glActiveTexture(GL_TEXTURE0 + var.second);
+			glBindTexture(GL_TEXTURE_2D, var.first);
+		}
+
+		glUniform1iv(glGetUniformLocation(shaderProgramID, "samplers"), unitIndices.size(), &unitIndices[0]);
+
+		glBindVertexArray(vertexArray);
+		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, batch.positions.size());
+		glBindVertexArray(0);
 	}
 
-	glUniform1iv(glGetUniformLocation(shaderProgramID, "samplers"), unitIndices.size(), &unitIndices[0]);
-
-	glBindVertexArray(vertexArray);
-	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, positions.size());
-	glBindVertexArray(0);
-
-	this->reset();
-}
-
-void InstancedSpriteRenderer::reset()
-{
-	positions.clear();
-	dimensions.clear();
-	rotTransforms.clear();
-	texUnits.clear();
-	texTransforms.clear();
-
-	currentFreeUnit = 0;
-	texUnitMap.clear();
-
-	texBatchMap.clear();
 	batches.clear();
+	texBatchMap.clear();
+
 	batches.push_back(Batch(0));
 }
 
@@ -254,23 +205,13 @@ InstancedSpriteRenderer::Batch::Batch(int index) : index(index)
 
 void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample)
 {
-	if (texture == nullptr)
-		return;
-
 	int texId = texture->getId();
 	auto mapEntry = texUnitMap.find(texId);
 	if (mapEntry == texUnitMap.end())
 	{
-		if (texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
-		{
-			texUnitMap[texId] = currentFreeUnit;
-			this->texUnits.push_back(currentFreeUnit);
-			currentFreeUnit++;
-		}
-		else
-		{
-			throw "No more slots";
-		}
+		texUnitMap[texId] = currentFreeUnit;
+		this->texUnits.push_back(currentFreeUnit);
+		currentFreeUnit++;
 	}
 	else
 	{
