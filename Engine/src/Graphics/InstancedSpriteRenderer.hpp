@@ -28,7 +28,7 @@ private:
 	{
 	public:
 		Batch(int index);
-		void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
+		void addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
 
 		int index;
 		std::unordered_map<int, int> texUnitMap;

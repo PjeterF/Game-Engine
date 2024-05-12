@@ -67,16 +67,14 @@ InstancedSpriteRenderer::InstancedSpriteRenderer(GLuint shaderProgramID, Camera*
 
 	for (int i = 0; i < SPRITE_RENDERER_MAX_TEX_SLOTS; i++)
 		unitIndices.push_back(i);
+
+	batches.push_back(Batch(0));
 }
 
 void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample)
 {
 	if (texture == nullptr)
 		return;
-
-	this->positions.push_back({ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y });
-	this->dimensions.push_back(camera->getZoom() * dimensions);
-	this->rotTransforms.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
 
 	int texId = texture->getId();
 	auto mapEntry = texUnitMap.find(texId);
@@ -98,6 +96,72 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 		this->texUnits.push_back((*mapEntry).second);
 	}
 
+	//glm::vec4 texSample;
+	//if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1)) == 0)
+	//{
+	//	texSample = { 0, 0, 1, 1 };
+	//}
+	//else
+	//{
+	//	texSample =
+	//	{
+	//		textureSample.x / texture->getWidth(),
+	//		textureSample.y / texture->getHeight(),
+	//		textureSample.z / texture->getWidth(),
+	//		textureSample.w / texture->getHeight()
+	//	};
+	//}
+
+	//auto batch_it = texBatchMap.find(texture->getId());
+	//if (batch_it == texBatchMap.end())
+	//{
+	//	//tex belongs to no batch
+	//	if (batches.back().texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
+	//	{
+	//		//add to current batch;
+	//		batches.back().addInstance
+	//		(
+	//			{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+	//			camera->getZoom() * dimensions,
+	//			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
+	//			texture,
+	//			texSample
+	//		);
+	//		texBatchMap[texture->getId()] = batches.back().index;
+	//	}
+	//	else
+	//	{
+	//		//create new batch and add
+	//		batches.push_back(Batch(batches.size()));
+	//		batches.back().addInstance
+	//		(
+	//			{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+	//			camera->getZoom() * dimensions,
+	//			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
+	//			texture,
+	//			texSample
+	//		);
+	//		texBatchMap[texture->getId()] = batches.back().index;
+	//	}
+	//}
+	//else
+	//{
+	//	//tex belongs to a batch
+	//	int batchIndex = (*batch_it).second;
+	//	batches[batchIndex].addInstance
+	//	(
+	//		{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+	//		camera->getZoom() * dimensions,
+	//		{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
+	//		texture,
+	//		texSample
+	//	);
+	//}
+
+	this->positions.push_back({ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y });
+	this->dimensions.push_back(camera->getZoom() * dimensions);
+	this->rotTransforms.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
+
 	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1))==0)
 	{
 		texTransforms.push_back({ 0, 0, 1, 1 });
@@ -112,8 +176,6 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 			textureSample.w / texture->getHeight()
 			});
 	}
-
-	
 }
 
 void InstancedSpriteRenderer::drawInstances()
@@ -168,6 +230,10 @@ void InstancedSpriteRenderer::reset()
 
 	currentFreeUnit = 0;
 	texUnitMap.clear();
+
+	texBatchMap.clear();
+	batches.clear();
+	batches.push_back(Batch(0));
 }
 
 void InstancedSpriteRenderer::setCamera(Camera* camera)
@@ -186,14 +252,10 @@ InstancedSpriteRenderer::Batch::Batch(int index) : index(index)
 {
 }
 
-void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample)
+void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample)
 {
 	if (texture == nullptr)
 		return;
-
-	this->positions.push_back(position);
-	this->dimensions.push_back(dimensions);
-	this->rotTransforms.push_back({ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) });
 
 	int texId = texture->getId();
 	auto mapEntry = texUnitMap.find(texId);
@@ -215,18 +277,8 @@ void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 d
 		this->texUnits.push_back((*mapEntry).second);
 	}
 
-	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1)) == 0)
-	{
-		texTransforms.push_back({ 0, 0, 1, 1 });
-	}
-	else
-	{
-		texTransforms.push_back
-		({
-			textureSample.x / texture->getWidth(),
-			textureSample.y / texture->getHeight(),
-			textureSample.z / texture->getWidth(),
-			textureSample.w / texture->getHeight()
-			});
-	}
+	this->positions.push_back(position);
+	this->dimensions.push_back(dimensions);
+	this->rotTransforms.push_back(rotTransform);
+	this->texTransforms.push_back(textureSample);
 }
