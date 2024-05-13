@@ -117,6 +117,7 @@ void ZumaApp::run()
 	float dt = 1;
 
 	deSerializeScene("Test", EntManager::getInstance(), SystemsManager::getInstance());
+	mainCamera->setOffset(400, 400);
 
 	while (!glfwWindowShouldClose(window))
 	{
