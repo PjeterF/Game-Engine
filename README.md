@@ -4,8 +4,8 @@ Basic game engine capable of supporting creation of 2D games.
 - Entity Component System object model
   - Systems for managing animations, particle emitters, movement etc.
 - 2D rendering system
-  - Batch quad rendering
-  - Sprite renderer capable of sampling texture atalases
+  - Batch quad and sprite rendering
+  - Sampling texture atlases
 - Multiplatform capabilities
   - Tested on Android and Windows
 - Resource management system
