@@ -1,4 +1,5 @@
 #include "ParticleEmitter.hpp"
+#include <thread>
 
 ParticeEmitter::Particle::Particle(float x, float y, float xV, float yV, float particleSize, float initialRot, float r, float g, float b, float w)
 {
@@ -28,7 +29,7 @@ ParticeEmitter::~ParticeEmitter()
 
 void ParticeEmitter::update()
 {
-	for (int i = 0; i < particlePool.size(); i++)
+	/*for (int i = 0; i < particlePool.size(); i++)
 	{
 		if (!particlePool[i].emitted)
 			continue;
@@ -44,6 +45,26 @@ void ParticeEmitter::update()
 		particlePool[i].size = (1-(float)particlePool[i].lifetime / (float)particlePool[i].maxLifetime) * (particlePool[i].endSize - particlePool[i].startSize)+ particlePool[i].startSize;
 		particlePool[i].vel = particlePool[i].velocityDecay * particlePool[i].vel;
 		particlePool[i].lifetime--;
+	}*/
+
+	int nThreads = 8;
+	std::vector<int> ranges;
+
+	for (int i = 0; i <= nThreads; i++)
+	{
+		ranges.push_back(i * (particlePool.size() / nThreads));
+	}
+
+
+	std::vector<std::thread> threads;
+	for (int i = 0; i < nThreads; i++)
+	{
+		threads.push_back(std::thread(&ParticeEmitter::processRange, this, ranges[i], ranges[i + 1]));
+	}
+
+	for (auto& thread : threads)
+	{
+		thread.join();
 	}
 }
 
@@ -122,6 +143,27 @@ void ParticeEmitter::applyForceInverseToSize(float xF, float yF)
 	for (auto& particle : particlePool)
 	{
 		particle.vel = particle.vel + (1/particle.size) * glm::vec2(xF, yF);
+	}
+}
+
+void ParticeEmitter::processRange(int lower, int upper)
+{
+	for (int i = lower; i < upper; i++)
+	{
+		if (!particlePool[i].emitted)
+			continue;
+
+		if (particlePool[i].lifetime <= 0)
+		{
+			particlePool[i].emitted = false;
+			continue;
+		}
+
+		particlePool[i].pos = particlePool[i].pos + particlePool[i].vel;
+		particlePool[i].col = (1 - (float)particlePool[i].lifetime / (float)particlePool[i].maxLifetime) * (particlePool[i].endColour - particlePool[i].startColour) + particlePool[i].startColour;
+		particlePool[i].size = (1 - (float)particlePool[i].lifetime / (float)particlePool[i].maxLifetime) * (particlePool[i].endSize - particlePool[i].startSize) + particlePool[i].startSize;
+		particlePool[i].vel = particlePool[i].velocityDecay * particlePool[i].vel;
+		particlePool[i].lifetime--;
 	}
 }
 

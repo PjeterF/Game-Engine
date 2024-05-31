@@ -54,7 +54,8 @@ void LayeredRenderingSystem::update(float dt)
 			auto transform = (TransformC*)entity->getComponent(Transform);
 			auto sprite = (SpriteC*)entity->getComponent(Sprite);
 
-			API->drawSprite(transform->position, transform->size, transform->rotation, sprite->getTexture());
+			//API->drawSprite(transform->position, transform->size, transform->rotation, sprite->getTexture());
+			API->addSpriteInstance(transform->position, transform->size, transform->rotation, sprite->getTexture());
 		}
 		if (entity->hasComponent(AnimatedSprite))
 		{
@@ -69,12 +70,16 @@ void LayeredRenderingSystem::update(float dt)
 					aSprite->counter = 0;
 				}
 
-				API->drawSpriteSampled(transform->position, transform->size, transform->rotation, aSprite->getTexture(), aSprite->divisions[aSprite->currentFrame]);
+				//API->drawSpriteSampled(transform->position, transform->size, transform->rotation, aSprite->getTexture(), aSprite->divisions[aSprite->currentFrame]);
+
+				TextureDivision div = aSprite->divisions[aSprite->currentFrame];
+				API->addSpriteInstance(transform->position, transform->size, transform->rotation, aSprite->getTexture(), { div.x, div.y, div.width, div.height });
 
 				if (!aSprite->paused)
 					aSprite->counter++;
 			}
 		}
+		API->drawSpriteInstances();
 		if (entity->hasComponent(Particle))
 		{
 			auto transform = (TransformC*)entity->getComponent(Transform);

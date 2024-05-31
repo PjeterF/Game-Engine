@@ -339,7 +339,7 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 		{
 			velocity->velocity = marbleSpeed * glm::normalize((*spline->getSampledPoints())[routeInfo->targetSample] - transform->position);
 			transform->position = transform->position +  velocity->velocity;
-			transform->rotation = 57.2958 * atan(velocity->velocity.y / velocity->velocity.x);
+			transform->rotation = -atan(velocity->velocity.y / velocity->velocity.x);
 		}
 
 		if (routeInfo->inserting)

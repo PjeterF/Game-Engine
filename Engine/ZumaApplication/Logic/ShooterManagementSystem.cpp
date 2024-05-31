@@ -152,22 +152,26 @@ float ShooterManagementSystem::lookAtAngle(glm::vec2 target, glm::vec2 position)
 	vector = glm::normalize(vector);
 	float angle;
 
-	if (target.x >= position.x && target.y >= position.y)
-	{
-		angle = atan(vector.y / vector.x) * 57.2958 + 90;
-	}
-	else if (target.x < position.x && target.y >= position.y)
-	{
-		angle = 180 - atan(-vector.y / vector.x) * 57.2958 + 90;
-	}
-	else if (target.x < position.x && target.y < position.y)
-	{
-		angle = 180 + atan(vector.y / vector.x) * 57.2958 + 90;
-	}
-	else if (target.x >= position.x && target.y < position.y)
-	{
-		angle = 360 - atan(-vector.y / vector.x) * 57.2958 + 90;
-	}
+	if (target.x > position.x)
+		angle = atan(vector.y / vector.x) + 1.57;
+	else
+		angle = -atan(vector.y / vector.x) + 1.57;
+	//if (target.x >= position.x && target.y >= position.y)
+	//{
+	//	angle = atan(vector.y / vector.x) * 57.2958 + 90;
+	//}
+	//else if (target.x < position.x && target.y >= position.y)
+	//{
+	//	angle = 180 - atan(-vector.y / vector.x) * 57.2958 + 90;
+	//}
+	//else if (target.x < position.x && target.y < position.y)
+	//{
+	//	angle = 180 + atan(vector.y / vector.x) * 57.2958 + 90;
+	//}
+	//else if (target.x >= position.x && target.y < position.y)
+	//{
+	//	angle = 360 - atan(-vector.y / vector.x) * 57.2958 + 90;
+	//}
 
 	return angle;
 }

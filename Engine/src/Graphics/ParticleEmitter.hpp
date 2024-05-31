@@ -55,6 +55,8 @@ public:
 
 	glm::vec2 pos;
 private:
+
+	void processRange(int lower, int upper);
 	float randomFloat(float rangeMin, float rangeMax);
 	int randomInt(int rangeMin, int rangeMax);
 	int maxParticles;

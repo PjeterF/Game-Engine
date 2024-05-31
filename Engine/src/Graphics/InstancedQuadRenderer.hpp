@@ -40,7 +40,7 @@ private:
 		Camera* camera = nullptr;
 	private:
 		int currentIndex = 0;
-		int bufferSize = 50000;
+		int bufferSize = 100000;
 	};
 
 	ArrayBuffer* VBO;

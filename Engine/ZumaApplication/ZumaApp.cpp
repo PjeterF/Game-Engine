@@ -173,7 +173,8 @@ void ZumaApp::run()
 		renderingAPI->addSpriteInstance({ 300, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/red_marble.png")->getContents());
 		renderingAPI->addSpriteInstance({ 400, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/yellow_marble.png")->getContents());
 		renderingAPI->addSpriteInstance({ 500, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());
-		*/	
+		*/
+		//renderingAPI->addSpriteInstance({ 100, 100, }, { 10, 10 }, 3.14, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
 		renderingAPI->drawSpriteInstances();
 
 		SystemsManager::getInstance().update(dt, DRAWING);
