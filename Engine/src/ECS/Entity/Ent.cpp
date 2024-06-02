@@ -43,14 +43,14 @@ void Ent::from_json(nlohmann::json& j)
 		int type = component["type"];
 		switch (type)
 		{
-		case Transform:
+		case Transform_:
 		{
 			TransformC* newC = new TransformC();
 			(*newC).from_json(component);
 			this->addComponent(newC);
 		}
 		break;
-		case Velocity:
+		case Velocity_:
 		{
 			VelocityC* newC = new VelocityC();
 			(*newC).from_json(component);
@@ -64,7 +64,7 @@ void Ent::from_json(nlohmann::json& j)
 			this->addComponent(newC);
 		}
 		break;
-		case Sprite:
+		case Sprite_:
 		{
 			SpriteC* newC = new SpriteC();
 			(*newC).from_json(component);

@@ -8,9 +8,9 @@
 
 enum CType
 {
-	Transform,
-	Velocity,
-	Sprite,
+	Transform_,
+	Velocity_,
+	Sprite_,
 	BoxCollider,
 	AnimatedSprite,
 	RenderingLayer,

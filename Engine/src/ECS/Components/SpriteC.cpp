@@ -1,6 +1,6 @@
 #include "SpriteC.hpp"
 
-SpriteC::SpriteC(Resource<Texture>* texture) : ComponentBase(CType::Sprite)
+SpriteC::SpriteC(Resource<Texture>* texture) : ComponentBase(CType::Sprite_)
 {
 	if(texture!=nullptr)
 		texture->subscribe();

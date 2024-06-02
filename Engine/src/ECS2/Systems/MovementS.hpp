@@ -1,0 +1,14 @@
+#pragma once
+
+#include "SysBase.hpp"
+
+#include "../Components/Transform.hpp"
+#include "../Components/Velocity.hpp"
+
+class MovementS : public SysBase
+{
+public:
+	MovementS();
+	virtual void update(float dt) override;
+private:
+};

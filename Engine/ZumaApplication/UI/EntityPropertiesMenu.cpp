@@ -43,13 +43,13 @@ void EntityPropertiesMenu::draw()
 	{
 		switch (component.second->getType())
 		{
-		case Transform:
+		case Transform_:
 			transformProp((TransformC*)component.second);
 		break;
-		case Velocity:
+		case Velocity_:
 			velocityProp((VelocityC*)component.second);
 		break;
-		case Sprite:
+		case Sprite_:
 			spriteProp((SpriteC*)component.second);
 		break;
 		case BoxCollider:
@@ -174,7 +174,7 @@ void EntityPropertiesMenu::componentAdditionMenu()
 		{
 			BoxColliderC* newComponent;
 
-			auto transform = (TransformC*)selectedEntity->getComponent(Transform);
+			auto transform = (TransformC*)selectedEntity->getComponent(Transform_);
 			if (transform != nullptr)
 				newComponent = new BoxColliderC(transform->position.x, transform->position.x, transform->size.x, transform->size.y, selectedEntity);
 			else

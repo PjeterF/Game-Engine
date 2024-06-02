@@ -5,7 +5,7 @@ MovementSystem::MovementSystem() : SystemBase(UNPAUSED, true, MovementSys)
 {
 	name = "MovementSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Velocity };
+	requiredComponents = { Transform_, Velocity_ };
 }
 
 MovementSystem& MovementSystem::getInstance()
@@ -53,8 +53,8 @@ void MovementSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transC = (TransformC*)entity->getComponent(CType::Transform);
-		auto velC = (VelocityC*)entity->getComponent(CType::Velocity);
+		auto transC = (TransformC*)entity->getComponent(CType::Transform_);
+		auto velC = (VelocityC*)entity->getComponent(CType::Velocity_);
 
 		transC->position = transC->position + velC->velocity;
 		transC->rotation = 57.2958 * atan(velC->velocity.y / (velC->velocity.x + 0.00001));

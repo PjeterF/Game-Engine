@@ -4,7 +4,7 @@ SpriteRenderingSystem::SpriteRenderingSystem(RenderingAPI* API) : SystemBase(PAU
 {
 	name = "SpriteRenderingSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Sprite };
+	requiredComponents = { Transform_, Sprite_ };
 	this->API = API;
 }
 
@@ -12,8 +12,8 @@ void SpriteRenderingSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity->getComponent(CType::Transform);
-		auto sprite = (SpriteC*)entity->getComponent(CType::Sprite);
+		auto transform = (TransformC*)entity->getComponent(CType::Transform_);
+		auto sprite = (SpriteC*)entity->getComponent(CType::Sprite_);
 
 		API->drawSprite(transform->position, transform->size, transform->rotation, sprite->getTexture());
 	}

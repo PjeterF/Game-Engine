@@ -27,7 +27,7 @@ RouteManagementSystem::RouteManagementSystem(Spline* spline, int initialMarbleNu
 {
 	name = "RouteSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Velocity, AnimatedSprite, BoxCollider, RouteInfo };
+	requiredComponents = { Transform_, Velocity_, AnimatedSprite, BoxCollider, RouteInfo };
 	this->spline = spline;
 
 	maxMarbles = initialMarbleNumber;
@@ -84,7 +84,7 @@ void RouteManagementSystem::update(float dt)
 	if (selfDestruct && entities.size()>0)
 	{
 		auto it = entities.begin();
-		auto transform = (TransformC*)(*it)->getComponent(Transform);
+		auto transform = (TransformC*)(*it)->getComponent(Transform_);
 
 		spawnExplosion(transform->position.x, transform->position.y, { 1, 0.8, 0 }, { 1, 0.8, 0 }, 10, 5, 1, 0.5, 3, 10);
 		(*it)->destroy();
@@ -99,7 +99,7 @@ void RouteManagementSystem::update(float dt)
 			auto first = entities.end();
 			first--;
 			((RouteInfoC*)(*first)->getComponent(RouteInfo))->moving = true;
-			auto transform = (TransformC*)(*first)->getComponent(Transform);
+			auto transform = (TransformC*)(*first)->getComponent(Transform_);
 
 			if (glm::distance((*spline->getSampledPoints())[0], transform->position) > 2 * transform->size.x)
 				spawnRandomMarble();
@@ -230,8 +230,8 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 	auto it = s_it;
 	while(1)
 	{
-		auto transform = (TransformC*)(*it)->getComponent(Transform);
-		auto velocity = (VelocityC*)(*it)->getComponent(Velocity);
+		auto transform = (TransformC*)(*it)->getComponent(Transform_);
+		auto velocity = (VelocityC*)(*it)->getComponent(Velocity_);
 		auto routeInfo = (RouteInfoC*)(*it)->getComponent(RouteInfo);
 		auto currCollider = (BoxColliderC*)(*it)->getComponent(BoxCollider);
 
@@ -256,7 +256,7 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 			it_prev++;
 			
 			auto prev_Collider = (BoxColliderC*)(*it_prev)->getComponent(BoxCollider);
-			auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform);
+			auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform_);
 			auto prev_routeInfo = (RouteInfoC*)(*it_prev)->getComponent(RouteInfo);
 
 			float distance = glm::distance(prev_transform->position, transform->position);
@@ -312,7 +312,7 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 				otherRouteInfo->route = routeInfo->route;
 				otherRouteInfo->targetSample = routeInfo->targetSample;
 
-				auto otherTransform = (TransformC*)otherEntity->getComponent(Transform);
+				auto otherTransform = (TransformC*)otherEntity->getComponent(Transform_);
 				float forwardLength = glm::distance(otherTransform->position, transform->position + transform->position + velocity->velocity);
 				float backwardsLength = glm::distance(otherTransform->position, transform->position + transform->position - velocity->velocity);
 
@@ -351,8 +351,8 @@ void RouteManagementSystem::moveRoutine(std::vector<Ent*>::iterator s_it, float 
 			auto it_prev = it;
 			it_prev++;
 
-			auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform);
-			auto prev_velocity = (VelocityC*)(*it_prev)->getComponent(Velocity);
+			auto prev_transform = (TransformC*)(*it_prev)->getComponent(Transform_);
+			auto prev_velocity = (VelocityC*)(*it_prev)->getComponent(Velocity_);
 
 			if (it_prev == entities.end())
 			{
@@ -449,7 +449,7 @@ int RouteManagementSystem::popSame(std::vector<Ent*>::iterator it, int threshold
 
 		for (auto marble : marblesToPop)
 		{
-			auto transform = (TransformC*)marble->getComponent(Transform);
+			auto transform = (TransformC*)marble->getComponent(Transform_);
 			auto routeInfo = (RouteInfoC*)marble->getComponent(RouteInfo);
 			
 			for (auto& temp : marbleTemplates)

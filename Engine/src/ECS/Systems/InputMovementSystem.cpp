@@ -8,7 +8,7 @@ InputMovementSystem::InputMovementSystem(InputManager* input) : SystemBase(UNPAU
 {
 	name = "InputMovementSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Velocity };
+	requiredComponents = { Velocity_ };
 	this->input = input;
 }
 
@@ -19,7 +19,7 @@ void InputMovementSystem::update(float dt)
 
 	for (auto& entity : entities)
 	{
-		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity);
+		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity_);
 
 		glm::vec2 acceleration = { 0, 0 };
 

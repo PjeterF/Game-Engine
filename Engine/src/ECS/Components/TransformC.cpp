@@ -1,6 +1,6 @@
 #include "TransformC.hpp"
 
-TransformC::TransformC(glm::vec2 position, glm::vec2 size, float rotation) : ComponentBase(CType::Transform)
+TransformC::TransformC(glm::vec2 position, glm::vec2 size, float rotation) : ComponentBase(CType::Transform_)
 {
 	this->position = position;
 	this->size = size;

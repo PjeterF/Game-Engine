@@ -11,7 +11,7 @@ CollisionSystem::CollisionSystem(int x, int y, int dimX, int dimY, float cellSiz
 {
 	name = "ColisionSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { BoxCollider, Transform };
+	requiredComponents = { BoxCollider, Transform_ };
 
 	this->x = x;
 	this->y = y;
@@ -114,7 +114,7 @@ void CollisionSystem::lateUpdate(float dt)
 	for (auto& entity : entities)
 	{
 		auto collider = (BoxColliderC*)entity->getComponent(CType::BoxCollider);
-		auto transform = (TransformC*)entity->getComponent(CType::Transform);
+		auto transform = (TransformC*)entity->getComponent(CType::Transform_);
 
 		collider->colX = transform->position.x;
 		collider->colY = transform->position.y;

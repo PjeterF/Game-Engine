@@ -1,6 +1,6 @@
 #include "VelocityC.hpp"
 
-VelocityC::VelocityC(glm::vec2 velocity) : ComponentBase(CType::Velocity)
+VelocityC::VelocityC(glm::vec2 velocity) : ComponentBase(CType::Velocity_)
 {
 	this->velocity = velocity;
 }

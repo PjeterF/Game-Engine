@@ -8,7 +8,7 @@ LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(D
 {
 	name = "LayeredRenderingSystem(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, RenderingLayer };
+	requiredComponents = { Transform_, RenderingLayer };
 	this->API = API;
 }
 
@@ -49,17 +49,17 @@ void LayeredRenderingSystem::update(float dt)
 	{
 		auto layer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
 
-		if (entity->hasComponent(Sprite))
+		if (entity->hasComponent(Sprite_))
 		{
-			auto transform = (TransformC*)entity->getComponent(Transform);
-			auto sprite = (SpriteC*)entity->getComponent(Sprite);
+			auto transform = (TransformC*)entity->getComponent(Transform_);
+			auto sprite = (SpriteC*)entity->getComponent(Sprite_);
 
 			//API->drawSprite(transform->position, transform->size, transform->rotation, sprite->getTexture());
 			API->addSpriteInstance(transform->position, transform->size, transform->rotation, sprite->getTexture());
 		}
 		if (entity->hasComponent(AnimatedSprite))
 		{
-			auto transform = (TransformC*)entity->getComponent(Transform);
+			auto transform = (TransformC*)entity->getComponent(Transform_);
 			auto aSprite = (AnimatedSpriteC*)entity->getComponent(AnimatedSprite);
 
 			if (!aSprite->divisions.empty())
@@ -82,7 +82,7 @@ void LayeredRenderingSystem::update(float dt)
 		API->drawSpriteInstances();
 		if (entity->hasComponent(Particle))
 		{
-			auto transform = (TransformC*)entity->getComponent(Transform);
+			auto transform = (TransformC*)entity->getComponent(Transform_);
 			auto emitter = (ParticleC*)entity->getComponent(Particle);
 
 			emitter->emitter.draw(API);

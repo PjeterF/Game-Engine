@@ -10,6 +10,9 @@
 #include "Serialization/serialization.hpp"
 #include "../src/Graphics/InstancedSpriteRenderer.hpp"
 
+#include "../src/ECS2/Systems/MovementS.hpp"
+#include "../src/ECS2/Systems/RenderingS.hpp"
+
 ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
 {
 	EventManager::getInstance().addObserver(this, UI);
@@ -119,6 +122,20 @@ void ZumaApp::run()
 	deSerializeScene("Test", EntManager::getInstance(), SystemsManager::getInstance());
 	mainCamera->setOffset(400, 400);
 
+	MovementS msys;
+	RenderingS rsys(renderingAPI);
+
+	for (int i = 0; i < 100; i++)
+	{
+		Entity ent = EntityManager::getInstance().createEntity();
+		ent.addComponent<Transform>(Transform(rand() % 100, rand() % 100, 10, 10, 0));
+		ent.addComponent<Velocity>(Velocity(2*float(rand()%100)/100-1, 2*float(rand() % 100) / 100-1));
+		ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"));
+
+		msys.addEntity(ent);
+		rsys.addEntity(ent);
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();
@@ -133,6 +150,8 @@ void ZumaApp::run()
 			for (int i = 0; i < 10; i++)
 				emitter.emit();
 			emitter.applyForceInverseToSize(0.1, 0);
+
+			msys.update(0);
 		}
 		else
 		{
@@ -179,6 +198,8 @@ void ZumaApp::run()
 
 		SystemsManager::getInstance().update(dt, DRAWING);
 		emitter.draw(renderingAPI);
+
+		rsys.update(0);
 
 		if (paused)
 		{

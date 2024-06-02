@@ -9,7 +9,7 @@ ParticleSystem::ParticleSystem() : SystemBase(UNPAUSED, true, ParticleSys)
 {
 	name = "ParticleSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, Particle };
+	requiredComponents = { Transform_, Particle };
 }
 
 ParticleSystem& ParticleSystem::getInstance()
@@ -40,7 +40,7 @@ void ParticleSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity->getComponent(Transform);
+		auto transform = (TransformC*)entity->getComponent(Transform_);
 		auto emitter = (ParticleC*)entity->getComponent(Particle);
 
 		if (emitter->counter--==0)

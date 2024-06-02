@@ -8,7 +8,7 @@ ShooterManagementSystem::ShooterManagementSystem() : SystemBase(UNPAUSED, true, 
 
 	name = "ShooterSys(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform, ShooterInfo, RenderingLayer };
+	requiredComponents = { Transform_, ShooterInfo, RenderingLayer };
 	EventManager::getInstance().addObserver(this, ObsBin::Defualt);
 }
 
@@ -51,7 +51,7 @@ bool ShooterManagementSystem::addEntity(Ent* entity)
 	if (!SystemBase::addEntity(entity))
 		return false;
 
-	auto transform = (TransformC*)entity->getComponent(Transform);
+	auto transform = (TransformC*)entity->getComponent(Transform_);
 	auto shooterComponent = (ShooterC*)entity->getComponent(ShooterInfo);
 
 	if (shooterComponent->currShotEntID == -1)
@@ -80,12 +80,12 @@ void ShooterManagementSystem::handleEvent(Event& event)
 			if (shooterComponent->counter != 0)
 				continue;
 
-			auto transform = (TransformC*)entity->getComponent(Transform);
+			auto transform = (TransformC*)entity->getComponent(Transform_);
 			auto layer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
 
 			Ent* shotFired = EntManager::getInstance().getEntity(shooterComponent->currShotEntID);
-			auto shotFired_Velocity = (VelocityC*)shotFired->getComponent(Velocity);
-			auto shotFired_Transform = (TransformC*)shotFired->getComponent(Transform);
+			auto shotFired_Velocity = (VelocityC*)shotFired->getComponent(Velocity_);
+			auto shotFired_Transform = (TransformC*)shotFired->getComponent(Transform_);
 			auto shotFired_Layer = (RenderingLayerC*)shotFired->getComponent(RenderingLayer);
 			shotFired_Layer->layer = layer->layer;
 
@@ -94,7 +94,7 @@ void ShooterManagementSystem::handleEvent(Event& event)
 			shotFired_Velocity->velocity = shooterComponent->shotSpeed * glm::normalize(*targetPos - shotFired_Transform->position);
 
 			Ent* nextShot = EntManager::getInstance().getEntity(shooterComponent->nextShotEntID);
-			auto nextShotTransform = (TransformC*)nextShot->getComponent(Transform);
+			auto nextShotTransform = (TransformC*)nextShot->getComponent(Transform_);
 			nextShotTransform->position = transform->position + transform->size * glm::normalize(*targetPos - transform->position);
 
 			shooterComponent->currShotEntID = shooterComponent->nextShotEntID;

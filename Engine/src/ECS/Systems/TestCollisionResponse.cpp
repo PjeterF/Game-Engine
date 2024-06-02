@@ -2,7 +2,7 @@
 
 TestCollisionResponse::TestCollisionResponse(CollisionSystem* collisionSystem) : SystemBase(UNPAUSED)
 {
-	this->requiredComponents = { Transform, BoxCollider, Velocity };
+	this->requiredComponents = { Transform_, BoxCollider, Velocity_ };
 	this->collisionSystem = collisionSystem;
 }
 
@@ -10,8 +10,8 @@ void TestCollisionResponse::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto transform = (TransformC*)entity->getComponent(CType::Transform);
-		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity);
+		auto transform = (TransformC*)entity->getComponent(CType::Transform_);
+		auto velocity = (VelocityC*)entity->getComponent(CType::Velocity_);
 		auto collider = (BoxColliderC*)entity->getComponent(CType::BoxCollider);
 
 		for (auto& collisionID : collider->collisionsIDs)
