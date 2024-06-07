@@ -488,13 +488,14 @@
     <ClInclude Include="Externals\stb_image.h" />
     <ClInclude Include="src\ECS2\ComponentPool.hpp" />
     <ClInclude Include="src\ECS2\ComponentPoolManager.hpp" />
+    <ClInclude Include="src\ECS2\Components\AABB.hpp" />
     <ClInclude Include="src\ECS2\Components\Sprite.hpp" />
     <ClInclude Include="src\ECS2\Components\Transform.hpp" />
     <ClInclude Include="src\ECS2\Components\Velocity.hpp" />
-    <ClInclude Include="src\ECS2\Entity.hpp" />
     <ClInclude Include="src\ECS2\EntityManager.hpp" />
     <ClInclude Include="src\ECS2\Systems\MovementS.hpp" />
     <ClInclude Include="src\ECS2\Systems\RenderingS.hpp" />
+    <ClInclude Include="src\ECS2\Systems\CollisionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\SysBase.hpp" />
     <ClInclude Include="src\ECS\Components\AnimatedSpriteC.hpp" />
     <ClInclude Include="src\ECS\Components\ParticleC.hpp" />
@@ -577,8 +578,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\ECS2\ComponentPoolManager.cpp" />
     <ClCompile Include="src\ECS2\Components\Sprite.cpp" />
-    <ClCompile Include="src\ECS2\Entity.cpp" />
     <ClCompile Include="src\ECS2\EntityManager.cpp" />
+    <ClCompile Include="src\ECS2\Systems\CollisionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\MovementS.cpp" />
     <ClCompile Include="src\ECS2\Systems\RenderingS.cpp" />
     <ClCompile Include="src\ECS2\Systems\SysBase.cpp" />

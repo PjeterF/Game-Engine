@@ -12,6 +12,7 @@
 
 #include "../src/ECS2/Systems/MovementS.hpp"
 #include "../src/ECS2/Systems/RenderingS.hpp"
+#include "../src/ECS2/Systems/CollisionS.hpp"
 
 ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
 {
@@ -123,9 +124,10 @@ void ZumaApp::run()
 	mainCamera->setOffset(400, 400);
 
 	MovementS msys;
+	CollisionS::initialize(0, 0, 30);
 	RenderingS rsys(renderingAPI);
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 0; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 		ent.addComponent<Transform>(Transform(rand() % 100, rand() % 100, 10, 10, 0));
@@ -135,6 +137,28 @@ void ZumaApp::run()
 		msys.addEntity(ent);
 		rsys.addEntity(ent);
 	}
+
+	
+
+	Entity ent2 = EntityManager::getInstance().createEntity();
+	ent2.addComponent<Transform>(Transform(0, 0, 100, 10, 0));
+	ent2.addComponent<Velocity>(Velocity(0, 0));
+	ent2.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"));
+	ent2.addComponent<AABB>(AABB(100, 10));
+
+	msys.addEntity(ent2);
+	rsys.addEntity(ent2);
+	CollisionS::getInstance().addEntity(ent2);
+
+	Entity ent = EntityManager::getInstance().createEntity();
+	ent.addComponent<Transform>(Transform(-100, 0, 10, 10, 0));
+	ent.addComponent<Velocity>(Velocity(1, 0));
+	ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point2.png"));
+	ent.addComponent<AABB>(AABB(10, 10));
+
+	msys.addEntity(ent);
+	rsys.addEntity(ent);
+	CollisionS::getInstance().addEntity(ent);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -151,7 +175,9 @@ void ZumaApp::run()
 				emitter.emit();
 			emitter.applyForceInverseToSize(0.1, 0);
 
+			CollisionS::getInstance().update(0);
 			msys.update(0);
+			CollisionS::getInstance().lateUpdate(0);
 		}
 		else
 		{

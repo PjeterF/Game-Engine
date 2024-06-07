@@ -29,3 +29,7 @@ void SysBase::removeEntity(int ID)
 {
     entities.erase(ID);
 }
+
+void SysBase::lateUpdate(float dt)
+{
+}

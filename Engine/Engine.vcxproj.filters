@@ -1257,9 +1257,6 @@
     <ClInclude Include="src\ECS2\ComponentPoolManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS2\Entity.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS2\Components\Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1279,6 +1276,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS2\Systems\RenderingS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS2\Components\AABB.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS2\Systems\CollisionS.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1484,9 +1487,6 @@
     <ClCompile Include="src\Graphics\InstancedSpriteRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS2\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ECS2\ComponentPoolManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1503,6 +1503,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS2\Systems\RenderingS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Systems\CollisionS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

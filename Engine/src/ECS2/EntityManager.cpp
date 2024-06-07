@@ -1,11 +1,40 @@
 #include "EntityManager.hpp"
 
+Entity::Entity(int ID) : ID(ID)
+{
+	if (ID == -1)
+		valid = false;
+	else
+		valid = true;
+}
+
+int Entity::getID()
+{
+	return ID;
+}
+
+bool Entity::isValid()
+{
+	return valid;
+}
+
+EntityTag Entity::getTag()
+{
+	return EntityManager::getInstance().getTag(ID);
+}
+
+void Entity::setTag(EntityTag tag)
+{
+	EntityManager::getInstance().setTag(ID, tag);
+}
+
 EntityManager::EntityManager()
 {
 	for (int i = MAX_ENTITIES - 1; i >= 0; i--)
 		availableID.push(i);
 
 	alive = std::vector<bool>(MAX_ENTITIES, false);
+	tags = std::vector<EntityTag>(MAX_ENTITIES, EntityTag::DefaultTag);
 }
 
 EntityManager& EntityManager::getInstance()
@@ -14,7 +43,7 @@ EntityManager& EntityManager::getInstance()
 	return instance;
 }
 
-Entity EntityManager::createEntity()
+Entity EntityManager::createEntity(EntityTag tag)
 {
 	if (availableID.empty())
 		return Entity(-1);
@@ -22,6 +51,7 @@ Entity EntityManager::createEntity()
 	int id = availableID.top();
 	alive[id]=true;
 	availableID.pop();
+	tags[id] = tag;
 
 	return Entity(id);
 }
@@ -54,5 +84,22 @@ void EntityManager::deleteEntity(int ID)
 	{
 		availableID.push(ID);
 		alive[ID] = false;
+		tags[ID] = DefaultTag;
 	}
+}
+
+EntityTag EntityManager::getTag(int ID)
+{
+	if (ID < 0 || ID >= MAX_ENTITIES)
+		throw "Entity ID out of range";
+
+	return this->tags[ID];
+}
+
+void EntityManager::setTag(int ID, EntityTag tag)
+{
+	if (ID < 0 || ID >= MAX_ENTITIES)
+		throw "Entity ID out of range";
+
+	this->tags[ID] = tag;
 }
