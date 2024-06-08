@@ -128,7 +128,7 @@ void ZumaApp::run()
 	CollisionS::initialize(0, 0, 30);
 	RenderingS rsys(renderingAPI);
 
-	for (int i = 0; i < 2000; i++)
+	for (int i = 0; i < 4000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 		ent.addComponent<Transform>(Transform(rand() % 2000, rand() % 2000, 10, 10, 0));

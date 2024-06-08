@@ -37,7 +37,7 @@ private:
 	bool collided(glm::vec2 pos1, glm::vec2 dim1, glm::vec2 pos2, glm::vec2 dim2);
 	float x, y, cellSize;
 
-	std::unordered_map<int, std::unordered_set<int>> grid;
+	std::unordered_map<int, std::vector<int>> grid;
 	std::unordered_map<int, Collision> collisions;
 	std::vector<int> collisionToRemove;
 

@@ -24,19 +24,6 @@ void CollisionS::update(float dt)
 {
 	for (auto& col : collisions)
 	{
-		//switch (col.second.state)
-		//{
-		//	case CollisionS::Collision::State::entry:
-		//		std::cout << col.second.ID1 << "|" << col.second.ID2 << " " << "entry\n";
-		//		break;
-		//	case CollisionS::Collision::State::stay:
-		//		std::cout << col.second.ID1 << "|" << col.second.ID2 << " " << "stay\n";
-		//		break;
-		//	case CollisionS::Collision::State::exit:
-		//		std::cout << col.second.ID1 << "|" << col.second.ID2 << " " << "exit\n";
-		//		break;
-		//}
-
 		if (col.second.state == CollisionS::Collision::State::exit)
 		{
 			collisionToRemove.push_back(col.first);
@@ -65,40 +52,31 @@ void CollisionS::update(float dt)
 
 	for (auto& cell : grid)
 	{
-		for (auto& entId : cell.second)
+		for (int i = 0; i < cell.second.size(); i++)
 		{
-			auto it = cell.second.begin();
-			while (it != cell.second.end())
+			Entity ent1(cell.second[i]);
+			Transform& t1 = ent1.getComponent<Transform>();
+			AABB& c1 = ent1.getComponent<AABB>();
+
+			for (int j = i + 1; j < cell.second.size(); j++)
 			{
-				Entity ent1(*it);
-				Transform& t1 = ent1.getComponent<Transform>();
-				AABB& c1 = ent1.getComponent<AABB>();
+				Entity ent2(cell.second[j]);
+				Transform& t2 = ent2.getComponent<Transform>();
+				AABB& c2 = ent2.getComponent<AABB>();
 
-				auto it2 = it;
-				it2++;
-				while (it2 != cell.second.end())
+				int pairIndex;
+				if (ent1.getID() < ent2.getID())
+					pairIndex = utility::pairing::cantorPair(ent1.getID(), ent2.getID());
+				else
+					pairIndex = utility::pairing::cantorPair(ent2.getID(), ent1.getID());
+
+				if (collisions.find(pairIndex) == collisions.end())
 				{
-					Entity ent2(*it2);
-					Transform& t2 = ent2.getComponent<Transform>();
-					AABB& c2 = ent2.getComponent<AABB>();
-
-					int pairIndex;
-					if (ent1.getID() < ent2.getID())
-						pairIndex = utility::pairing::cantorPair(ent1.getID(), ent2.getID());
-					else
-						pairIndex = utility::pairing::cantorPair(ent2.getID(), ent1.getID());
-
-					if (collisions.find(pairIndex) == collisions.end())
+					if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
 					{
-						if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
-						{
-							collisions[pairIndex] = Collision(ent1.getID(), ent2.getID());
-						}
+						collisions[pairIndex] = Collision(ent1.getID(), ent2.getID());
 					}
-
-					it2++;
 				}
-				it++;
 			}
 		}
 	}
@@ -106,7 +84,6 @@ void CollisionS::update(float dt)
 
 void CollisionS::lateUpdate(float dt)
 {
-	grid.clear();
 	for (auto& cell : grid)
 	{
 		cell.second.clear();
@@ -177,7 +154,7 @@ void CollisionS::addToGrid(int ID)
 	{
 		for (int y = min.y; y <= max.y; y++)
 		{
-			grid[utility::pairing::integerPair(x, y)].insert(ent.getID());
+			grid[utility::pairing::integerPair(x, y)].push_back(ent.getID());
 		}
 	}
 }
