@@ -107,6 +107,10 @@ void CollisionS::update(float dt)
 void CollisionS::lateUpdate(float dt)
 {
 	grid.clear();
+	for (auto& cell : grid)
+	{
+		cell.second.clear();
+	}
 	for (auto& entID : entities)
 	{
 		addToGrid(entID);
@@ -167,13 +171,13 @@ void CollisionS::addToGrid(int ID)
 	Transform& trans = ent.getComponent<Transform>();
 	AABB& col = ent.getComponent<AABB>();
 
-	glm::ivec2 min = { trans.x - col.width, trans.y - col.height }, max = { trans.x + col.width, trans.y + col.height };
+	glm::ivec2 min = { (trans.x - col.width) / cellSize, (trans.y - col.height) / cellSize }, max = { (trans.x + col.width) / cellSize, (trans.y + col.height) / cellSize };
 
 	for (int x = min.x; x <= max.x; x++)
 	{
 		for (int y = min.y; y <= max.y; y++)
 		{
-			grid[utility::pairing::integerPair(x / cellSize, y / cellSize)].insert(ent.getID());
+			grid[utility::pairing::integerPair(x, y)].insert(ent.getID());
 		}
 	}
 }

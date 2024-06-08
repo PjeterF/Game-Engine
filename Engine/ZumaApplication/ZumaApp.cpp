@@ -128,12 +128,12 @@ void ZumaApp::run()
 	CollisionS::initialize(0, 0, 30);
 	RenderingS rsys(renderingAPI);
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 2000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
-		ent.addComponent<Transform>(Transform(rand() % 100, rand() % 100, 10, 10, 0));
+		ent.addComponent<Transform>(Transform(rand() % 2000, rand() % 2000, 10, 10, 0));
 		ent.addComponent<Velocity>(Velocity(2*float(rand()%100)/100-1, 2*float(rand() % 100) / 100-1));
-		ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"));
+		ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/red.jpg"));
 		ent.addComponent<AABB>(AABB(10, 10));
 
 		msys.addEntity(ent);
@@ -178,7 +178,7 @@ void ZumaApp::run()
 
 			CollisionS::getInstance().update(0);
 			msys.update(0);
-			//CollisionS::getInstance().updateResponse(0);
+			CollisionS::getInstance().updateResponse(0);
 			CollisionS::getInstance().lateUpdate(0);
 		}
 		else
@@ -207,6 +207,15 @@ void ZumaApp::run()
 			mainCamera->setPosition(camOffset.x - rate, camOffset.y);
 		if (input->keyDown[ZE_KEY_D])
 			mainCamera->setPosition(camOffset.x + rate, camOffset.y);
+		float wheel = input->mouseWheel();
+		if (input->keyDown[ZE_KEY_Q])
+			wheel = 0.2;
+		if (input->keyDown[ZE_KEY_E])
+			wheel = -0.2;
+		if (wheel)
+		{
+			mainCamera->changeZoom(0.05*wheel);
+		}
 
 		// UI
 		ImGui_ImplOpenGL3_NewFrame();
