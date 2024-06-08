@@ -4790,7 +4790,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                             JSON_THROW(out_of_range::create(401, detail::concat("array index ", std::to_string(idx), " is out of range"), &parent));
                         }
 
-                        // default case: insert add offset
+                        // default case: insert add position
                         parent.insert(parent.begin() + static_cast<difference_type>(idx), val);
                     }
                     break;

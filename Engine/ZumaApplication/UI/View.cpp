@@ -112,8 +112,8 @@ void View::handleEvent(Event& event)
 
 glm::vec2 View::convertPos(float x, float y)
 {
-	x = x - camera->getOffset().x;
-	y = y + camera->getOffset().y;
+	x = x - camera->getPosition().x;
+	y = y + camera->getPosition().y;
 
 	float xScale = (x - this->x) / width;
 	float yScale = (y - this->y) / height;

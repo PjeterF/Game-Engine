@@ -1489,8 +1489,8 @@ typedef void (* GLFWcursorenterfun)(GLFWwindow* window, int entered);
  *  @endcode
  *
  *  @param[in] window The window that received the event.
- *  @param[in] xoffset The scroll offset along the x-axis.
- *  @param[in] yoffset The scroll offset along the y-axis.
+ *  @param[in] xoffset The scroll position along the x-axis.
+ *  @param[in] yoffset The scroll position along the y-axis.
  *
  *  @sa @ref scrolling
  *  @sa @ref glfwSetScrollCallback
@@ -3094,7 +3094,7 @@ GLFWAPI void glfwGetFramebufferSize(GLFWwindow* window, int* width, int* height)
  *  [window-related hints](@ref window_hints_wnd) used to create it.
  *
  *  Because this function retrieves the size of each window frame edge and not
- *  the offset along a particular coordinate axis, the retrieved values will
+ *  the position along a particular coordinate axis, the retrieved values will
  *  always be zero or positive.
  *
  *  Any or all of the size arguments may be `NULL`.  If an error occurs, all

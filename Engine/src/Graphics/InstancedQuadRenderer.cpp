@@ -148,7 +148,7 @@ void InstancedQuadRenderer::INSTANCES_DATA::addInstance(float xPos, float yPos, 
 	if (currentIndex >= bufferSize)
 		return;
 
-	positions[currentIndex] = { camera->getOffset().x + camera->getZoom() * xPos, camera->getOffset().y + camera->getZoom() * yPos };
+	positions[currentIndex] = { camera->getZoom() * xPos - camera->getPosition().x, camera->getZoom() * yPos - camera->getPosition().y };
 	sizes[currentIndex] = camera->getZoom() * scale;
 	colors[currentIndex] = { r, g, b, a };
 	angles[currentIndex] = angle;

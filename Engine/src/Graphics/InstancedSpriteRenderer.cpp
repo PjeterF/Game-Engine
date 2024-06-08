@@ -101,7 +101,7 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 			//add to current batch;
 			batches.back().addInstance
 			(
-				{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+				{ camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y },
 				camera->getZoom() * dimensions,
 				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 				texture,
@@ -115,7 +115,7 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 			batches.push_back(Batch(batches.size()));
 			batches.back().addInstance
 			(
-				{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+				{ camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y },
 				camera->getZoom() * dimensions,
 				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 				texture,
@@ -130,7 +130,7 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 		int batchIndex = (*batch_it).second;
 		batches[batchIndex].addInstance
 		(
-			{ camera->getOffset().x + camera->getZoom() * position.x, camera->getOffset().y + camera->getZoom() * position.y },
+			{ camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y },
 			camera->getZoom() * dimensions,
 			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 			texture,

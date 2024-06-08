@@ -160,7 +160,7 @@ class lexer : public lexer_base<BasicJsonType>
 
     Furthermore, the possible characters '0'..'9', 'A'..'F', and 'a'..'f'
     must be converted to the integers 0x0..0x9, 0xA..0xF, 0xA..0xF, resp. The
-    conversion is done by subtracting the offset (0x30, 0x37, and 0x57)
+    conversion is done by subtracting the position (0x30, 0x37, and 0x57)
     between the ASCII value of the character and the desired integer value.
 
     @return codepoint (0x0000..0xFFFF) or -1 in case of an error (e.g. EOF or

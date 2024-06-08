@@ -18,16 +18,16 @@ public:
 	static CollisionS& getInstance();
 	void update(float dt) override;
 	void lateUpdate(float dt) override;
+	void updateResponse(float dt);
 	virtual bool addEntity(int ID) override;
 	virtual bool addEntity(Entity entity) override;
 private:
 	struct Collision
 	{
-		Collision(int otherID);
+		Collision(int ID1=-1, int ID2=-1);
 		enum class State{entry, stay, exit};
 		State state=State::entry;
-		int otherID;
-
+		int ID1, ID2;
 	};
 
 	CollisionS(float x, float y, float cellSize);
@@ -38,5 +38,8 @@ private:
 	float x, y, cellSize;
 
 	std::unordered_map<int, std::unordered_set<int>> grid;
-	std::unordered_map<int, std::unordered_set<int>> collisions;
+	std::unordered_map<int, Collision> collisions;
+	std::vector<int> collisionToRemove;
+
+	friend class CollisionResolutionS;
 };

@@ -217,7 +217,7 @@ template <class Key, class T, class IgnoredLess = std::less<Key>,
         // This is the start situation. We need to delete elements_affected
         // elements (3 in this example: e, f, g), and need to return an
         // iterator past the last deleted element (h in this example).
-        // Note that offset is the distance from the start of the vector
+        // Note that position is the distance from the start of the vector
         // to first. We will need this later.
 
         // [ a, b, c, d, e, f, g, h, i, j ]
@@ -253,7 +253,7 @@ template <class Key, class T, class IgnoredLess = std::less<Key>,
 
         // first is now pointing past the last deleted element, but we cannot
         // use this iterator, because it may have been invalidated by the
-        // resize call. Instead, we can return begin() + offset.
+        // resize call. Instead, we can return begin() + position.
         return Container::begin() + offset;
     }
 

@@ -74,7 +74,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getOffset().x, camera->getZoom() * position.y + camera->getOffset().y, 0));
+	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y, 0));
 	transform = glm::rotate(transform, glm::radians(angle+0), glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(camera->getZoom() * scale.x, camera->getZoom() *scale.y, 1));
 
@@ -109,7 +109,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getOffset().x, camera->getZoom() * position.y + camera->getOffset().y, 0));
+	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getPosition().x, camera->getZoom() * position.y + camera->getPosition().y, 0));
 	transform = glm::rotate(transform, glm::radians(angle + 0), glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(camera->getZoom() * scale.x, camera->getZoom() * scale.y, 1));
 
@@ -142,7 +142,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getOffset().x, camera->getZoom() * position.y + camera->getOffset().y, 0));
+	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getPosition().x, camera->getZoom() * position.y + camera->getPosition().y, 0));
 	transform = glm::rotate(transform, glm::radians(angle + 0), glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(camera->getZoom() * scale.x, camera->getZoom() * scale.y, 1));
 
@@ -178,7 +178,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 
 	//glm::mat4 transform = glm::mat4(1.0f);
 	//transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	//transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getOffset().x, camera->getZoom() * position.y + camera->getOffset().y, 0));
+	//transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x + camera->getPosition().x, camera->getZoom() * position.y + camera->getPosition().y, 0));
 	//transform = glm::rotate(transform, glm::radians(angle + 0), glm::vec3(0, 0, 1));
 	//transform = glm::scale(transform, glm::vec3(camera->getZoom() * scale.x, camera->getZoom() * scale.y, 1));
 

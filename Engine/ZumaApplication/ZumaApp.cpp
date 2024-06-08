@@ -50,6 +50,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 	);
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
+	viewportFramebuffer->unbind();
 
 	view = new View(windowWidth * 0.25, windowHeight*0.03, windowWidth * 0.5, windowHeight * 0.97, viewportFramebuffer->getTextureID(), window, mainCamera, input);
 	propertiesMenu = new EntityPropertiesMenu(windowWidth * 0.75, windowHeight * 0.5, windowWidth * 0.25, windowHeight);
@@ -58,8 +59,8 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 	zumaMenu = new ZumaMenu(0, windowHeight * 0.5, windowWidth * 0.25, windowHeight * 0.5, &this->routes);
 	bar = new TopBar(windowWidth * 0.25, 0, windowWidth * 0.5, windowHeight * 0.03);
 
-	mainCamera->setFrustrumX(0, view->width);
-	mainCamera->setFrustrumY(0, view->height);
+	mainCamera->setFrustrumX(0, windowWidth);
+	mainCamera->setFrustrumY(0, windowHeight);
 
 	LayeredRenderingSystem::initialize(renderingAPI);
 	CollisionSystem::initialize(-2000, -2000, 80, 80, 40);
@@ -71,7 +72,7 @@ ZumaApp::ZumaApp(float windowWidth, float windowHeight, std::string windowName) 
 
 void ZumaApp::run()
 {
-	std::vector<TextureDivision> divisions;
+	/*std::vector<TextureDivision> divisions;
 	divisions.push_back(TextureDivision(0 * 122, 0, 112, 112));
 	divisions.push_back(TextureDivision(1 * 112, 0, 112, 112));
 	divisions.push_back(TextureDivision(2 * 112, 0, 112, 112));
@@ -110,7 +111,7 @@ void ZumaApp::run()
 	emitter.defaultProperties.startSize = 15;
 	emitter.defaultProperties.endSize = 0;
 	emitter.defaultProperties.velocityDecay = 0.9999;
-	emitter.defaultProperties.particleLifetime = { 100, 300 };
+	emitter.defaultProperties.particleLifetime = { 100, 300 };*/
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -120,28 +121,28 @@ void ZumaApp::run()
 
 	float dt = 1;
 
-	deSerializeScene("Test", EntManager::getInstance(), SystemsManager::getInstance());
-	mainCamera->setOffset(400, 400);
+	//deSerializeScene("Test", EntManager::getInstance(), SystemsManager::getInstance());
+	//mainCamera->setPosition(400, 400);
 
 	MovementS msys;
 	CollisionS::initialize(0, 0, 30);
 	RenderingS rsys(renderingAPI);
 
-	for (int i = 0; i < 0; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 		ent.addComponent<Transform>(Transform(rand() % 100, rand() % 100, 10, 10, 0));
 		ent.addComponent<Velocity>(Velocity(2*float(rand()%100)/100-1, 2*float(rand() % 100) / 100-1));
 		ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"));
+		ent.addComponent<AABB>(AABB(10, 10));
 
 		msys.addEntity(ent);
 		rsys.addEntity(ent);
+		CollisionS::getInstance().addEntity(ent);
 	}
 
-	
-
 	Entity ent2 = EntityManager::getInstance().createEntity();
-	ent2.addComponent<Transform>(Transform(0, 0, 100, 10, 0));
+	ent2.addComponent<Transform>(Transform(100, 100, 100, 10, 0));
 	ent2.addComponent<Velocity>(Velocity(0, 0));
 	ent2.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"));
 	ent2.addComponent<AABB>(AABB(100, 10));
@@ -151,7 +152,7 @@ void ZumaApp::run()
 	CollisionS::getInstance().addEntity(ent2);
 
 	Entity ent = EntityManager::getInstance().createEntity();
-	ent.addComponent<Transform>(Transform(-100, 0, 10, 10, 0));
+	ent.addComponent<Transform>(Transform(-100, 100, 10, 10, 0));
 	ent.addComponent<Velocity>(Velocity(1, 0));
 	ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point2.png"));
 	ent.addComponent<AABB>(AABB(10, 10));
@@ -165,18 +166,19 @@ void ZumaApp::run()
 		auto timeStart = std::chrono::high_resolution_clock::now();
 
 		// Logic Update
-		if (!paused)
+		if (paused)
 		{
 			EntManager::getInstance().update();
 			SystemsManager::getInstance().update(dt, UNPAUSED);
 
-			emitter.update();
-			for (int i = 0; i < 10; i++)
-				emitter.emit();
-			emitter.applyForceInverseToSize(0.1, 0);
+			//emitter.update();
+			//for (int i = 0; i < 10; i++)
+			//	emitter.emit();
+			//emitter.applyForceInverseToSize(0.1, 0);
 
 			CollisionS::getInstance().update(0);
 			msys.update(0);
+			//CollisionS::getInstance().updateResponse(0);
 			CollisionS::getInstance().lateUpdate(0);
 		}
 		else
@@ -185,70 +187,38 @@ void ZumaApp::run()
 		}
 
 		// Drawing
-		viewportFramebuffer->bind();
-		glEnable(GL_DEPTH_TEST);
 		glClearColor(0.3, 0.3, 0.3, 1);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		/*CollisionSystem::getInstance().drawGrid(renderingAPI);
-		CollisionSystem::getInstance().drawColliders(renderingAPI);*/
-
-//		int n = 70;
-//		static float rot = 0;
-//		for (int i = 0; i < n; i++)
-//		{
-//			for (int j= 0; j < n; j++)
-//			{
-//				if((i+j)%2)
-//					renderingAPI->addSpriteInstance({ i * 10, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents(), {0, 0, 128, 256});
-//				else
-//					renderingAPI->addSpriteInstance({ i * 10, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/blue_marble.png")->getContents(), { 112*(iteration/50%4), 0, 112, 112});
-//				
-//					/*if (i % 2)
-//					renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
-//				else
-//					renderingAPI->drawSprite({ i * 10 + iteration, j * 10 }, { 5, 5 }, rot, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());
-//			*/
-//}
-//		}
-//		rot +=0.01;
-
-		/*renderingAPI->addSpriteInstance({ 100, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
-		renderingAPI->addSpriteInstance({ 200, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/blue_marble.png")->getContents());
-		renderingAPI->addSpriteInstance({ 300, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/red_marble.png")->getContents());
-		renderingAPI->addSpriteInstance({ 400, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/yellow_marble.png")->getContents());
-		renderingAPI->addSpriteInstance({ 500, 100, }, { 10, 10 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());
-		*/
-		//renderingAPI->addSpriteInstance({ 100, 100, }, { 10, 10 }, 3.14, ResourceManager::getInstance().getResource<Texture>("src/textures/frog.png")->getContents());
-		renderingAPI->drawSpriteInstances();
-
-		SystemsManager::getInstance().update(dt, DRAWING);
-		emitter.draw(renderingAPI);
+		/*renderingAPI->drawSprite({ 400, 400 }, { 50, 50 }, 0, ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png")->getContents());
+		renderingAPI->addQuadInstance({ 400, 400 }, { 50, 50 }, 0, {0.5, 0.5, 0.5, 1});
+		renderingAPI->drawQuadInstances();
+		renderingAPI->drawQuad({ 500, 400 }, { 50, 50 }, 0, { 0.5, 0.5, 0.5, 1 });*/
 
 		rsys.update(0);
 
-		if (paused)
-		{
-			for (auto& route : routes)
-				route->drawSpline(renderingAPI);
-		}
-
-	
-		viewportFramebuffer->unbind();
-		glDisable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT);
+		auto camOffset = mainCamera->getPosition();
+		static int rate = 10;
+		if (input->keyDown[ZE_KEY_W])
+			mainCamera->setPosition(camOffset.x, camOffset.y + rate);
+		if (input->keyDown[ZE_KEY_S])
+			mainCamera->setPosition(camOffset.x, camOffset.y - rate);
+		if (input->keyDown[ZE_KEY_A])
+			mainCamera->setPosition(camOffset.x - rate, camOffset.y);
+		if (input->keyDown[ZE_KEY_D])
+			mainCamera->setPosition(camOffset.x + rate, camOffset.y);
 
 		// UI
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		view->draw();
+		/*view->draw();
 		propertiesMenu->draw();
 		sceneMenu->draw();
 		assetLoader->draw();
 		zumaMenu->draw();
-		bar->draw();
+		bar->draw();*/
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

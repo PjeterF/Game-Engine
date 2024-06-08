@@ -9,8 +9,8 @@ public:
 	Camera(float frustumX_min, float frustumX_max, float frustumY_min, float frustumY_max) : frustumX_original(glm::vec2(frustumX_min, frustumX_max)), frustumY_original(glm::vec2(frustumY_min, frustumY_max)){}
 	
 	void pan(float x, float y);
-	glm::vec2 getOffset() { return offset; }
-	void setOffset(float x, float y) { offset=glm::vec2(x,y); }
+	glm::vec2 getPosition() { return position; }
+	void setPosition(float x, float y) { position=glm::vec2(x,y); }
 
 	void changeZoom(float increment);
 	void setZoom(float newZoom);
@@ -27,7 +27,7 @@ public:
 private:
 	float zoom = 1;
 	float panningSpeedScale = 0.2;
-	glm::vec2 offset=glm::vec2(0,0);
+	glm::vec2 position=glm::vec2(0,0);
 	glm::vec2 frustumX_original;
 	glm::vec2 frustumY_original;
 };

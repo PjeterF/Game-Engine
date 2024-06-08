@@ -2,7 +2,7 @@
 
 void Camera::pan(float x, float y)
 {
-	offset = offset - zoom*panningSpeedScale*glm::vec2(x, y);
+	position = position - zoom*panningSpeedScale*glm::vec2(x, y);
 }
 void Camera::changeZoom(float increment)
 {

@@ -959,7 +959,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
     const bool is_hovering_table = ItemHoverable(mouse_hit_rect, 0);
     g.ActiveId = backup_active_id;
 
-    // [Part 6] Setup final position, offset, skip/clip states and clipping rectangles, detect hovered column
+    // [Part 6] Setup final position, position, skip/clip states and clipping rectangles, detect hovered column
     // Process columns in their visible orders as we are comparing the visible order and adjusting host_clip_rect while looping.
     int visible_n = 0;
     bool offset_x_frozen = (table->FreezeColumnsCount > 0);
@@ -1599,7 +1599,7 @@ ImGuiTableColumnFlags ImGui::TableGetColumnFlags(int column_n)
 // - Important: we generally don't know our row height until the end of the row, so Max.y will be incorrect in many situations.
 //   The only case where this is correct is if we provided a min_row_height to TableNextRow() and don't go below it, or in TableEndRow() when we locked that height.
 // - Important: if ImGuiTableFlags_PadOuterX is set but ImGuiTableFlags_PadInnerX is not set, the outer-most left and right
-//   columns report a small offset so their CellBgRect can extend up to the outer border.
+//   columns report a small position so their CellBgRect can extend up to the outer border.
 //   FIXME: But the rendering code in TableEndRow() nullifies that with clamping required for scrolling.
 ImRect ImGui::TableGetCellBgRect(const ImGuiTable* table, int column_n)
 {
@@ -2132,7 +2132,7 @@ void ImGui::TableSetColumnWidth(int column_n, float width)
     // When forwarding resize from Wn| to Fn+1| we need to be considerate of the _NoResize flag on Fn+1.
     // FIXME-TABLE: Find a way to rewrite all of this so interactions feel more consistent for the user.
     // Scenarios:
-    // - F1 F2 F3  resize from F1| or F2|   --> ok: alter ->WidthRequested of Fixed column. Subsequent columns will be offset.
+    // - F1 F2 F3  resize from F1| or F2|   --> ok: alter ->WidthRequested of Fixed column. Subsequent columns will be position.
     // - F1 F2 F3  resize from F3|          --> ok: alter ->WidthRequested of Fixed column. If active, ScrollX extent can be altered.
     // - F1 F2 W3  resize from F1| or F2|   --> ok: alter ->WidthRequested of Fixed column. If active, ScrollX extent can be altered, but it doesn't make much sense as the Stretch column will always be minimal size.
     // - F1 F2 W3  resize from W3|          --> ok: no-op (disabled by Resize Rule 1)
@@ -2585,8 +2585,8 @@ void ImGui::TableDrawBorders(ImGuiTable* table)
     // FIXME: could use AddRect or explicit VLine/HLine helper?
     if (table->Flags & ImGuiTableFlags_BordersOuter)
     {
-        // Display outer border offset by 1 which is a simple way to display it without adding an extra draw call
-        // (Without the offset, in outer_window it would be rendered behind cells, because child windows are above their
+        // Display outer border position by 1 which is a simple way to display it without adding an extra draw call
+        // (Without the position, in outer_window it would be rendered behind cells, because child windows are above their
         // parent. In inner_window, it won't reach out over scrollbars. Another weird solution would be to display part
         // of it in inner window, and the part that's over scrollbars in the outer window..)
         // Either solution currently won't allow us to use a larger border size: the border would clipped.

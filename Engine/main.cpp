@@ -19,7 +19,7 @@
 
 int main(void)
 {
-    ZumaApp zumaApp(1920, 1080, "ZumaApp");
+    ZumaApp zumaApp(1000, 1000, "ZumaApp");
     zumaApp.run();
     return 0;
 }

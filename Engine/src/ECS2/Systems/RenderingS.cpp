@@ -16,5 +16,5 @@ void RenderingS::update(float dt)
 
 		rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents());
 	}
-	rAPI->drawQuadInstances();
+	rAPI->drawSpriteInstances();
 }

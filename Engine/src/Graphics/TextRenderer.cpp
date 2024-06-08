@@ -56,7 +56,7 @@ void TextRenderer::draw(float x, float y, float size, char character)
 {
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	transform = glm::translate(transform, glm::vec3(camera->getZoom() * x + camera->getOffset().x, camera->getZoom() * y + camera->getOffset().y, 0));
+	transform = glm::translate(transform, glm::vec3(camera->getZoom() * x + camera->getPosition().x, camera->getZoom() * y + camera->getPosition().y, 0));
 	transform = glm::scale(transform, glm::vec3(camera->getZoom() * size, camera->getZoom() * size, 1));
 
 	glm::vec2 characterSize = glm::vec2(bitmapFont->getWidth() / birmapSizeHorizontal, bitmapFont->getHeight() / birmapSizeVertical);
