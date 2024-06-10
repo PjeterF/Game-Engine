@@ -4,11 +4,13 @@
 #include <set>
 
 #include "../EntityManager.hpp"
+#include "../../Events/EventManager.hpp"
 
-class SysBase
+class SysBase : public EventObserver
 {
 public:
 	SysBase();
+	virtual void handleEvent(Event& event) override;
 	virtual bool addEntity(int ID);
 	virtual bool addEntity(Entity entity);
 	virtual void removeEntity(int ID);

@@ -145,13 +145,15 @@ void ZumaApp::run()
 		
 	}
 
-	for (int i = 0; i < 4000; i++)
+	for (int i = 0; i < 3000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 		ent.addComponent<Transform>(Transform(rand() % 2000-200, rand() % 2000 -200, 30, 30, 0));
 		ent.addComponent<Velocity>(Velocity(2*(1*float(rand()%100)/100-1), 1*(2*float(rand() % 100) / 100-1)));
 		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), divisions[rand()%divisions.size()]));
-		ent.addComponent<AABB>(AABB(15, 15));
+		AABB& col = ent.addComponent<AABB>(AABB(15, 15));
+		if (rand() % 100 < 0)
+			col.enabled = false;
 
 		msys.addEntity(ent);
 		rsys.addEntity(ent);
@@ -220,6 +222,7 @@ void ZumaApp::run()
 			msys.update(0);
 			CollisionS::getInstance().updateResponse(0);
 			CollisionS::getInstance().lateUpdate(0);
+			EntityManager::getInstance().update();
 		}
 		else
 		{
@@ -252,9 +255,8 @@ void ZumaApp::run()
 			auto vec = CollisionS::getInstance().pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
 			for (auto ID : vec)
 			{
-				std::cout << ID<<", ";
+				EntityManager::getInstance().deleteEntity(ID);
 			}
-			std::cout << "\n";
 		}
 		float wheel = input->mouseWheel();
 		if (input->keyDown[ZE_KEY_Q])

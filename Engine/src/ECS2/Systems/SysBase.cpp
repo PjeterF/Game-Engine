@@ -1,8 +1,23 @@
 #include "SysBase.hpp"
 #include "../ComponentPoolManager.hpp"
 
-SysBase::SysBase()
+SysBase::SysBase() : EventObserver(ECS2)
 {
+}
+
+void SysBase::handleEvent(Event& event)
+{
+    switch (event.getType())
+    {
+    case Event::EntityRemoval:
+    {
+        int* ID = (int*)event.getPayload();
+        this->removeEntity(*ID);
+    }
+    break;
+    default:
+        break;
+    }
 }
 
 bool SysBase::addEntity(int ID)

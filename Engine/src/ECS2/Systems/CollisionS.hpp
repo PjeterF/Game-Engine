@@ -17,6 +17,7 @@ class CollisionS : public SysBase
 public:
 	static void initialize(float cellSize);
 	static CollisionS& getInstance();
+	virtual void handleEvent(Event& event) override;
 	void update(float dt) override;
 	void lateUpdate(float dt) override;
 	void updateResponse(float dt);
@@ -37,8 +38,9 @@ private:
 
 	void addToGrid(int ID);
 	bool collided(glm::vec2 pos1, glm::vec2 dim1, glm::vec2 pos2, glm::vec2 dim2);
+	bool pointCollision(glm::vec2 colPos, glm::vec2 colDim, glm::vec2 point);
 	float cellSize;
-	int framesToProcess = 4;
+
 
 	std::unordered_map<int, std::vector<int>> grid;
 	std::unordered_map<int, Collision> collisions;

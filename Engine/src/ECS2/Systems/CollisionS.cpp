@@ -2,6 +2,9 @@
 
 #include <glm/glm.hpp>
 #include <iostream>
+#include <future>
+#include <chrono>
+#include <cmath>
 
 #include "../Components/Velocity.hpp"
 
@@ -18,6 +21,39 @@ void CollisionS::initialize(float cellSize)
 CollisionS& CollisionS::getInstance()
 {
 	return instanceImp(0);
+}
+
+void CollisionS::handleEvent(Event& event)
+{
+	SysBase::handleEvent(event);
+	switch (event.getType())
+	{
+	case Event::EntityRemoval:
+	{
+		int* ID = (int*)event.getPayload();
+		auto it = collisions.begin();
+		while (it != collisions.end())
+		{
+			if ((*it).second.ID1 == *ID || (*it).second.ID2 == *ID)
+			{
+				collisions.erase(it);
+				break;
+			}
+			it++;
+		}
+		/*for (auto& col : collisions)
+		{
+			if (col.second.ID1 == *ID || col.second.ID2 == *ID)
+			{
+				collisionToRemove.push_back(col.first);
+				break;
+			}
+		}*/
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 void CollisionS::update(float dt)
@@ -50,22 +86,26 @@ void CollisionS::update(float dt)
 	}
 	collisionToRemove.clear();
 
+	/*std::vector<std::future<void>> futures;
+	std::mutex colsMutex;*/
+
 	for (auto& cell : grid)
 	{
 		for (int i = 0; i < cell.second.size(); i++)
 		{
 			Entity ent1(cell.second[i]);
-			Transform& t1 = ent1.getComponent<Transform>();
 			AABB& c1 = ent1.getComponent<AABB>();
+			if (!c1.enabled)
+				continue;
+			Transform& t1 = ent1.getComponent<Transform>();
 
 			for (int j = i + 1; j < cell.second.size(); j++)
 			{
 				Entity ent2(cell.second[j]);
-				Transform& t2 = ent2.getComponent<Transform>();
 				AABB& c2 = ent2.getComponent<AABB>();
-
-				if (!c1.enabled || !c2.enabled)
+				if (!c2.enabled)
 					continue;
+				Transform& t2 = ent2.getComponent<Transform>();
 
 				int pairIndex;
 				if (ent1.getID() < ent2.getID())
@@ -77,12 +117,56 @@ void CollisionS::update(float dt)
 				{
 					if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
 					{
+
 						collisions[pairIndex] = Collision(ent1.getID(), ent2.getID());
 					}
 				}
 			}
 		}
+		/*std::future<void> f = std::async(std::launch::async, [this, cell, &colsMutex]() {
+			for (int i = 0; i < cell.second.size(); i++)
+			{
+				Entity ent1(cell.second[i]);
+				Transform& t1 = ent1.getComponent<Transform>();
+				AABB& c1 = ent1.getComponent<AABB>();
+
+				if (!c1.enabled)
+					continue;
+
+				for (int j = i + 1; j < cell.second.size(); j++)
+				{
+					Entity ent2(cell.second[j]);
+					Transform& t2 = ent2.getComponent<Transform>();
+					AABB& c2 = ent2.getComponent<AABB>();
+
+					if (!c2.enabled)
+						continue;
+
+					int pairIndex;
+					if (ent1.getID() < ent2.getID())
+						pairIndex = utility::pairing::cantorPair(ent1.getID(), ent2.getID());
+					else
+						pairIndex = utility::pairing::cantorPair(ent2.getID(), ent1.getID());
+
+					std::lock_guard<std::mutex> lock(colsMutex);
+					if (collisions.find(pairIndex) == collisions.end())
+					{
+						if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
+						{
+
+							collisions[pairIndex] = Collision(ent1.getID(), ent2.getID());
+						}
+					}
+				}
+			}
+			});
+		futures.push_back(std::move(f));*/
 	}
+
+	/*for (auto& future : futures)
+	{
+		future.get();
+	}*/
 }
 
 void CollisionS::lateUpdate(float dt)
@@ -156,7 +240,19 @@ std::vector<int> CollisionS::pointPick(glm::vec2 point)
 	if (it == grid.end())
 		return std::vector<int>();
 	else
-		return (*it).second;
+	{
+		std::vector<int> result;
+		for (auto& ID : (*it).second)
+		{
+			 Entity ent = EntityManager::getInstance().getEntity(ID);
+			 AABB& c = ent.getComponent<AABB>();
+			 Transform& t = ent.getComponent<Transform>();
+
+			 if (pointCollision({ t.x, t.y }, { c.width, c.height }, point))
+				 result.push_back(ID);
+		}
+		return result;
+	}
 }
 
 bool CollisionS::addEntity(int ID)
@@ -202,6 +298,16 @@ bool CollisionS::collided(glm::vec2 pos1, glm::vec2 dim1, glm::vec2 pos2, glm::v
 	if (abs(pos1.x - pos2.x) > dim1.x + dim2.x)
 		return false;
 	if (abs(pos1.y - pos2.y) > dim1.y + dim2.y)
+		return false;
+
+	return true;
+}
+
+bool CollisionS::pointCollision(glm::vec2 colPos, glm::vec2 colDim, glm::vec2 point)
+{
+	if (abs(colPos.x - point.x) > colDim.x)
+		return false;
+	if (abs(colPos.y - point.y) > colDim.y)
 		return false;
 
 	return true;

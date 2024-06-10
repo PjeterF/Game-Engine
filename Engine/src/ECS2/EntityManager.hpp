@@ -25,6 +25,7 @@ public:
 	T& getComponent();
 	EntityTag getTag();
 	void setTag(EntityTag tag);
+	void delete_();
 private:
 	int ID;
 	bool valid;
@@ -40,11 +41,13 @@ public:
 	void deleteEntity(int ID);
 	EntityTag getTag(int ID);
 	void setTag(int ID, EntityTag tag);
+	void update();
 private:
 	EntityManager();
 	std::stack<int> availableID;
 	std::vector<bool> alive;
 	std::vector<EntityTag> tags;
+	std::vector<int> entitiesToDelete;
 };
 
 template<typename T>

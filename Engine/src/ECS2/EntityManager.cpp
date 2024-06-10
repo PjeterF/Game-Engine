@@ -1,5 +1,7 @@
 #include "EntityManager.hpp"
 
+#include "../Events/EventManager.hpp"
+
 Entity::Entity(int ID) : ID(ID)
 {
 	if (ID == -1)
@@ -26,6 +28,11 @@ EntityTag Entity::getTag()
 void Entity::setTag(EntityTag tag)
 {
 	EntityManager::getInstance().setTag(ID, tag);
+}
+
+void Entity::delete_()
+{
+	EntityManager::getInstance().deleteEntity(this->ID);
 }
 
 EntityManager::EntityManager()
@@ -80,12 +87,7 @@ void EntityManager::deleteEntity(int ID)
 	if (ID < 0 || ID >= MAX_ENTITIES)
 		throw "Entity ID out of range";
 
-	if (alive[ID])
-	{
-		availableID.push(ID);
-		alive[ID] = false;
-		tags[ID] = DefaultTag;
-	}
+	entitiesToDelete.push_back(ID);
 }
 
 EntityTag EntityManager::getTag(int ID)
@@ -102,4 +104,19 @@ void EntityManager::setTag(int ID, EntityTag tag)
 		throw "Entity ID out of range";
 
 	this->tags[ID] = tag;
+}
+
+void EntityManager::update()
+{
+	for (auto& ID : entitiesToDelete)
+	{
+		EventManager::getInstance().notify(Event(Event::EntityRemoval, &ID), ECS2);
+		if (alive[ID])
+		{
+			availableID.push(ID);
+			alive[ID] = false;
+			tags[ID] = DefaultTag;
+		}
+	}
+	entitiesToDelete.clear();
 }

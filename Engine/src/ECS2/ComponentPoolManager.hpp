@@ -23,28 +23,46 @@ public:
 private:
 	ComponentPoolManager();
 	std::unordered_map<std::type_index, ComponentPoolBase*> pools;
+	std::vector<std::type_index> indices;
+	std::vector<ComponentPoolBase*> poolsVec;
 };
 
 template<typename T>
 inline bool ComponentPoolManager::addPool()
 {
-	if (pools.find(std::type_index(typeid(T))) == pools.end())
+	for (int i = 0; i < indices.size(); i++)
+	{
+		if (indices[i] == std::type_index(typeid(T)))
+			return false;
+	}
+	indices.push_back(std::type_index(typeid(T)));
+	poolsVec.push_back(new ComponentPool<T>());
+
+	/*if (pools.find(std::type_index(typeid(T))) == pools.end())
 	{
 		pools[std::type_index(typeid(T))] = new ComponentPool<T>();
 		return true;
 	}
-	return false;
+	return false;*/
 }
 
 template<typename T>
 inline T& ComponentPoolManager::getComponent(int ID)
 {
-	auto it = pools.find(std::type_index(typeid(T)));
+	for (int i = 0; i < indices.size(); i++)
+	{
+		if (indices[i] == std::type_index(typeid(T)))
+		{
+			return ((ComponentPool<T>*)poolsVec[i])->components[ID];
+		}
+	}
+
+	/*auto it = pools.find(std::type_index(typeid(T)));
 	int x = 0;
 	ComponentPoolBase* poolb = (*it).second;
 	ComponentPool<T>* pool= (ComponentPool<T>*)poolb;
 	T& c = pool->components[ID];
-	return c;
+	return c;*/
 
 	/*auto it = pools.find(std::type_index(typeid(T)));
 	return ((ComponentPool<T>*)(*it).second)->components[ID];*/
@@ -55,15 +73,33 @@ inline T& ComponentPoolManager::getComponent(int ID)
 template<typename T>
 inline bool ComponentPoolManager::hasComponent(int ID)
 {
-	return ((ComponentPool<T>*)pools[std::type_index(typeid(T))])->entityHasComponent[ID];
+	for (int i = 0; i < indices.size(); i++)
+	{
+		if (indices[i] == std::type_index(typeid(T)))
+		{
+			return ((ComponentPool<T>*)poolsVec[i])->entityHasComponent[ID];
+		}
+	}
+	//return ((ComponentPool<T>*)pools[std::type_index(typeid(T))])->entityHasComponent[ID];
 }
 
 template<typename T>
 inline T& ComponentPoolManager::addComponent(int ID, T component)
 {
-	ComponentPool<T>* pool = (ComponentPool<T>*)pools[std::type_index(typeid(T))];
+	for (int i = 0; i < indices.size(); i++)
+	{
+		if (indices[i] == std::type_index(typeid(T)))
+		{
+			ComponentPool<T>* pool = ((ComponentPool<T>*)poolsVec[i]);
+			pool->entityHasComponent[ID] = true;
+			pool->components[ID] = component;
+			return pool->components[ID];
+		}
+	}
+
+	/*ComponentPool<T>* pool = (ComponentPool<T>*)pools[std::type_index(typeid(T))];
 	pool->entityHasComponent[ID] = true;
 	pool->components[ID] = component;
-	return pool->components[ID];
+	return pool->components[ID];*/
 }
 
