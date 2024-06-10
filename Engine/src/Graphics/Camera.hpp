@@ -22,8 +22,10 @@ public:
 	glm::vec2 getOriginalFrustrumX() { return frustumX_original; }
 	glm::vec2 getOriginalFrustrumY() { return frustumY_original; }
 
-	glm::vec2 getFrustrumX() { return zoom * frustumX_original; }
-	glm::vec2 getFrustrumY() { return zoom * frustumY_original; }
+	glm::vec2 getFrustrumX() { return zoom * (frustumX_original+position.x); }
+	glm::vec2 getFrustrumY() { return zoom * (frustumY_original+position.y); }
+
+	bool pointIsInFrustrum(glm::vec2 point);
 private:
 	float zoom = 1;
 	float panningSpeedScale = 0.2;

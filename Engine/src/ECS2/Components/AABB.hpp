@@ -2,6 +2,7 @@
 
 struct AABB
 {
-	AABB(float width = 0, float height = 0) : width(width), height(height) {}
+	AABB(float width = 0, float height = 0, bool enabled=true) : width(width), height(height), enabled(enabled) {}
 	float width, height;
+	bool enabled;
 };

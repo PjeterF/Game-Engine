@@ -14,7 +14,7 @@ void RenderingS::update(float dt)
 		Transform& trans = ent.getComponent<Transform>();
 		Sprite& sprite = ent.getComponent<Sprite>();
 
-		rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents());
+		rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample);
 	}
 	rAPI->drawSpriteInstances();
 }

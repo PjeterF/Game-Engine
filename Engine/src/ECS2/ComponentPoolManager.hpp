@@ -39,15 +39,23 @@ inline bool ComponentPoolManager::addPool()
 template<typename T>
 inline T& ComponentPoolManager::getComponent(int ID)
 {
-	ComponentPool<T>* pool = (ComponentPool<T>*)pools[std::type_index(typeid(T))];
-	return pool->components[ID];
+	auto it = pools.find(std::type_index(typeid(T)));
+	int x = 0;
+	ComponentPoolBase* poolb = (*it).second;
+	ComponentPool<T>* pool= (ComponentPool<T>*)poolb;
+	T& c = pool->components[ID];
+	return c;
+
+	/*auto it = pools.find(std::type_index(typeid(T)));
+	return ((ComponentPool<T>*)(*it).second)->components[ID];*/
+
+	//return ((ComponentPool<T>*)pools[std::type_index(typeid(T))])->components[ID];
 }
 
 template<typename T>
 inline bool ComponentPoolManager::hasComponent(int ID)
 {
-	ComponentPool<T>* pool = (ComponentPool<T>*)pools[std::type_index(typeid(T))];
-	return pool->entityHasComponent[ID];
+	return ((ComponentPool<T>*)pools[std::type_index(typeid(T))])->entityHasComponent[ID];
 }
 
 template<typename T>

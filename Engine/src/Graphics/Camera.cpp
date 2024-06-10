@@ -20,3 +20,17 @@ void Camera::setZoom(float newZoom)
 		zoom = 0.05;
 	}
 }
+
+bool Camera::pointIsInFrustrum(glm::vec2 point)
+{
+	if (point.x < getFrustrumX().x)
+		return false;
+	if (point.x > getFrustrumX().y)
+		return false;
+	if (point.y < getFrustrumY().x)
+		return false;
+	if (point.y > getFrustrumY().y)
+		return false;
+
+	return true;
+}

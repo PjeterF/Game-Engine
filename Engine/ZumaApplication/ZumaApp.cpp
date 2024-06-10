@@ -125,41 +125,81 @@ void ZumaApp::run()
 	//mainCamera->setPosition(400, 400);
 
 	MovementS msys;
-	CollisionS::initialize(0, 0, 30);
+	CollisionS::initialize(30);
 	RenderingS rsys(renderingAPI);
+
+	std::vector<glm::vec4> divisions;
+	for (int i = 0; i < 38; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			divisions.push_back(
+				{
+					i * 16,
+					j*16,
+					16,
+					16
+				}
+			);
+		}
+		
+	}
 
 	for (int i = 0; i < 4000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
-		ent.addComponent<Transform>(Transform(rand() % 2000, rand() % 2000, 10, 10, 0));
-		ent.addComponent<Velocity>(Velocity(2*float(rand()%100)/100-1, 2*float(rand() % 100) / 100-1));
-		ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/red.jpg"));
-		ent.addComponent<AABB>(AABB(10, 10));
+		ent.addComponent<Transform>(Transform(rand() % 2000-200, rand() % 2000 -200, 30, 30, 0));
+		ent.addComponent<Velocity>(Velocity(2*(1*float(rand()%100)/100-1), 1*(2*float(rand() % 100) / 100-1)));
+		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), divisions[rand()%divisions.size()]));
+		ent.addComponent<AABB>(AABB(15, 15));
 
 		msys.addEntity(ent);
 		rsys.addEntity(ent);
 		CollisionS::getInstance().addEntity(ent);
 	}
+	int boxSize = 500;
+	int boxWidth = 5;
+	{
+		Entity box = EntityManager::getInstance().createEntity();
+		box.addComponent<Transform>(Transform(0, boxSize, boxSize, boxWidth));
+		box.addComponent<AABB>(AABB(boxSize, boxWidth));
+		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
+		box.setTag(Barrier);
 
-	Entity ent2 = EntityManager::getInstance().createEntity();
-	ent2.addComponent<Transform>(Transform(100, 100, 100, 10, 0));
-	ent2.addComponent<Velocity>(Velocity(0, 0));
-	ent2.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point.png"));
-	ent2.addComponent<AABB>(AABB(100, 10));
+		CollisionS::getInstance().addEntity(box);
+		rsys.addEntity(box);
+	}
+	{
+		Entity box = EntityManager::getInstance().createEntity();
+		box.addComponent<Transform>(Transform(0, -boxSize, boxSize, boxWidth));
+		box.addComponent<AABB>(AABB(boxSize, boxWidth));
+		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
+		box.setTag(Barrier);
 
-	msys.addEntity(ent2);
-	rsys.addEntity(ent2);
-	CollisionS::getInstance().addEntity(ent2);
+		CollisionS::getInstance().addEntity(box);
+		rsys.addEntity(box);
+	}
+	{
+		Entity box = EntityManager::getInstance().createEntity();
+		box.addComponent<Transform>(Transform(boxSize, 0, boxWidth, boxSize));
+		box.addComponent<AABB>(AABB(boxWidth, boxSize));
+		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
+		box.setTag(Barrier);
 
-	Entity ent = EntityManager::getInstance().createEntity();
-	ent.addComponent<Transform>(Transform(-100, 100, 10, 10, 0));
-	ent.addComponent<Velocity>(Velocity(1, 0));
-	ent.addComponent<Sprite>(ResourceManager::getInstance().getResource<Texture>("src/textures/control_point2.png"));
-	ent.addComponent<AABB>(AABB(10, 10));
+		CollisionS::getInstance().addEntity(box);
+		rsys.addEntity(box);
+	}
+	{
+		Entity box = EntityManager::getInstance().createEntity();
+		box.addComponent<Transform>(Transform(-boxSize, 0, boxWidth, boxSize));
+		box.addComponent<AABB>(AABB(boxWidth, boxSize));
+		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
+		box.setTag(Barrier);
 
-	msys.addEntity(ent);
-	rsys.addEntity(ent);
-	CollisionS::getInstance().addEntity(ent);
+		CollisionS::getInstance().addEntity(box);
+		rsys.addEntity(box);
+	}
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -207,6 +247,15 @@ void ZumaApp::run()
 			mainCamera->setPosition(camOffset.x - rate, camOffset.y);
 		if (input->keyDown[ZE_KEY_D])
 			mainCamera->setPosition(camOffset.x + rate, camOffset.y);
+		if (input->mouseKeyClicked[ZE_MOUSE_BUTTON_1])
+		{
+			auto vec = CollisionS::getInstance().pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
+			for (auto ID : vec)
+			{
+				std::cout << ID<<", ";
+			}
+			std::cout << "\n";
+		}
 		float wheel = input->mouseWheel();
 		if (input->keyDown[ZE_KEY_Q])
 			wheel = 0.2;

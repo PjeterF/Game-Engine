@@ -20,7 +20,5 @@ void MovementS::update(float dt)
 
 		trans.x += vel.x;
 		trans.y += vel.y;
-
-		//std::cout << entID << "'s position: " << trans.x << " " << trans.y << "\n";
 	}
 }

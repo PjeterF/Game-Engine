@@ -1,6 +1,6 @@
 #include "Sprite.hpp"
 
-Sprite::Sprite(Resource<Texture>* textureRes)
+Sprite::Sprite(Resource<Texture>* textureRes, glm::vec4 textureSample) : textureSample(textureSample)
 {
 	if (textureRes == nullptr)
 	{

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#define MAX_ENTITIES 10000
+#define MAX_ENTITIES 100000
 
 class ComponentPoolBase
 {

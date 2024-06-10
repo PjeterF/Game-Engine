@@ -5,19 +5,19 @@
 
 #include "../Components/Velocity.hpp"
 
-CollisionS::CollisionS(float x, float y, float cellSize) : x(x), y(y), cellSize(cellSize)
+CollisionS::CollisionS(float cellSize) : cellSize(cellSize)
 {
 	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(AABB)) };
 }
 
-void CollisionS::initialize(float x, float y, float cellSize)
+void CollisionS::initialize(float cellSize)
 {
-	instanceImp(x, y, cellSize);
+	instanceImp(cellSize);
 }
 
 CollisionS& CollisionS::getInstance()
 {
-	return instanceImp(0, 0, 0);
+	return instanceImp(0);
 }
 
 void CollisionS::update(float dt)
@@ -64,6 +64,9 @@ void CollisionS::update(float dt)
 				Transform& t2 = ent2.getComponent<Transform>();
 				AABB& c2 = ent2.getComponent<AABB>();
 
+				if (!c1.enabled || !c2.enabled)
+					continue;
+
 				int pairIndex;
 				if (ent1.getID() < ent2.getID())
 					pairIndex = utility::pairing::cantorPair(ent1.getID(), ent2.getID());
@@ -86,8 +89,16 @@ void CollisionS::lateUpdate(float dt)
 {
 	for (auto& cell : grid)
 	{
+		if (cell.second.empty())
+			cellToRemove.push_back(cell.first);
 		cell.second.clear();
 	}
+	for (auto index : cellToRemove)
+	{
+		grid.erase(index);
+	}
+	cellToRemove.clear();
+
 	for (auto& entID : entities)
 	{
 		addToGrid(entID);
@@ -100,25 +111,52 @@ void CollisionS::updateResponse(float dt)
 	{
 		Entity ent1(collision.second.ID1);
 		Entity ent2(collision.second.ID2);
+		EntityTag tag1 = ent1.getTag();
+		EntityTag tag2 = ent2.getTag();
 
-		if (ent1.getTag() == EntityTag::DefaultTag && ent2.getTag() == EntityTag::DefaultTag)
+		if ((tag1 | tag2) == (Barrier | DefaultTag) && collision.second.state == CollisionS::Collision::State::entry)
 		{
-			if (collision.second.state == CollisionS::Collision::State::entry)
+			if (ent1.hasComponent<Velocity>())
 			{
-				Velocity& v1 = ent1.getComponent<Velocity>();
-				Velocity& v2 = ent2.getComponent<Velocity>();
-
-				Velocity v1Init = v1;
-				Velocity v2Init = v2;
-
-				v1.x = (2 * v2Init.x) / (2);
-				v1.y = (2 * v2Init.y) / (2);
-
-				v2.x = (2 * v1Init.x) / (2);
-				v2.y = (2 * v1Init.y) / (2);
+				Velocity& v = ent1.getComponent<Velocity>();
+				v.x = -v.x;
+				v.y = -v.y;
 			}
+			else
+			{
+				Velocity& v = ent2.getComponent<Velocity>();
+				v.x = -v.x;
+				v.y = -v.y;
+			}
+			continue;
 		}
+		if ((tag1 | tag2) == (Barrier | DefaultTag))
+			continue;
+		if (ent1.getTag() == EntityTag::DefaultTag && ent2.getTag() == EntityTag::DefaultTag && collision.second.state == CollisionS::Collision::State::entry)
+		{
+			Velocity& v1 = ent1.getComponent<Velocity>();
+			Velocity& v2 = ent2.getComponent<Velocity>();
+
+			Velocity v1Init = v1;
+			Velocity v2Init = v2;
+
+			v1.x = (2 * v2Init.x) / (2);
+			v1.y = (2 * v2Init.y) / (2);
+
+			v2.x = (2 * v1Init.x) / (2);
+			v2.y = (2 * v1Init.y) / (2);
+		}
+		
 	}
+}
+
+std::vector<int> CollisionS::pointPick(glm::vec2 point)
+{
+	auto it = grid.find(utility::pairing::integerPair(point.x / cellSize, point.y / cellSize));
+	if (it == grid.end())
+		return std::vector<int>();
+	else
+		return (*it).second;
 }
 
 bool CollisionS::addEntity(int ID)
@@ -136,9 +174,9 @@ bool CollisionS::addEntity(Entity entity)
 	return CollisionS::addEntity(entity.getID());
 }
 
-CollisionS& CollisionS::instanceImp(float x, float y, float cellSize)
+CollisionS& CollisionS::instanceImp(float cellSize)
 {
-	static CollisionS system(x, y, cellSize);
+	static CollisionS system(cellSize);
 	return system;
 }
 
