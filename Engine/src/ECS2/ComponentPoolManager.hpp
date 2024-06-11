@@ -13,6 +13,8 @@ public:
 	template<typename T>
 	bool addPool();
 	template<typename T>
+	ComponentPool<T>* getPool();
+	template<typename T>
 	T& getComponent(int ID);
 	template<typename T>
 	bool hasComponent(int ID);
@@ -44,6 +46,18 @@ inline bool ComponentPoolManager::addPool()
 		return true;
 	}
 	return false;*/
+}
+
+template<typename T>
+inline ComponentPool<T>* ComponentPoolManager::getPool()
+{
+	for (int i = 0; i < indices.size(); i++)
+	{
+		if (indices[i] == std::type_index(typeid(T)))
+		{
+			return ((ComponentPool<T>*)poolsVec[i]);
+		}
+	}
 }
 
 template<typename T>

@@ -89,6 +89,9 @@ void CollisionS::update(float dt)
 	/*std::vector<std::future<void>> futures;
 	std::mutex colsMutex;*/
 
+	auto TransformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+	auto AABBPool = ComponentPoolManager::getInstance().getPool<AABB>();
+
 	for (auto& cell : grid)
 	{
 		for (int i = 0; i < cell.second.size(); i++)
