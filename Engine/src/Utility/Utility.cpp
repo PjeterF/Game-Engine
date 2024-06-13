@@ -47,11 +47,12 @@ std::vector<glm::vec4> utility::sampling::sampleEvenly(int regionWidth, int regi
 {
     std::vector<glm::vec4> result;
     glm::vec2 partitionDim = { regionWidth / dimX, regionHeight / dimY };
-    for (int y = 0; y < dimY; y++)
-    {
+    for (int y = 0; y < dimY; y++) {
         for (int x = 0; x < dimX; x++)
         {
-            result.push_back({ partitionDim.x * x+xOffset, partitionDim.y * y+yOffset, partitionDim.x, partitionDim.y });
+            float xPos = partitionDim.x * x + xOffset;
+            float yPos = regionHeight - partitionDim.y * (y + 1) - yOffset;
+            result.push_back({ xPos, yPos, partitionDim.x, partitionDim.y });
         }
     }
     return result;

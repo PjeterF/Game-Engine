@@ -9,7 +9,7 @@ void Camera::changeZoom(float increment)
 	zoom = zoom + increment;
 	if (zoom <= 0)
 	{
-		zoom = 0.05;
+		zoom = 0.1;
 	}
 }
 void Camera::setZoom(float newZoom)
@@ -17,7 +17,7 @@ void Camera::setZoom(float newZoom)
 	zoom = newZoom;
 	if (zoom <= 0)
 	{
-		zoom = 0.05;
+		zoom = 0.1;
 	}
 }
 

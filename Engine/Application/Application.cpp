@@ -13,6 +13,8 @@
 #include "../src/ECS2/Systems/RenderingS.hpp"
 #include "../src/ECS2/Systems/CollisionS.hpp"
 
+#include "Tilemap/Tilemap.hpp"
+
 Application::Application(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
 {
 	EventManager::getInstance().addObserver(this, UI);
@@ -38,7 +40,7 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 	//ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/line");
 	//ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/instancedQuad");
 
-	mainCamera = new Camera(0, windowWidth, 0, windowHeight);
+	mainCamera = new Camera(0, windowWidth, 0, windowHeight*2);
 	renderingAPI = new RenderingAPI(
 		mainCamera,
 		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/line")->getContents()->getId(),
@@ -61,6 +63,8 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 
 void Application::run()
 {
+
+
 	/*ParticeEmitter emitter(0, 3000, 10000);
 	emitter.defaultProperties.xPosVar = glm::vec2(-50, 50);
 	emitter.defaultProperties.yPosVar = glm::vec2(-10, 30);
@@ -85,20 +89,36 @@ void Application::run()
 	std::vector<glm::vec4> fruitDivisions;
 	fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
 	std::vector<glm::vec4> tileDivisions;
-	tileDivisions = utility::sampling::sampleEvenly(256, 256, 0, 0, 8, 8);
+	tileDivisions = utility::sampling::sampleEvenly(32*8, 32*8, 0, 0, 8, 8);
 
+	TileArchetype::map[TileType::Grass] = TileArchetype("src/Textures/Tilesets/TX Tileset Grass.png", tileDivisions[0 + 3 * 8], true);
+	TileArchetype::map[TileType::Path1] = TileArchetype("src/Textures/Tilesets/TX Tileset Grass.png", tileDivisions[0 + 4 * 8], true);
 
+	std::vector<Tile> tiles;
+	for (int i = 0; i <TILE_ARRAY_SIZE; i++)
 	{
-		Entity ent = EntityManager::getInstance().createEntity();
-		ent.addComponent<Transform>(Transform(0, 0, 100, 100));
-		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Tilesets/TX Tileset Grass.png"), tileDivisions[0]));
-		//ent.addComponent<Animation>(Animation(0, 10, { { 0, 64, 96, 192 }, { 0, 64, 192, 192 } }));
-		RenderingS::getInstance().addEntity(ent, 1);
+		if (i % 2)
+			tiles.push_back(Tile(TileArchetype::map[TileType::Grass]));
+		else
+			tiles.push_back(Tile(TileArchetype::map[TileType::Path1]));
 	}
+
+	Tilemap tilemap = Tilemap(0, 0, tiles);
+
+	//{
+	//	Entity ent = EntityManager::getInstance().createEntity();
+	//	ent.addComponent<Transform>(Transform(0, 0, 100, 100));
+	//	ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Tilesets/TX Tileset Grass.png"), tileDivisions[0 + 4 * 8]));
+	//	//ent.addComponent<Animation>(Animation(0, 10, { { 0, 64, 96, 192 }, { 0, 64, 192, 192 } }));
+	//	RenderingS::getInstance().addEntity(ent, 1);
+	//}
+	int id;
 	for (int i = 0; i < 4000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
-		ent.addComponent<Transform>(Transform(rand() % 2000-200, rand() % 2000 -200, 30, 30, 0));
+		if (i == 0)
+			id = ent.getID();
+		ent.addComponent<Transform>(Transform(rand() % 2000-200, rand() % 2000-200, 30, 30, 0));
 		ent.addComponent<Velocity>(Velocity(2*(1*float(rand()%100)/100-1), 1*(2*float(rand() % 100) / 100-1), 0, -0.01));
 		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand()%fruitDivisions.size()]));
 		AABB& col = ent.addComponent<AABB>(AABB(15, 15));
@@ -153,6 +173,7 @@ void Application::run()
 		RenderingS::getInstance().addEntity(box);
 	}
 	
+	mainCamera->setPosition(0, 0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -169,6 +190,11 @@ void Application::run()
 			//	emitter.emit();
 			//emitter.applyForceInverseToSize(0.1, 0);
 
+			/*Entity ent(id);
+			Transform& transform = ent.getComponent<Transform>();
+
+			mainCamera->setPosition(transform.x, transform.y);*/
+
 			CollisionS::getInstance().update(0);
 			msys.update(0);
 			CollisionS::getInstance().updateResponse(0);
@@ -183,6 +209,8 @@ void Application::run()
 		// Drawing
 		glClearColor(0.3, 0.3, 0.3, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		tilemap.draw(renderingAPI);
 
 		RenderingS::getInstance().update(0);
 
@@ -206,18 +234,21 @@ void Application::run()
 		}
 		float wheel = input->mouseWheel();
 		if (input->keyDown[ZE_KEY_Q])
-			wheel = 0.2;
+			wheel = 1;
 		if (input->keyDown[ZE_KEY_E])
-			wheel = -0.2;
+			wheel = -1;
 		if (wheel)
 		{
-			mainCamera->changeZoom(0.05*wheel);
+			mainCamera->changeZoom(0.1*wheel);
 		}
 
 		// UI
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+
+		ImGui::Begin("Tile map edit");
+		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
