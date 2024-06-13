@@ -42,3 +42,22 @@ namespace utility
         }
     }
 }
+
+std::vector<glm::vec4> utility::sampling::sampleEvenly(int regionWidth, int regionHeight, int xOffset, int yOffset, int dimX, int dimY)
+{
+    std::vector<glm::vec4> result;
+    glm::vec2 partitionDim = { regionWidth / dimX, regionHeight / dimY };
+    for (int y = 0; y < dimY; y++)
+    {
+        for (int x = 0; x < dimX; x++)
+        {
+            result.push_back({ partitionDim.x * x+xOffset, partitionDim.y * y+yOffset, partitionDim.x, partitionDim.y });
+        }
+    }
+    return result;
+}
+
+float utility::tweens::easeOutCubic(float t)
+{
+    return 1 - pow(1.0f - t, 3);
+}

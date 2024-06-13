@@ -41,14 +41,6 @@ void CollisionS::handleEvent(Event& event)
 			}
 			it++;
 		}
-		/*for (auto& col : collisions)
-		{
-			if (col.second.ID1 == *ID || col.second.ID2 == *ID)
-			{
-				collisionToRemove.push_back(col.first);
-				break;
-			}
-		}*/
 	}
 	break;
 	default:
@@ -58,21 +50,26 @@ void CollisionS::handleEvent(Event& event)
 
 void CollisionS::update(float dt)
 {
+	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+	auto AABBPool = ComponentPoolManager::getInstance().getPool<AABB>();
+
 	for (auto& col : collisions)
 	{
+		int ID1 = col.second.ID1;
+		Transform& t1 = transformPool->get(ID1);
+		AABB& c1 = AABBPool->get(ID1);
+
+		int ID2 = col.second.ID2;
+		Transform& t2 = transformPool->get(ID2);
+		AABB& c2 = AABBPool->get(ID2);
+
 		if (col.second.state == CollisionS::Collision::State::exit)
 		{
+			c1.collidingEntIDs.push_back(ID2);
+			c2.collidingEntIDs.push_back(ID1);
 			collisionToRemove.push_back(col.first);
 			continue;
 		}
-
-		Entity ent1(col.second.ID1);
-		Transform& t1 = ent1.getComponent<Transform>();
-		AABB& c1 = ent1.getComponent<AABB>();
-
-		Entity ent2(col.second.ID2);
-		Transform& t2 = ent2.getComponent<Transform>();
-		AABB& c2 = ent2.getComponent<AABB>();
 
 		if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
 			col.second.state = CollisionS::Collision::State::stay;
@@ -89,39 +86,37 @@ void CollisionS::update(float dt)
 	/*std::vector<std::future<void>> futures;
 	std::mutex colsMutex;*/
 
-	auto TransformPool = ComponentPoolManager::getInstance().getPool<Transform>();
-	auto AABBPool = ComponentPoolManager::getInstance().getPool<AABB>();
-
 	for (auto& cell : grid)
 	{
 		for (int i = 0; i < cell.second.size(); i++)
 		{
-			Entity ent1(cell.second[i]);
-			AABB& c1 = ent1.getComponent<AABB>();
+			int ID1 = cell.second[i];
+			AABB& c1 = AABBPool->get(ID1);
 			if (!c1.enabled)
 				continue;
-			Transform& t1 = ent1.getComponent<Transform>();
+			Transform& t1 = transformPool->get(ID1);
 
 			for (int j = i + 1; j < cell.second.size(); j++)
 			{
-				Entity ent2(cell.second[j]);
-				AABB& c2 = ent2.getComponent<AABB>();
+				int ID2 = cell.second[j];
+				AABB& c2 = AABBPool->get(ID2);
 				if (!c2.enabled)
 					continue;
-				Transform& t2 = ent2.getComponent<Transform>();
+				Transform& t2 = transformPool->get(ID2);
 
 				int pairIndex;
-				if (ent1.getID() < ent2.getID())
-					pairIndex = utility::pairing::cantorPair(ent1.getID(), ent2.getID());
+				if (ID1 < ID2)
+					pairIndex = utility::pairing::cantorPair(ID1, ID2);
 				else
-					pairIndex = utility::pairing::cantorPair(ent2.getID(), ent1.getID());
+					pairIndex = utility::pairing::cantorPair(ID2, ID1);
 
 				if (collisions.find(pairIndex) == collisions.end())
 				{
 					if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
 					{
-
-						collisions[pairIndex] = Collision(ent1.getID(), ent2.getID());
+						c1.collidingEntIDs.push_back(ID2);
+						c2.collidingEntIDs.push_back(ID1);
+						collisions[pairIndex] = Collision(ID1, ID2);
 					}
 				}
 			}
@@ -248,10 +243,10 @@ std::vector<int> CollisionS::pointPick(glm::vec2 point)
 		for (auto& ID : (*it).second)
 		{
 			 Entity ent = EntityManager::getInstance().getEntity(ID);
-			 AABB& c = ent.getComponent<AABB>();
+			 //AABB& c = ent.getComponent<AABB>();
 			 Transform& t = ent.getComponent<Transform>();
 
-			 if (pointCollision({ t.x, t.y }, { c.width, c.height }, point))
+			 if (pointCollision({ t.x, t.y }, { t.width, t.height }, point))
 				 result.push_back(ID);
 		}
 		return result;
@@ -273,6 +268,21 @@ bool CollisionS::addEntity(Entity entity)
 	return CollisionS::addEntity(entity.getID());
 }
 
+CollisionS::Collision& CollisionS::getCollision(int ID1, int ID2)
+{
+	int pairIndex;
+	if (ID1 < ID2)
+		pairIndex = utility::pairing::cantorPair(ID1, ID2);
+	else
+		pairIndex = utility::pairing::cantorPair(ID2, ID1);
+
+	auto it = collisions.find(pairIndex);
+	if (it == collisions.end())
+		throw "Collision does not exist";
+	else
+		return (*it).second;
+}
+
 CollisionS& CollisionS::instanceImp(float cellSize)
 {
 	static CollisionS system(cellSize);
@@ -281,9 +291,11 @@ CollisionS& CollisionS::instanceImp(float cellSize)
 
 void CollisionS::addToGrid(int ID)
 {
-	Entity ent = EntityManager::getInstance().getEntity(ID);
-	Transform& trans = ent.getComponent<Transform>();
-	AABB& col = ent.getComponent<AABB>();
+	static auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+	static auto AABBPool = ComponentPoolManager::getInstance().getPool<AABB>();
+
+	Transform& trans = transformPool->get(ID);
+	AABB& col = AABBPool->get(ID);
 
 	glm::ivec2 min = { (trans.x - col.width) / cellSize, (trans.y - col.height) / cellSize }, max = { (trans.x + col.width) / cellSize, (trans.y + col.height) / cellSize };
 
@@ -291,7 +303,7 @@ void CollisionS::addToGrid(int ID)
 	{
 		for (int y = min.y; y <= max.y; y++)
 		{
-			grid[utility::pairing::integerPair(x, y)].push_back(ent.getID());
+			grid[utility::pairing::integerPair(x, y)].push_back(ID);
 		}
 	}
 }

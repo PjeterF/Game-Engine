@@ -8,7 +8,6 @@
 #include "../Components/RenderingLayerC.hpp"
 #include "../Components/ParticleC.hpp"
 #include "../Components/CounterC.hpp"
-#include "../../../ZumaApplication/Logic/ShooterInfoC.hpp"
 
 Ent::~Ent()
 {
@@ -87,9 +86,9 @@ void Ent::from_json(nlohmann::json& j)
 		break;
 		case ShooterInfo:
 		{
-			ShooterC* newC = new ShooterC();
+			/*ShooterC* newC = new ShooterC();
 			(*newC).from_json(component);
-			this->addComponent(newC);
+			this->addComponent(newC);*/
 		}
 		break;
 		case Particle:

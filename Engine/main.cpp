@@ -15,11 +15,11 @@
 #include <math.h>
 #include "src/Graphics/Camera.hpp"
 
-#include "ZumaApplication/ZumaApp.hpp"
+#include "Application/Application.hpp"
 
 int main(void)
 {
-    ZumaApp zumaApp(1000, 1000, "ZumaApp");
+    Application zumaApp(1000, 1000, "Engine");
     zumaApp.run();
     return 0;
 }

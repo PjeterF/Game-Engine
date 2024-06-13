@@ -1,8 +1,9 @@
 #pragma once
 
-#include <glm/vec2.hpp>
+#include <glm/glm.hpp>
 #include <tuple>
 #include <cmath>
+#include <vector>
 
 namespace utility
 {
@@ -17,5 +18,13 @@ namespace utility
 		int integerTriple(int a, int b, int c);
 
 		std::tuple<int, int> undoCantorPair(int pair);
+	}
+	namespace sampling
+	{
+		std::vector<glm::vec4> sampleEvenly(int regionWidth, int regionHeight, int xOffset=0, int yOffset=0, int dimX=1, int dimY=1);
+	}
+	namespace tweens
+	{
+		float easeOutCubic(float t);
 	}
 }

@@ -1,9 +1,5 @@
 #include "MovementS.hpp"
 
-
-
-#include <iostream>
-
 MovementS::MovementS()
 {
 	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(Velocity)) };
@@ -11,12 +7,16 @@ MovementS::MovementS()
 
 void MovementS::update(float dt)
 {
+	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+	auto velocityPool = ComponentPoolManager::getInstance().getPool<Velocity>();
+
 	for (auto entID : entities)
 	{
-		Entity ent = EntityManager::getInstance().getEntity(entID);
-		
-		Transform& trans = ent.getComponent<Transform>();
-		Velocity& vel = ent.getComponent<Velocity>();
+		Transform& trans = transformPool->get(entID);
+		Velocity& vel = velocityPool->get(entID);
+
+		vel.x += vel.ax;
+		vel.y += vel.ay;
 
 		trans.x += vel.x;
 		trans.y += vel.y;
