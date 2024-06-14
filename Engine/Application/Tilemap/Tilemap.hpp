@@ -7,8 +7,10 @@
 #include <string>
 #include <glm/glm.hpp>
 
-#define TILEMAP_DIM_X 48
-#define TILEMAP_DIM_Y 24
+#include <nlohmann/json.hpp>
+
+#define TILEMAP_DIM_X 5
+#define TILEMAP_DIM_Y 5
 #define TILE_ARRAY_SIZE TILEMAP_DIM_X*TILEMAP_DIM_Y
 #define TILE_SIZE 50
 
@@ -31,6 +33,7 @@ struct TileArchetype
 struct Tile
 {
 	Tile(TileArchetype& archetype);
+	Tile(std::string textureFilepath, glm::vec4 division, bool passable);
 	Resource<Texture>* textureRes;
 	glm::vec4 division;
 	bool passable;
@@ -42,6 +45,8 @@ public:
 	Tilemap(float x, float y, std::vector<Tile> tiles);
 	void draw(RenderingAPI* API);
 	void setTile(int x, int y, Tile tile);
+	nlohmann::json serialize();
+	void deserialize(nlohmann::json j);
 private:
 	glm::vec2 position;
 	std::vector<Tile> tiles;

@@ -1251,6 +1251,12 @@
     <ClInclude Include="src\Managers\Tileset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Application\UI\View.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UI\UIElement.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">

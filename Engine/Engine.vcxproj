@@ -142,6 +142,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application\Tilemap\Tilemap.hpp" />
+    <ClInclude Include="Application\UI\View.hpp" />
+    <ClInclude Include="Application\UI\UIElement.hpp" />
     <ClInclude Include="Externals\includes\gladES\glad.h" />
     <ClInclude Include="Externals\includes\glad\glad.h" />
     <ClInclude Include="Externals\includes\GLES3\gl3.h" />

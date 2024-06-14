@@ -76,6 +76,9 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 	if (texture == nullptr)
 		return;
 
+	if (!camera->pointIsInFrustrum(position))
+		return;
+
 	glm::vec4 texSample;
 	if (glm::dot(textureSample, glm::vec4(1, 1, 1, 1)) == 0)
 	{
@@ -101,8 +104,8 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 			//add to current batch;
 			batches.back().addInstance
 			(
-				{ camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y },
-				camera->getZoom() * dimensions,
+				{ position.x,position.y },
+				dimensions,
 				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 				texture,
 				texSample
@@ -115,8 +118,8 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 			batches.push_back(Batch(batches.size()));
 			batches.back().addInstance
 			(
-				{ camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y },
-				camera->getZoom() * dimensions,
+				{ position.x,position.y },
+				dimensions,
 				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 				texture,
 				texSample
@@ -130,8 +133,8 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 		int batchIndex = (*batch_it).second;
 		batches[batchIndex].addInstance
 		(
-			{ camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y },
-			camera->getZoom() * dimensions,
+			{ position.x,position.y },
+			dimensions,
 			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 			texture,
 			texSample
@@ -165,7 +168,7 @@ void InstancedSpriteRenderer::drawInstances()
 
 		glUseProgram(shaderProgramID);
 
-		glm::mat4 projection = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
+		glm::mat4 projection = glm::ortho(camera->getFrustrumX().x, camera->getFrustrumX().y, camera->getFrustrumY().x, camera->getFrustrumY().y, -1.0f, 1.0f);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 		for (auto var : batch.texUnitMap)

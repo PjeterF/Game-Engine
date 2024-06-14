@@ -90,7 +90,7 @@ void InstancedQuadRenderer::drawInstances()
 
 	glUseProgram(shaderProgramID);
 
-	glm::mat4 projection = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(camera->getFrustrumX().x, camera->getFrustrumX().y, camera->getFrustrumY().x, camera->getFrustrumY().y, -1.0f, 1.0f);
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgramID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	VAO->bind();
@@ -148,8 +148,11 @@ void InstancedQuadRenderer::INSTANCES_DATA::addInstance(float xPos, float yPos, 
 	if (currentIndex >= bufferSize)
 		return;
 
-	positions[currentIndex] = { camera->getZoom() * xPos - camera->getPosition().x, camera->getZoom() * yPos - camera->getPosition().y };
-	sizes[currentIndex] = camera->getZoom() * scale;
+	if (!camera->pointIsInFrustrum({xPos, yPos}))
+		return;
+
+	positions[currentIndex] = { xPos, yPos };
+	sizes[currentIndex] = scale;
 	colors[currentIndex] = { r, g, b, a };
 	angles[currentIndex] = angle;
 

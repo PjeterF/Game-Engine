@@ -22,8 +22,8 @@ public:
 	glm::vec2 getOriginalFrustrumX() { return frustumX_original; }
 	glm::vec2 getOriginalFrustrumY() { return frustumY_original; }
 
-	glm::vec2 getFrustrumX() { return zoom * (frustumX_original+position.x); }
-	glm::vec2 getFrustrumY() { return zoom * (frustumY_original+position.y); }
+	glm::vec2 getFrustrumX() { return frustumX_original / zoom + position.x; }
+	glm::vec2 getFrustrumY() { return frustumY_original / zoom + position.y; }
 
 	bool pointIsInFrustrum(glm::vec2 point);
 private:

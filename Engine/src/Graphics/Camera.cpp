@@ -8,17 +8,17 @@ void Camera::changeZoom(float increment)
 {
 	zoom = zoom + increment;
 	if (zoom <= 0)
-	{
 		zoom = 0.1;
-	}
+	if (zoom == 3)
+		zoom = 3;
 }
 void Camera::setZoom(float newZoom)
 {
 	zoom = newZoom;
 	if (zoom <= 0)
-	{
 		zoom = 0.1;
-	}
+	if (zoom == 3)
+		zoom = 3;
 }
 
 bool Camera::pointIsInFrustrum(glm::vec2 point)

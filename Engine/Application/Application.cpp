@@ -65,7 +65,7 @@ void Application::run()
 {
 
 
-	/*ParticeEmitter emitter(0, 3000, 10000);
+	ParticeEmitter emitter(0, 3000, 10000);
 	emitter.defaultProperties.xPosVar = glm::vec2(-50, 50);
 	emitter.defaultProperties.yPosVar = glm::vec2(-10, 30);
 	emitter.defaultProperties.yVelVar = glm::vec2(1, 3);
@@ -74,7 +74,7 @@ void Application::run()
 	emitter.defaultProperties.startSize = 15;
 	emitter.defaultProperties.endSize = 0;
 	emitter.defaultProperties.velocityDecay = 0.9999;
-	emitter.defaultProperties.particleLifetime = { 100, 300 };*/
+	emitter.defaultProperties.particleLifetime = { 100, 300 };
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -104,6 +104,8 @@ void Application::run()
 	}
 
 	Tilemap tilemap = Tilemap(0, 0, tiles);
+	auto ser = tilemap.serialize();
+	tilemap.deserialize(ser);
 
 	//{
 	//	Entity ent = EntityManager::getInstance().createEntity();
@@ -113,7 +115,7 @@ void Application::run()
 	//	RenderingS::getInstance().addEntity(ent, 1);
 	//}
 	int id;
-	for (int i = 0; i < 4000; i++)
+	for (int i = 0; i < 6000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 		if (i == 0)
@@ -122,7 +124,7 @@ void Application::run()
 		ent.addComponent<Velocity>(Velocity(2*(1*float(rand()%100)/100-1), 1*(2*float(rand() % 100) / 100-1), 0, -0.01));
 		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand()%fruitDivisions.size()]));
 		AABB& col = ent.addComponent<AABB>(AABB(15, 15));
-		if (rand() % 100 < 0)
+		if (rand() % 100 < 100)
 			col.enabled = false;
 
 		msys.addEntity(ent);
@@ -175,20 +177,21 @@ void Application::run()
 	
 	mainCamera->setPosition(0, 0);
 
+	enum UIState {Normal, TileMapEditor };
+	UIState UIState = Normal;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();
 
-		// Logic Update
+/*======START OF LOGIC========*/
+
 		if (paused)
 		{
-			EntManager::getInstance().update();
-			SystemsManager::getInstance().update(dt, UNPAUSED);
-
-			//emitter.update();
-			//for (int i = 0; i < 10; i++)
-			//	emitter.emit();
-			//emitter.applyForceInverseToSize(0.1, 0);
+			emitter.update();
+			for (int i = 0; i < 10; i++)
+				emitter.emit();
+			emitter.applyForceInverseToSize(0.1, 0);
 
 			/*Entity ent(id);
 			Transform& transform = ent.getComponent<Transform>();
@@ -206,16 +209,49 @@ void Application::run()
 			SystemsManager::getInstance().update(dt, PAUSED);
 		}
 
-		// Drawing
+/*======END OF LOGIC==========*/
+
+/*======START OF DRAWING======*/
+
 		glClearColor(0.3, 0.3, 0.3, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		tilemap.draw(renderingAPI);
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 
-		RenderingS::getInstance().update(0);
+		switch (UIState)
+		{
+		case Normal:
+		{
+			tilemap.draw(renderingAPI);
+
+			RenderingS::getInstance().update(0);
+
+			emitter.draw(renderingAPI);
+
+			ImGui::Begin("Tile map edit");
+			ImGui::End();
+		}
+		break;
+		case TileMapEditor:
+		{
+
+		}
+		break;
+		}
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		glfwSwapBuffers(window);
+
+/*======END OF DRAWING=======*/
+
+/*======START OF INPUT=======*/
 
 		auto camOffset = mainCamera->getPosition();
-		static int rate = 10;
+		int rate = 10 / mainCamera->getZoom();
 		if (input->keyDown[ZE_KEY_W])
 			mainCamera->setPosition(camOffset.x, camOffset.y + rate);
 		if (input->keyDown[ZE_KEY_S])
@@ -242,20 +278,10 @@ void Application::run()
 			mainCamera->changeZoom(0.1*wheel);
 		}
 
-		// UI
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::Begin("Tile map edit");
-		ImGui::End();
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		glfwSwapBuffers(window);
-
 		input->update();
+
+/*======END OF INPUT=========*/
+
 
 		auto timeEnd = std::chrono::high_resolution_clock::now();
 
