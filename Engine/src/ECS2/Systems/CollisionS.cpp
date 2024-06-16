@@ -5,6 +5,7 @@
 #include <future>
 #include <chrono>
 #include <cmath>
+#include <math.h>
 
 #include "../Components/Velocity.hpp"
 
@@ -228,7 +229,26 @@ void CollisionS::updateResponse(float dt)
 			v2.x = (2 * v1Init.x) / (2);
 			v2.y = (2 * v1Init.y) / (2);
 		}
-		
+		if (ent1.getTag() == EntityTag::DefaultTag && ent2.getTag() == EntityTag::DefaultTag && collision.second.state == CollisionS::Collision::State::stay)
+		{
+			auto& t1 = ent1.getComponent<Transform>();
+			auto& t2 = ent2.getComponent<Transform>();
+
+			auto& v1 = ent1.getComponent<Velocity>();
+			auto& v2 = ent2.getComponent<Velocity>();
+
+			glm::vec2 diff = glm::normalize(glm::vec2(t2.x - t1.x, t2.y - t1.y ));
+
+			v2.x = v2.x + 1/diff.x*0.1;
+			v2.y = v2.y + 1/diff.y*0.1;
+			v1.x = v1.x - 1/diff.x*0.1;
+			v1.y = v1.y - 1/diff.y*0.1;
+
+			v2.x = std::min(1.0f, v2.x);
+			v2.y = std::min(1.0f, v2.y);
+			v1.x = std::min(1.0f, v1.x);
+			v1.y = std::min(1.0f, v1.y);
+		}
 	}
 }
 

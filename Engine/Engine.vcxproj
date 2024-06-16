@@ -501,6 +501,7 @@
     <ClInclude Include="src\ECS2\Systems\RenderingS.hpp" />
     <ClInclude Include="src\ECS2\Systems\CollisionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\SysBase.hpp" />
+    <ClInclude Include="src\ECS2\Systems\UserControllerS.hpp" />
     <ClInclude Include="src\ECS\Components\AnimatedSpriteC.hpp" />
     <ClInclude Include="src\ECS\Components\BoxColliderC.hpp" />
     <ClInclude Include="src\ECS\Components\ComponentBase.hpp" />
@@ -524,6 +525,7 @@
     <ClInclude Include="src\ECS\Systems\TestCollisionResponse.hpp" />
     <ClInclude Include="src\Graphics\InstancedSpriteRenderer.hpp" />
     <ClInclude Include="src\Input\keyCodes.h" />
+    <ClInclude Include="src\Managers\Scene\SceneManager.hpp" />
     <ClInclude Include="src\Managers\Tileset.hpp" />
     <ClInclude Include="src\Serialization\serialization.hpp" />
     <ClInclude Include="src\Events\Event.hpp" />
@@ -575,6 +577,7 @@
     <ClCompile Include="src\ECS2\Systems\MovementS.cpp" />
     <ClCompile Include="src\ECS2\Systems\RenderingS.cpp" />
     <ClCompile Include="src\ECS2\Systems\SysBase.cpp" />
+    <ClCompile Include="src\ECS2\Systems\UserControllerS.cpp" />
     <ClCompile Include="src\ECS\Components\AnimatedSpriteC.cpp" />
     <ClCompile Include="src\ECS\Components\BoxColliderC.cpp" />
     <ClCompile Include="src\ECS\Components\ComponentBase.cpp" />
@@ -610,6 +613,7 @@
     <ClCompile Include="src\Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\Input\InputMap.cpp" />
     <ClCompile Include="src\Input\Windows\GLFWInputManager.cpp" />
+    <ClCompile Include="src\Managers\Scene\SceneManager.cpp" />
     <ClCompile Include="src\OpenGL\ElementBuffer.cpp" />
     <ClCompile Include="src\OpenGL\FrameBuffer.cpp" />
     <ClCompile Include="src\OpenGL\ShaderProgram.cpp" />

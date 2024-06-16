@@ -72,6 +72,9 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 	if (texture == nullptr)
 		return;
 
+	if (!camera->isPointInFrustrum(position))
+		return;
+
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
 	transform = glm::translate(transform, glm::vec3(camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y, 0));

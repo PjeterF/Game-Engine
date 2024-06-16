@@ -91,3 +91,17 @@ glm::vec2 GLFWInputManager::getCursorPos()
 	pos.y = wndSize.y - pos.y;
 	return pos;
 }
+
+glm::vec2 GLFWInputManager::getNormalizedCursorPos()
+{
+	glm::ivec2 wndSize = { 0, 0 };
+
+	glfwGetWindowSize(window, &wndSize.x, &wndSize.y);
+
+	glm::dvec2 pos = { 0, 0 };
+	glfwGetCursorPos(window, &pos.x, &pos.y);
+	pos.y = wndSize.y - pos.y;
+	pos.x = pos.x / wndSize.x;
+	pos.y = pos.y / wndSize.y;
+	return pos;
+}

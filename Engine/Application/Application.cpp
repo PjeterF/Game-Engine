@@ -12,6 +12,7 @@
 #include "../src/ECS2/Systems/MovementS.hpp"
 #include "../src/ECS2/Systems/RenderingS.hpp"
 #include "../src/ECS2/Systems/CollisionS.hpp"
+#include "../src/ECS2/Systems/UserControllerS.hpp"
 
 #include "Tilemap/Tilemap.hpp"
 
@@ -35,12 +36,7 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 	input = &GLFWInputManager::getInstance();
 	initializeImGui();
 
-	//ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/sprite");
-	//ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/quad");
-	//ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/line");
-	//ResourceManager::getInstance().createResourceFromFile<ShaderProgram>("src/shaders/instancedQuad");
-
-	mainCamera = new Camera(0, windowWidth, 0, windowHeight*2);
+	mainCamera = new Camera(0, windowWidth, 0, windowHeight);
 	renderingAPI = new RenderingAPI(
 		mainCamera,
 		ResourceManager::getInstance().getResource<ShaderProgram>("src/shaders/line")->getContents()->getId(),
@@ -53,9 +49,6 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
 	viewportFramebuffer->unbind();
 
-	mainCamera->setFrustrumX(0, windowWidth);
-	mainCamera->setFrustrumY(0, windowHeight);
-
 	CollisionS::initialize(30);
 	RenderingS::initialize(renderingAPI);
 }
@@ -63,8 +56,6 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 
 void Application::run()
 {
-
-
 	ParticeEmitter emitter(0, 3000, 10000);
 	emitter.defaultProperties.xPosVar = glm::vec2(-50, 50);
 	emitter.defaultProperties.yPosVar = glm::vec2(-10, 30);
@@ -85,6 +76,7 @@ void Application::run()
 	float dt = 1;
 
 	MovementS msys;
+	UserControllerS inputsys(input);
 
 	std::vector<glm::vec4> fruitDivisions;
 	fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
@@ -115,16 +107,16 @@ void Application::run()
 	//	RenderingS::getInstance().addEntity(ent, 1);
 	//}
 	int id;
-	for (int i = 0; i < 6000; i++)
+	for (int i = 0; i < 3000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 		if (i == 0)
 			id = ent.getID();
 		ent.addComponent<Transform>(Transform(rand() % 2000-200, rand() % 2000-200, 30, 30, 0));
-		ent.addComponent<Velocity>(Velocity(2*(1*float(rand()%100)/100-1), 1*(2*float(rand() % 100) / 100-1), 0, -0.01));
+		ent.addComponent<Velocity>(Velocity(2*(1*float(rand()%100)/100-1), 1*(2*float(rand() % 100) / 100-1), 0, -0.0));
 		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand()%fruitDivisions.size()]));
 		AABB& col = ent.addComponent<AABB>(AABB(15, 15));
-		if (rand() % 100 < 100)
+		if (rand() % 100 < 0)
 			col.enabled = false;
 
 		msys.addEntity(ent);
@@ -199,6 +191,7 @@ void Application::run()
 			mainCamera->setPosition(transform.x, transform.y);*/
 
 			CollisionS::getInstance().update(0);
+			inputsys.update(0);
 			msys.update(0);
 			CollisionS::getInstance().updateResponse(0);
 			CollisionS::getInstance().lateUpdate(0);
@@ -220,26 +213,14 @@ void Application::run()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		switch (UIState)
-		{
-		case Normal:
-		{
-			tilemap.draw(renderingAPI);
+		tilemap.draw(renderingAPI);
 
-			RenderingS::getInstance().update(0);
+		RenderingS::getInstance().update(0);
 
-			emitter.draw(renderingAPI);
+		emitter.draw(renderingAPI);
 
-			ImGui::Begin("Tile map edit");
-			ImGui::End();
-		}
-		break;
-		case TileMapEditor:
-		{
-
-		}
-		break;
-		}
+		ImGui::Begin("Tile map edit");
+		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -252,26 +233,50 @@ void Application::run()
 
 		auto camOffset = mainCamera->getPosition();
 		int rate = 10 / mainCamera->getZoom();
-		if (input->keyDown[ZE_KEY_W])
+		if (input->keyDown[ZE_KEY_UP])
 			mainCamera->setPosition(camOffset.x, camOffset.y + rate);
-		if (input->keyDown[ZE_KEY_S])
+		if (input->keyDown[ZE_KEY_DOWN])
 			mainCamera->setPosition(camOffset.x, camOffset.y - rate);
-		if (input->keyDown[ZE_KEY_A])
+		if (input->keyDown[ZE_KEY_LEFT])
 			mainCamera->setPosition(camOffset.x - rate, camOffset.y);
-		if (input->keyDown[ZE_KEY_D])
+		if (input->keyDown[ZE_KEY_RIGHT])
+			mainCamera->setPosition(camOffset.x + rate, camOffset.y);
+		auto nCursorPos = input->getNormalizedCursorPos();
+		float scrollRegionWidth = 0.1f;
+		if (nCursorPos.y > 1.0f - scrollRegionWidth)
+			mainCamera->setPosition(camOffset.x, camOffset.y + rate);
+		if (nCursorPos.y < scrollRegionWidth)
+			mainCamera->setPosition(camOffset.x, camOffset.y - rate);
+		if (nCursorPos.x<scrollRegionWidth)
+			mainCamera->setPosition(camOffset.x - rate, camOffset.y);
+		if (nCursorPos.x > 1.0f - scrollRegionWidth)
 			mainCamera->setPosition(camOffset.x + rate, camOffset.y);
 		if (input->mouseKeyClicked[ZE_MOUSE_BUTTON_1])
 		{
-			auto vec = CollisionS::getInstance().pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
+			auto normalized = mainCamera->viewPortPointToWorldCoord(input->getNormalizedCursorPos());
+			std::cout << normalized.x << " " << normalized.y << "\n";
+
+			Entity ent = EntityManager::getInstance().createEntity();
+			ent.addComponent<Transform>(Transform(normalized.x, normalized.y, 30, 30, 0));
+			ent.addComponent<Velocity>(Velocity(rand()%2-0.5, rand() % 2 - 0.5, 0, 0));
+			ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand() % fruitDivisions.size()]));
+			AABB& col = ent.addComponent<AABB>(AABB(15, 15));
+			msys.addEntity(ent);
+			RenderingS::getInstance().addEntity(ent);
+			CollisionS::getInstance().addEntity(ent);
+			inputsys.addEntity(ent);
+
+			//auto vec = CollisionS::getInstance().pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
+			/*auto vec = CollisionS::getInstance().pointPick(mainCamera->viewPortPointToWorldCoord(input->getNormalizedCursorPos()));
 			for (auto ID : vec)
 			{
 				EntityManager::getInstance().deleteEntity(ID);
-			}
+			}*/
 		}
 		float wheel = input->mouseWheel();
-		if (input->keyDown[ZE_KEY_Q])
+		if (input->keyClicked[ZE_KEY_Q])
 			wheel = 1;
-		if (input->keyDown[ZE_KEY_E])
+		if (input->keyClicked[ZE_KEY_E])
 			wheel = -1;
 		if (wheel)
 		{

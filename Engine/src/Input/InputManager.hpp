@@ -12,6 +12,7 @@ public:
 	virtual float mouseWheel() = 0;
 	virtual void update() = 0;
 	virtual glm::vec2 getCursorPos() = 0;
+	virtual glm::vec2 getNormalizedCursorPos() = 0;
 
 	bool keyDown[No_Keys];
 	bool keyClicked[No_Keys];

@@ -9,10 +9,10 @@
 
 #include <nlohmann/json.hpp>
 
-#define TILEMAP_DIM_X 5
-#define TILEMAP_DIM_Y 5
+#define TILEMAP_DIM_X 48
+#define TILEMAP_DIM_Y 27
 #define TILE_ARRAY_SIZE TILEMAP_DIM_X*TILEMAP_DIM_Y
-#define TILE_SIZE 50
+#define TILE_SIZE 20
 
 enum TileType
 {

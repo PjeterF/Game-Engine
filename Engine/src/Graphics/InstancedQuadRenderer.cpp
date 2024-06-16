@@ -148,7 +148,7 @@ void InstancedQuadRenderer::INSTANCES_DATA::addInstance(float xPos, float yPos, 
 	if (currentIndex >= bufferSize)
 		return;
 
-	if (!camera->pointIsInFrustrum({xPos, yPos}))
+	if (!camera->isPointInFrustrum({xPos, yPos}))
 		return;
 
 	positions[currentIndex] = { xPos, yPos };

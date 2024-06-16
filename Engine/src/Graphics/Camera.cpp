@@ -21,7 +21,7 @@ void Camera::setZoom(float newZoom)
 		zoom = 3;
 }
 
-bool Camera::pointIsInFrustrum(glm::vec2 point)
+bool Camera::isPointInFrustrum(glm::vec2 point)
 {
 	if (point.x < getFrustrumX().x)
 		return false;
@@ -33,4 +33,15 @@ bool Camera::pointIsInFrustrum(glm::vec2 point)
 		return false;
 
 	return true;
+}
+
+glm::vec2 Camera::viewPortPointToWorldCoord(glm::vec2 normalizedP)
+{
+	glm::vec2 frustumX = getFrustrumX();
+	glm::vec2 frustumY = getFrustrumY();
+
+	glm::vec2 p = glm::vec2(frustumX.y - frustumX.x, frustumY.y - frustumY.x) * normalizedP;
+	p = p + this->position;
+
+	return p;
 }

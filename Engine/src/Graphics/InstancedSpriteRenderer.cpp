@@ -76,7 +76,7 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 	if (texture == nullptr)
 		return;
 
-	if (!camera->pointIsInFrustrum(position))
+	if (!camera->isPointInFrustrum(position))
 		return;
 
 	glm::vec4 texSample;

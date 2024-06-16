@@ -20,6 +20,7 @@ public:
 	virtual float mouseWheel() override;
 	virtual void update() override;
 	virtual glm::vec2 getCursorPos() override;
+	virtual glm::vec2 getNormalizedCursorPos() override;
 
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	{
