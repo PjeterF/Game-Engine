@@ -20,6 +20,13 @@ void SceneManager::draw()
     currentScene->draw();
 }
 
+void SceneManager::input()
+{
+    if (currentScene == nullptr)
+        return;
+    currentScene->input();
+}
+
 void SceneManager::setScene(Scene* scene)
 {
     this->currentScene = scene;
