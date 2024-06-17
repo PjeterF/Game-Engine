@@ -48,9 +48,6 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 
 	viewportFramebuffer = new FrameBuffer(windowWidth, windowHeight);
 	viewportFramebuffer->unbind();
-
-	CollisionS::initialize(30);
-	RenderingS::initialize(renderingAPI);
 }
 
 
@@ -77,6 +74,8 @@ void Application::run()
 
 	MovementS msys;
 	UserControllerS inputsys(input);
+	CollisionS csys(30);
+	RenderingS rsys(renderingAPI);
 
 	std::vector<glm::vec4> fruitDivisions;
 	fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
@@ -104,7 +103,7 @@ void Application::run()
 	//	ent.addComponent<Transform>(Transform(0, 0, 100, 100));
 	//	ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Tilesets/TX Tileset Grass.png"), tileDivisions[0 + 4 * 8]));
 	//	//ent.addComponent<Animation>(Animation(0, 10, { { 0, 64, 96, 192 }, { 0, 64, 192, 192 } }));
-	//	RenderingS::getInstance().addEntity(ent, 1);
+	//	rsys.addEntity(ent, 1);
 	//}
 	int id;
 	for (int i = 0; i < 3000; i++)
@@ -120,8 +119,8 @@ void Application::run()
 			col.enabled = false;
 
 		msys.addEntity(ent);
-		RenderingS::getInstance().addEntity(ent);
-		CollisionS::getInstance().addEntity(ent);
+		rsys.addEntity(ent);
+		csys.addEntity(ent);
 	}
 
 	int boxSize = 500;
@@ -133,8 +132,8 @@ void Application::run()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	{
 		Entity box = EntityManager::getInstance().createEntity();
@@ -143,8 +142,8 @@ void Application::run()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	{
 		Entity box = EntityManager::getInstance().createEntity();
@@ -153,8 +152,8 @@ void Application::run()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	{
 		Entity box = EntityManager::getInstance().createEntity();
@@ -163,8 +162,8 @@ void Application::run()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	
 	mainCamera->setPosition(0, 0);
@@ -190,11 +189,11 @@ void Application::run()
 
 			mainCamera->setPosition(transform.x, transform.y);*/
 
-			CollisionS::getInstance().update(0);
+			csys.update(0);
 			inputsys.update(0);
 			msys.update(0);
-			CollisionS::getInstance().updateResponse(0);
-			CollisionS::getInstance().lateUpdate(0);
+			csys.updateResponse(0);
+			csys.lateUpdate(0);
 			EntityManager::getInstance().update();
 		}
 		else
@@ -215,7 +214,7 @@ void Application::run()
 
 		tilemap.draw(renderingAPI);
 
-		RenderingS::getInstance().update(0);
+		rsys.update(0);
 
 		emitter.draw(renderingAPI);
 
@@ -262,12 +261,12 @@ void Application::run()
 			ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand() % fruitDivisions.size()]));
 			AABB& col = ent.addComponent<AABB>(AABB(15, 15));
 			msys.addEntity(ent);
-			RenderingS::getInstance().addEntity(ent);
-			CollisionS::getInstance().addEntity(ent);
+			rsys.addEntity(ent);
+			csys.addEntity(ent);
 			inputsys.addEntity(ent);
 
-			//auto vec = CollisionS::getInstance().pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
-			/*auto vec = CollisionS::getInstance().pointPick(mainCamera->viewPortPointToWorldCoord(input->getNormalizedCursorPos()));
+			//auto vec = csys.pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
+			/*auto vec = csys.pointPick(mainCamera->viewPortPointToWorldCoord(input->getNormalizedCursorPos()));
 			for (auto ID : vec)
 			{
 				EntityManager::getInstance().deleteEntity(ID);

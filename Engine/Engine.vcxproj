@@ -141,6 +141,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Application\Games\Game1\Game1.hpp" />
+    <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp" />
     <ClInclude Include="Application\Tilemap\Tilemap.hpp" />
     <ClInclude Include="Application\UI\View.hpp" />
     <ClInclude Include="Application\UI\UIElement.hpp" />
@@ -559,6 +561,7 @@
     <ClInclude Include="ZumaGame\Game.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp" />
     <ClCompile Include="Application\Tilemap\Tilemap.cpp" />
     <ClCompile Include="Externals\includes\glm\detail\glm.cpp" />
     <ClCompile Include="Externals\includes\imgui\imgui.cpp" />

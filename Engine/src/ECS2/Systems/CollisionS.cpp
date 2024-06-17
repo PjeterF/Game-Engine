@@ -14,16 +14,6 @@ CollisionS::CollisionS(float cellSize) : cellSize(cellSize)
 	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(AABB)) };
 }
 
-void CollisionS::initialize(float cellSize)
-{
-	instanceImp(cellSize);
-}
-
-CollisionS& CollisionS::getInstance()
-{
-	return instanceImp(0);
-}
-
 void CollisionS::handleEvent(Event& event)
 {
 	SysBase::handleEvent(event);
@@ -301,12 +291,6 @@ CollisionS::Collision& CollisionS::getCollision(int ID1, int ID2)
 		throw "Collision does not exist";
 	else
 		return (*it).second;
-}
-
-CollisionS& CollisionS::instanceImp(float cellSize)
-{
-	static CollisionS system(cellSize);
-	return system;
 }
 
 void CollisionS::addToGrid(int ID)

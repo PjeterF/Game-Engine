@@ -7,11 +7,9 @@
 #include "../../src/Graphics/InstancedSpriteRenderer.hpp"
 #include "../../src/Input/Windows/GLFWInputManager.hpp"
 
-Game1_scene1::Game1_scene1()
+Game1_scene1::Game1_scene1(CollisionS& csys, RenderingS& rsys, MovementS& msys, UserControllerS& inputsys)
+: csys(csys), rsys(rsys), msys(msys), inputsys(inputsys)
 {
-	msys = new MovementS();
-	inputsys = new UserControllerS(&GLFWInputManager::getInstance());
-
 	std::vector<glm::vec4> fruitDivisions;
 	fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
 	for (int i = 0; i < rand()%100; i++)
@@ -24,9 +22,9 @@ Game1_scene1::Game1_scene1()
 		if (rand() % 100 < 0)
 			col.enabled = false;
 
-		msys->addEntity(ent);
-		RenderingS::getInstance().addEntity(ent);
-		CollisionS::getInstance().addEntity(ent);
+		msys.addEntity(ent);
+		rsys.addEntity(ent);
+		csys.addEntity(ent);
 	}
 
 	int boxSize = 500;
@@ -38,8 +36,8 @@ Game1_scene1::Game1_scene1()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	{
 		Entity box = EntityManager::getInstance().createEntity();
@@ -48,8 +46,8 @@ Game1_scene1::Game1_scene1()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	{
 		Entity box = EntityManager::getInstance().createEntity();
@@ -58,8 +56,8 @@ Game1_scene1::Game1_scene1()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 	{
 		Entity box = EntityManager::getInstance().createEntity();
@@ -68,30 +66,29 @@ Game1_scene1::Game1_scene1()
 		box.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/red.jpg")));
 		box.setTag(Barrier);
 
-		CollisionS::getInstance().addEntity(box);
-		RenderingS::getInstance().addEntity(box);
+		csys.addEntity(box);
+		rsys.addEntity(box);
 	}
 }
 
 Game1_scene1::~Game1_scene1()
 {
-	delete msys;
-	delete inputsys;
+
 }
 
 void Game1_scene1::update(float dt)
 {
-	CollisionS::getInstance().update(dt);
-	inputsys->update(dt);
-	msys->update(dt);
-	CollisionS::getInstance().updateResponse(dt);
-	CollisionS::getInstance().lateUpdate(dt);
+	csys.update(dt);
+	inputsys.update(dt);
+	msys.update(dt);
+	csys.updateResponse(dt);
+	csys.lateUpdate(dt);
 	EntityManager::getInstance().update();
 }
 
 void Game1_scene1::draw(RenderingAPI* renderingAPI)
 {
-	RenderingS::getInstance().update(0);
+	rsys.update(0);
 }
 
 void Game1_scene1::input()
@@ -128,12 +125,12 @@ void Game1_scene1::input()
 	//	ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand() % fruitDivisions.size()]));
 	//	AABB& col = ent.addComponent<AABB>(AABB(15, 15));
 	//	msys->addEntity(ent);
-	//	RenderingS::getInstance().addEntity(ent);
-	//	CollisionS::getInstance().addEntity(ent);
+	//	rsys.addEntity(ent);
+	//	csys.addEntity(ent);
 	//	inputsys->addEntity(ent);
 
-	//	//auto vec = CollisionS::getInstance().pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
-	//	/*auto vec = CollisionS::getInstance().pointPick(mainCamera->viewPortPointToWorldCoord(input->getNormalizedCursorPos()));
+	//	//auto vec = csys.pointPick(((input->getCursorPos()+mainCamera->getPosition())/mainCamera->getZoom()));
+	//	/*auto vec = csys.pointPick(mainCamera->viewPortPointToWorldCoord(input->getNormalizedCursorPos()));
 	//	for (auto ID : vec)
 	//	{
 	//		EntityManager::getInstance().deleteEntity(ID);

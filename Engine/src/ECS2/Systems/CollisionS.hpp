@@ -23,8 +23,7 @@ public:
 		int ID1, ID2;
 	};
 
-	static void initialize(float cellSize);
-	static CollisionS& getInstance();
+	CollisionS(float cellSize);
 	virtual void handleEvent(Event& event) override;
 	void update(float dt) override;
 	void lateUpdate(float dt) override;
@@ -34,8 +33,6 @@ public:
 	virtual bool addEntity(Entity entity) override;
 	CollisionS::Collision& getCollision(int ID1, int ID2);
 private:
-	CollisionS(float cellSize);
-	static CollisionS& instanceImp(float cellSize);
 
 	void addToGrid(int ID);
 	bool collided(glm::vec2 pos1, glm::vec2 dim1, glm::vec2 pos2, glm::vec2 dim2);

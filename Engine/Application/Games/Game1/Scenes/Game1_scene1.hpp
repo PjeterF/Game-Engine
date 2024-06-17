@@ -10,12 +10,14 @@
 class Game1_scene1 : public Scene
 {
 public:
-	Game1_scene1();
+	Game1_scene1(CollisionS& csys, RenderingS& rsys, MovementS& msys, UserControllerS& inputsys);
 	~Game1_scene1();
 	virtual void update(float dt) override;
 	virtual void draw(RenderingAPI* renderingAPI) override;
 	virtual void input() override;
 private:
-	MovementS* msys;
-	UserControllerS* inputsys;
+	CollisionS& csys;
+	RenderingS& rsys;
+	MovementS& msys;
+	UserControllerS& inputsys;
 };

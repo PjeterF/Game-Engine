@@ -5,22 +5,6 @@ RenderingS::RenderingS(RenderingAPI* rAPI) : rAPI(rAPI)
 	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(Sprite)) };
 }
 
-RenderingS& RenderingS::instanceImp(RenderingAPI* rAPI)
-{
-	static RenderingS instance(rAPI);
-	return instance;
-}
-
-void RenderingS::initialize(RenderingAPI* rAPI)
-{
-	instanceImp(rAPI);
-}
-
-RenderingS& RenderingS::getInstance()
-{
-	return instanceImp(nullptr);
-}
-
 void RenderingS::update(float dt)
 {
 	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();

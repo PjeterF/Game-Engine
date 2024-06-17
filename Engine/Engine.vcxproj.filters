@@ -1263,6 +1263,12 @@
     <ClInclude Include="src\Managers\Scene\SceneManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Games\Game1\Game1.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1452,6 +1458,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Managers\Scene\SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
