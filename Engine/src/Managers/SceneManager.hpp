@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Graphics/GeneralRenderer.hpp"
+#include "../Input/InputManager.hpp"
 
 class Scene
 {

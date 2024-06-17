@@ -196,10 +196,6 @@ void Application::run()
 			csys.lateUpdate(0);
 			EntityManager::getInstance().update();
 		}
-		else
-		{
-			SystemsManager::getInstance().update(dt, PAUSED);
-		}
 
 /*======END OF LOGIC==========*/
 
