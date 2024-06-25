@@ -29,12 +29,13 @@ public:
 
 	virtual void handleEvent(Event& event) override;
 
-private:
+protected:
 	void initializeImGui();
 
 	GLFWwindow* window;
 	float wndWidth;
 	float wndHeight;
+	std::string wndName;
 
 	FrameBuffer* viewportFramebuffer;
 

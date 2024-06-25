@@ -13,11 +13,11 @@ void SceneManager::update(float dt)
     currentScene->update(dt);
 }
 
-void SceneManager::draw()
+void SceneManager::draw(RenderingAPI* renderingAPI)
 {
     if (currentScene == nullptr)
         return;
-    currentScene->draw();
+    currentScene->draw(renderingAPI);
 }
 
 void SceneManager::input()
@@ -35,4 +35,20 @@ void SceneManager::setScene(Scene* scene)
 Scene* SceneManager::getScene()
 {
     return currentScene;
+}
+
+Scene::Scene(Camera& camera) : camera(camera)
+{
+}
+
+Scene::~Scene()
+{
+    for (auto& sysBin : systems)
+    {
+        for (auto& system : sysBin.second)
+        {
+            if (system.second->deleteOnSceneEnd)
+                delete system.second;
+        }
+    }
 }

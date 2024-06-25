@@ -1260,13 +1260,19 @@
     <ClInclude Include="src\ECS2\Systems\UserControllerS.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Managers\Scene\SceneManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Games\Game1\Game1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Managers\Scene\SceneManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\FollowS.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1457,10 +1463,19 @@
     <ClCompile Include="src\ECS2\Systems\UserControllerS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\Game1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Managers\Scene\SceneManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp">
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\FollowS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

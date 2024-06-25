@@ -19,4 +19,7 @@ protected:
 	SysBase();
 	std::vector<std::type_index> requiredComponents;
 	std::set<int> entities;
+	bool deleteOnSceneEnd = false;
+
+	friend class Scene;
 };

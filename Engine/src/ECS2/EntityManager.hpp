@@ -4,11 +4,13 @@
 
 #include <stack>
 #include <set>
+#include <unordered_set>
 
 enum EntityTag
 {
 	DefaultTag = 1<<0,
-	Barrier = 1 << 1
+	Barrier = 1 << 1,
+	PlayerCharacter
 };
 
 class Entity
@@ -42,9 +44,11 @@ public:
 	EntityTag getTag(int ID);
 	void setTag(int ID, EntityTag tag);
 	void update();
+	void reset();
 private:
 	EntityManager();
 	std::stack<int> availableID;
+	std::unordered_set<int> existingEntities;
 	std::vector<bool> alive;
 	std::vector<EntityTag> tags;
 	std::vector<int> entitiesToDelete;

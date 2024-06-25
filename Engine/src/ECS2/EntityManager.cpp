@@ -60,6 +60,7 @@ Entity EntityManager::createEntity(EntityTag tag)
 	availableID.pop();
 	tags[id] = tag;
 
+	existingEntities.insert(id);
 	return Entity(id);
 }
 
@@ -116,7 +117,22 @@ void EntityManager::update()
 			availableID.push(ID);
 			alive[ID] = false;
 			tags[ID] = DefaultTag;
+			existingEntities.erase(ID);
 		}
 	}
 	entitiesToDelete.clear();
+}
+
+void EntityManager::reset()
+{
+	for (auto ID : existingEntities)
+	{
+		deleteEntity(ID);
+	}
+	existingEntities.clear();
+	update();
+
+	availableID = std::stack<int>();
+	for (int i = MAX_ENTITIES - 1; i >= 0; i--)
+		availableID.push(i);
 }

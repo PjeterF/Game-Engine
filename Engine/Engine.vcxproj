@@ -141,6 +141,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\FollowS.hpp" />
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.hpp" />
     <ClInclude Include="Application\Games\Game1\Game1.hpp" />
     <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp" />
     <ClInclude Include="Application\Tilemap\Tilemap.hpp" />
@@ -561,6 +563,9 @@
     <ClInclude Include="ZumaGame\Game.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\FollowS.cpp" />
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.cpp" />
+    <ClCompile Include="Application\Games\Game1\Game1.cpp" />
     <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp" />
     <ClCompile Include="Application\Tilemap\Tilemap.cpp" />
     <ClCompile Include="Externals\includes\glm\detail\glm.cpp" />
