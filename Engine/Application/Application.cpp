@@ -30,6 +30,7 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 	wndName=windowName;
 
 	glfwInit();
+	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), NULL, NULL);
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
@@ -87,9 +88,6 @@ void Application::run()
 		ImGui::NewFrame();
 
 		SceneManager::getInstance().draw(renderingAPI);
-
-		ImGui::Begin("Tile map edit");
-		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

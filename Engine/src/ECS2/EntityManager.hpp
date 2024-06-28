@@ -8,9 +8,11 @@
 
 enum EntityTag
 {
-	DefaultTag = 1<<0,
+	DefaultTag = 1 << 0,
 	Barrier = 1 << 1,
-	PlayerCharacter
+	PlayerCharacter,
+	Enemy,
+	Projectile
 };
 
 class Entity

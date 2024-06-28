@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <set>
+#include <cmath>
 
 #include "../EntityManager.hpp"
 #include "../../Events/EventManager.hpp"

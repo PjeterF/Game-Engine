@@ -1,4 +1,7 @@
 #pragma once
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include "../../Graphics/GeneralRenderer.hpp"
 #include "../../ECS2/Systems/SysBase.hpp"
@@ -8,6 +11,7 @@ class Scene
 public:
 	Scene(Camera& camera);
 	~Scene();
+	virtual void initialize() = 0;
 	virtual void update(float dt) = 0;
 	virtual void draw(RenderingAPI* renderingAPI) = 0;
 	virtual void input() = 0;
@@ -15,6 +19,7 @@ public:
 	bool addSystem(std::string name, SysBase* system, bool deleteOnSceneEnd=false);
 	template<typename T>
 	T* getSystem(std::string name);
+	void setCamera(Camera& camera);
 
 	Camera& camera;
 

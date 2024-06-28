@@ -141,6 +141,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Application\Games\Game1\ECS\Components\CharacterStats.hpp" />
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\AIDirector.hpp" />
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.hpp" />
     <ClInclude Include="Application\Games\Game1\ECS\Systems\FollowS.hpp" />
     <ClInclude Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.hpp" />
     <ClInclude Include="Application\Games\Game1\Game1.hpp" />
@@ -497,10 +500,12 @@
     <ClInclude Include="src\ECS2\ComponentPoolManager.hpp" />
     <ClInclude Include="src\ECS2\Components\AABB.hpp" />
     <ClInclude Include="src\ECS2\Components\Animation.hpp" />
+    <ClInclude Include="src\ECS2\Components\RenderingLayer.hpp" />
     <ClInclude Include="src\ECS2\Components\Sprite.hpp" />
     <ClInclude Include="src\ECS2\Components\Transform.hpp" />
     <ClInclude Include="src\ECS2\Components\Velocity.hpp" />
     <ClInclude Include="src\ECS2\EntityManager.hpp" />
+    <ClInclude Include="src\ECS2\Systems\CollisionRepulsionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\MovementS.hpp" />
     <ClInclude Include="src\ECS2\Systems\RenderingS.hpp" />
     <ClInclude Include="src\ECS2\Systems\CollisionS.hpp" />
@@ -563,6 +568,8 @@
     <ClInclude Include="ZumaGame\Game.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\AIDirectorS.cpp" />
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.cpp" />
     <ClCompile Include="Application\Games\Game1\ECS\Systems\FollowS.cpp" />
     <ClCompile Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.cpp" />
     <ClCompile Include="Application\Games\Game1\Game1.cpp" />
@@ -581,6 +588,7 @@
     <ClCompile Include="src\ECS2\ComponentPoolManager.cpp" />
     <ClCompile Include="src\ECS2\Components\Sprite.cpp" />
     <ClCompile Include="src\ECS2\EntityManager.cpp" />
+    <ClCompile Include="src\ECS2\Systems\CollisionRepulsionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\MovementS.cpp" />
     <ClCompile Include="src\ECS2\Systems\RenderingS.cpp" />
@@ -632,6 +640,8 @@
     <ClCompile Include="Application\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Application\Games\Game1\EntityArchetypes\Ghoul.json" />
+    <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />
     <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
     <None Include="Externals\includes\glm\detail\func_common.inl" />
     <None Include="Externals\includes\glm\detail\func_common_simd.inl" />

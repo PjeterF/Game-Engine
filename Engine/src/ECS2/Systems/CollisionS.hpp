@@ -27,7 +27,6 @@ public:
 	virtual void handleEvent(Event& event) override;
 	void update(float dt) override;
 	void lateUpdate(float dt) override;
-	void updateResponse(float dt);
 	std::vector<int> pointPick(glm::vec2 point);
 	virtual bool addEntity(int ID) override;
 	virtual bool addEntity(Entity entity) override;

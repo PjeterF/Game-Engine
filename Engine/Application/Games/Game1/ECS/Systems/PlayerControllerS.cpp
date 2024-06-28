@@ -33,7 +33,7 @@ void PlayerControllerS::update(float dt)
 		}
 
 		glm::vec2 velVec = { vel.x, vel.y };
-		velVec = glm::normalize(velVec);
+		//velVec = glm::normalize(velVec);
 
 		if (glm::length(velVec) > maxVelocity) {
 			vel.x = velVec.x;

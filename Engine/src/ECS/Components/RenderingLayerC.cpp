@@ -1,6 +1,6 @@
 #include "RenderingLayerC.hpp"
 
-RenderingLayerC::RenderingLayerC(int layer) : ComponentBase(RenderingLayer)
+RenderingLayerC::RenderingLayerC(int layer) : ComponentBase(RenderingLayer_)
 {
 	this->layer = layer;
 }

@@ -77,7 +77,7 @@ void Ent::from_json(nlohmann::json& j)
 			this->addComponent(newC);
 		}
 		break;
-		case RenderingLayer:
+		case RenderingLayer_:
 		{
 			RenderingLayerC* newC = new RenderingLayerC();
 			(*newC).from_json(component);

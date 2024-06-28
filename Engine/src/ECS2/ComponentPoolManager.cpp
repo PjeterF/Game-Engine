@@ -5,6 +5,7 @@
 #include "Components/Sprite.hpp"
 #include "Components/AABB.hpp"
 #include "Components/Animation.hpp"
+#include "Components/RenderingLayer.hpp"
 
 bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 {
@@ -28,6 +29,7 @@ ComponentPoolManager::ComponentPoolManager()
 	addPool<Sprite>();
 	addPool<AABB>();
 	addPool<Animation>();
+	addPool<RenderingLayer>();
 }
 
 ComponentPoolManager& ComponentPoolManager::getInstance()

@@ -9,7 +9,7 @@ public:
 	PlayerControllerS(InputManager& input);
 	void update(float dt) override;
 
-	float maxVelocity = 50.0f;
+	float maxVelocity = 100.0f;
 	float velocityIncrease = 1.0f;
 private:
 	InputManager& input;

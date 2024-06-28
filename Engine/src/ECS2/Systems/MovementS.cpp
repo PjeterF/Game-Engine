@@ -15,8 +15,8 @@ void MovementS::update(float dt)
 		Transform& trans = transformPool->get(entID);
 		Velocity& vel = velocityPool->get(entID);
 
-		vel.x = vel.x * 0.9;
-		vel.y = vel.y * 0.9;
+		vel.x = vel.x * velocityDecayFactor;
+		vel.y = vel.y * velocityDecayFactor;
 
 		vel.x += vel.ax;
 		vel.y += vel.ay;

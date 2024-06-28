@@ -54,9 +54,9 @@ void RenderingAPI::drawQuadInstances()
 	instancedQuadRenderer->drawInstances();
 }
 
-void RenderingAPI::addSpriteInstance(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, glm::vec4 texTransform)
+void RenderingAPI::addSpriteInstance(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, glm::vec4 texTransform, bool flipHorizontally)
 {
-	instancedSpriteRenderer->addInstance(position, scale, angle, texture, texTransform);
+	instancedSpriteRenderer->addInstance(position, scale, angle, texture, texTransform, flipHorizontally);
 }
 
 void RenderingAPI::drawSpriteInstances()

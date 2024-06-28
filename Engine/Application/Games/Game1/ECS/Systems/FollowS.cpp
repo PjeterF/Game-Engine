@@ -5,6 +5,10 @@
 
 #include <glm/glm.hpp>
 
+#include <filesystem>
+#include <iostream>
+#include <string>
+
 FollowS::FollowS(int targetID)
 {
 	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(Velocity)) };
@@ -19,22 +23,23 @@ void FollowS::update(float dt)
 	auto velocityPool = ComponentPoolManager::getInstance().getPool<Velocity>();
 
 	auto& targetTransform = transformPool->get(targetID);
+	auto& targetVelocity = velocityPool->get(targetID);
 
 	for (auto entID : entities)
 	{
 		auto& transform = transformPool->get(entID);
 		auto & velociy = velocityPool->get(entID);
+		
+		glm::vec2 direction(targetTransform.x + interceptStrength * targetVelocity.x - transform.x, targetTransform.y + interceptStrength * targetVelocity.y - transform.y);
+		if (glm::length(direction) < 0.00001) {
+			direction.x += rand() % 2 - 0.5f;
+			direction.y += rand() % 2 - 0.5f;
+		}
 
-		float velLength = glm::length(glm::vec2(velociy.x, velociy.y));
+		direction = (acceleration) * glm::normalize(direction);
 
-		glm::vec2 newVelocity = (velLength+acceleration) * glm::normalize(
-			glm::vec2(targetTransform.x, targetTransform.y)
-			-
-			glm::vec2(transform.x, transform.y)
-		);
-
-		velociy.x = newVelocity.x;
-		velociy.y = newVelocity.y;
+		velociy.x = velociy.x + direction.x;
+		velociy.y = velociy.y + direction.y;
 	}
 }
 
@@ -45,6 +50,8 @@ bool FollowS::setTarget(int ID)
 	if (!targetEnt.isValid())
 		return false;
 	if (!targetEnt.hasComponent<Transform>())
+		return false;
+	if (!targetEnt.hasComponent<Velocity>())
 		return false;
 
 	targetID = ID;

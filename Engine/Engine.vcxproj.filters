@@ -1275,6 +1275,21 @@
     <ClInclude Include="Application\Games\Game1\ECS\Systems\FollowS.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS2\Systems\CollisionRepulsionS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\AIDirector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS2\Components\RenderingLayer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\ECS\Components\CharacterStats.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1476,6 +1491,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\Game1\ECS\Systems\FollowS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Systems\CollisionRepulsionS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\AIDirectorS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1903,5 +1927,7 @@
     <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
     <None Include="src\Shaders\instancedSprite.vert" />
     <None Include="src\Shaders\instancedSprite.frag" />
+    <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />
+    <None Include="Application\Games\Game1\EntityArchetypes\Ghoul.json" />
   </ItemGroup>
 </Project>

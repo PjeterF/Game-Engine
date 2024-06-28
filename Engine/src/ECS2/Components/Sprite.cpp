@@ -1,6 +1,6 @@
 #include "Sprite.hpp"
 
-Sprite::Sprite(Resource<Texture>* textureRes, glm::vec4 textureSample) : textureSample(textureSample)
+Sprite::Sprite(Resource<Texture>* textureRes, glm::vec4 textureSample, bool flipHorizontally) : textureSample(textureSample), flipHorizontally(flipHorizontally)
 {
 	if (textureRes == nullptr)
 	{

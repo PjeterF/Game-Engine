@@ -10,6 +10,7 @@ public:
 	bool setTarget(int ID);
 
 	float acceleration = 0.0f;
+	float interceptStrength = 40.0f;
 private:
 	int targetID = -1;
 };

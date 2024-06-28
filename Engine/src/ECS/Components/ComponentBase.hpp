@@ -13,7 +13,7 @@ enum CType
 	Sprite_,
 	BoxCollider,
 	AnimatedSprite,
-	RenderingLayer,
+	RenderingLayer_,
 	Particle,
 	Counter,
 

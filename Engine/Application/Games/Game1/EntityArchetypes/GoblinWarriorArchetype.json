@@ -1,0 +1,30 @@
+{
+  "animationFrames": {
+    "0": [
+      [ 0, 240, 80, 80 ],
+      [ 80, 240, 80, 80 ],
+      [ 160, 240, 80, 80 ],
+      [ 240, 240, 80, 80 ]
+    ],
+    "2": [
+      [ 320, 240, 80, 80 ],
+      [ 400, 240, 80, 80 ],
+      [ 480, 240, 80, 80 ],
+      [ 560, 240, 80, 80 ],
+      [ 640, 240, 80, 80 ],
+      [ 720, 240, 80, 80 ],
+      [ 800, 240, 80, 80 ],
+      [ 880, 240, 80, 80 ]
+    ]
+  },
+  "colliderSize": 25,
+  "frameDuration": 20,
+  "name": "GoblinWarrior",
+  "size": 200,
+  "tag": "enemy",
+  "texture": "Application/Games/Game1/Textures/TestSpritesheet.png",
+  "maxHealth": 100,
+  "attackDamage": 5,
+  "collisionDamage": 5,
+  "speed": 2
+}

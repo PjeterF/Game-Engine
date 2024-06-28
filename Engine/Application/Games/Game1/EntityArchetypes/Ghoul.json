@@ -1,0 +1,30 @@
+{
+  "animationFrames": {
+    "0": [
+      [ 0, 128, 32, 32 ],
+      [ 32, 128, 32, 32 ],
+      [ 64, 128, 32, 32 ],
+      [ 96, 128, 32, 32 ]
+    ],
+    "2": [
+      [ 0, 96, 32, 32 ],
+      [ 32, 96, 32, 32 ],
+      [ 64, 96, 32, 32 ],
+      [ 96, 96, 32, 32 ],
+      [ 128, 96, 32, 32 ],
+      [ 160, 96, 32, 32 ],
+      [ 192, 96, 32, 32 ],
+      [ 224, 96, 32, 32 ]
+    ]
+  },
+  "colliderSize": 32,
+  "frameDuration": 20,
+  "name": "GoblinWarrior",
+  "size": 64,
+  "tag": "enemy",
+  "texture": "Application/Games/Game1/Textures/GhoulSpriteSheet.png",
+  "maxHealth": 100,
+  "attackDamage": 5,
+  "collisionDamage": 5,
+  "speed": 2
+}

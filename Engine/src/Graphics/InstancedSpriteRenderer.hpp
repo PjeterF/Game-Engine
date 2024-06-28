@@ -18,7 +18,7 @@ class InstancedSpriteRenderer
 {
 public:
 	InstancedSpriteRenderer(GLuint shaderProgramID, Camera* camera);
-	void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
+	void addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 }, bool flipHorizontally = false);
 	void drawInstances();
 
 	void setCamera(Camera* camera);
@@ -27,7 +27,7 @@ private:
 	{
 	public:
 		Batch(int index);
-		void addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 });
+		void addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample = { 0, 0, 0, 0 }, bool flipHorizontally=false);
 
 		int index;
 		std::unordered_map<int, int> texUnitMap;

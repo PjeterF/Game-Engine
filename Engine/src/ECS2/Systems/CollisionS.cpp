@@ -56,8 +56,8 @@ void CollisionS::update(float dt)
 
 		if (col.second.state == CollisionS::Collision::State::exit)
 		{
-			c1.collidingEntIDs.push_back(ID2);
-			c2.collidingEntIDs.push_back(ID1);
+			c1.collidingEntIDs.erase(ID2);
+			c2.collidingEntIDs.erase(ID1);
 			collisionToRemove.push_back(col.first);
 			continue;
 		}
@@ -73,9 +73,6 @@ void CollisionS::update(float dt)
 		collisions.erase(index);
 	}
 	collisionToRemove.clear();
-
-	/*std::vector<std::future<void>> futures;
-	std::mutex colsMutex;*/
 
 	for (auto& cell : grid)
 	{
@@ -105,57 +102,14 @@ void CollisionS::update(float dt)
 				{
 					if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
 					{
-						c1.collidingEntIDs.push_back(ID2);
-						c2.collidingEntIDs.push_back(ID1);
+						c1.collidingEntIDs.insert(ID2);
+						c2.collidingEntIDs.insert(ID1);
 						collisions[pairIndex] = Collision(ID1, ID2);
 					}
 				}
 			}
 		}
-		/*std::future<void> f = std::async(std::launch::async, [this, cell, &colsMutex]() {
-			for (int i = 0; i < cell.second.size(); i++)
-			{
-				Entity ent1(cell.second[i]);
-				Transform& t1 = ent1.getComponent<Transform>();
-				AABB& c1 = ent1.getComponent<AABB>();
-
-				if (!c1.enabled)
-					continue;
-
-				for (int j = i + 1; j < cell.second.size(); j++)
-				{
-					Entity ent2(cell.second[j]);
-					Transform& t2 = ent2.getComponent<Transform>();
-					AABB& c2 = ent2.getComponent<AABB>();
-
-					if (!c2.enabled)
-						continue;
-
-					int pairIndex;
-					if (ent1.getID() < ent2.getID())
-						pairIndex = utility::pairing::cantorPair(ent1.getID(), ent2.getID());
-					else
-						pairIndex = utility::pairing::cantorPair(ent2.getID(), ent1.getID());
-
-					std::lock_guard<std::mutex> lock(colsMutex);
-					if (collisions.find(pairIndex) == collisions.end())
-					{
-						if (collided({ t1.x, t1.y }, { c1.width, c1.height }, { t2.x, t2.y }, { c2.width, c2.height }))
-						{
-
-							collisions[pairIndex] = Collision(ent1.getID(), ent2.getID());
-						}
-					}
-				}
-			}
-			});
-		futures.push_back(std::move(f));*/
 	}
-
-	/*for (auto& future : futures)
-	{
-		future.get();
-	}*/
 }
 
 void CollisionS::lateUpdate(float dt)
@@ -175,70 +129,6 @@ void CollisionS::lateUpdate(float dt)
 	for (auto& entID : entities)
 	{
 		addToGrid(entID);
-	}
-}
-
-void CollisionS::updateResponse(float dt)
-{
-	for (auto& collision : collisions)
-	{
-		Entity ent1(collision.second.ID1);
-		Entity ent2(collision.second.ID2);
-		EntityTag tag1 = ent1.getTag();
-		EntityTag tag2 = ent2.getTag();
-
-		if ((tag1 | tag2) == (Barrier | DefaultTag) && collision.second.state == CollisionS::Collision::State::entry)
-		{
-			if (ent1.hasComponent<Velocity>())
-			{
-				Velocity& v = ent1.getComponent<Velocity>();
-				v.x = -v.x;
-				v.y = -v.y;
-			}
-			else
-			{
-				Velocity& v = ent2.getComponent<Velocity>();
-				v.x = -v.x;
-				v.y = -v.y;
-			}
-			continue;
-		}
-		if ((tag1 | tag2) == (Barrier | DefaultTag))
-			continue;
-		if (ent1.getTag() == EntityTag::DefaultTag && ent2.getTag() == EntityTag::DefaultTag && collision.second.state == CollisionS::Collision::State::entry)
-		{
-			Velocity& v1 = ent1.getComponent<Velocity>();
-			Velocity& v2 = ent2.getComponent<Velocity>();
-
-			Velocity v1Init = v1;
-			Velocity v2Init = v2;
-
-			v1.x = (2 * v2Init.x) / (2);
-			v1.y = (2 * v2Init.y) / (2);
-
-			v2.x = (2 * v1Init.x) / (2);
-			v2.y = (2 * v1Init.y) / (2);
-		}
-		if (ent1.getTag() == EntityTag::DefaultTag && ent2.getTag() == EntityTag::DefaultTag && collision.second.state == CollisionS::Collision::State::stay)
-		{
-			auto& t1 = ent1.getComponent<Transform>();
-			auto& t2 = ent2.getComponent<Transform>();
-
-			auto& v1 = ent1.getComponent<Velocity>();
-			auto& v2 = ent2.getComponent<Velocity>();
-
-			glm::vec2 diff = glm::normalize(glm::vec2(t2.x - t1.x, t2.y - t1.y ));
-
-			v2.x = v2.x + 1/diff.x*0.1;
-			v2.y = v2.y + 1/diff.y*0.1;
-			v1.x = v1.x - 1/diff.x*0.1;
-			v1.y = v1.y - 1/diff.y*0.1;
-
-			v2.x = std::min(1.0f, v2.x);
-			v2.y = std::min(1.0f, v2.y);
-			v1.x = std::min(1.0f, v1.x);
-			v1.y = std::min(1.0f, v1.y);
-		}
 	}
 }
 

@@ -8,7 +8,7 @@ LayeredRenderingSystem::LayeredRenderingSystem(RenderingAPI* API) : SystemBase(D
 {
 	name = "LayeredRenderingSystem(" + std::to_string(ID) + ")";
 
-	requiredComponents = { Transform_, RenderingLayer };
+	requiredComponents = { Transform_, RenderingLayer_ };
 	this->API = API;
 }
 
@@ -47,7 +47,7 @@ void LayeredRenderingSystem::update(float dt)
 {
 	for (auto& entity : entities)
 	{
-		auto layer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
+		auto layer = (RenderingLayerC*)entity->getComponent(RenderingLayer_);
 
 		if (entity->hasComponent(Sprite_))
 		{
@@ -105,11 +105,11 @@ bool LayeredRenderingSystem::addEntity(Ent* entity)
 		return true;
 	}
 
-	auto inserteeLayer = (RenderingLayerC*)entity->getComponent(RenderingLayer);
+	auto inserteeLayer = (RenderingLayerC*)entity->getComponent(RenderingLayer_);
 
 	for (auto it = entities.begin(); it != entities.end(); it++)
 	{
-		auto layer = (RenderingLayerC*)(*it)->getComponent(RenderingLayer);
+		auto layer = (RenderingLayerC*)(*it)->getComponent(RenderingLayer_);
 
 		if (inserteeLayer->layer <= layer->layer )
 		{
@@ -141,12 +141,12 @@ void LayeredRenderingSystem::moveToLayer(int entID, int targetLayer)
 	if (ent == nullptr)
 		return;
 
-	if (!ent->hasComponent(RenderingLayer))
+	if (!ent->hasComponent(RenderingLayer_))
 		return;
 
 	this->removeEntity(entID);
 
-	auto layer = (RenderingLayerC*)ent->getComponent(RenderingLayer);
+	auto layer = (RenderingLayerC*)ent->getComponent(RenderingLayer_);
 	layer->layer = targetLayer;
 	this->addEntity(ent);
 }

@@ -71,7 +71,7 @@ InstancedSpriteRenderer::InstancedSpriteRenderer(GLuint shaderProgramID, Camera*
 	batches.push_back(Batch(0));
 }
 
-void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample)
+void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensions, float rotation, Texture* texture, glm::vec4 textureSample, bool flipHorizontally)
 {
 	if (texture == nullptr)
 		return;
@@ -108,7 +108,8 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 				dimensions,
 				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 				texture,
-				texSample
+				texSample,
+				flipHorizontally
 			);
 			texBatchMap[texture->getId()] = batches.back().index;
 		}
@@ -122,7 +123,8 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 				dimensions,
 				{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 				texture,
-				texSample
+				texSample,
+				flipHorizontally
 			);
 			texBatchMap[texture->getId()] = batches.back().index;
 		}
@@ -137,7 +139,8 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 			dimensions,
 			{ cos(rotation), -sin(rotation), sin(rotation), cos(rotation) },
 			texture,
-			texSample
+			texSample,
+			flipHorizontally
 		);
 	}
 }
@@ -199,8 +202,14 @@ InstancedSpriteRenderer::Batch::Batch(int index) : index(index)
 {
 }
 
-void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample)
+void InstancedSpriteRenderer::Batch::addInstance(glm::vec2 position, glm::vec2 dimensions, glm::vec4 rotTransform, Texture* texture, glm::vec4 textureSample, bool flipHorizontally)
 {
+	if (flipHorizontally)
+	{
+		textureSample.x = textureSample.x + textureSample.z;
+		textureSample.z = -textureSample.z;
+	}
+
 	int texId = texture->getId();
 	auto mapEntry = texUnitMap.find(texId);
 	if (mapEntry == texUnitMap.end())
