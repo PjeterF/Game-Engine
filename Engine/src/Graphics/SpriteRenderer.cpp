@@ -72,7 +72,7 @@ void SpriteRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, Text
 	if (texture == nullptr)
 		return;
 
-	if (!camera->isPointInFrustrum(position))
+	if (!camera->isPointInFrustrum(position, 50))
 		return;
 
 	glm::mat4 transform = glm::mat4(1.0f);

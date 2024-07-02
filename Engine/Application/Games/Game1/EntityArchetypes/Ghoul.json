@@ -21,10 +21,11 @@
   "frameDuration": 20,
   "name": "GoblinWarrior",
   "size": 64,
-  "tag": "enemy",
+  "mass": 0.4,
+  "tag": 3,
   "texture": "Application/Games/Game1/Textures/GhoulSpriteSheet.png",
   "maxHealth": 100,
   "attackDamage": 5,
-  "collisionDamage": 5,
+  "collisionDamage": 2,
   "speed": 2
 }

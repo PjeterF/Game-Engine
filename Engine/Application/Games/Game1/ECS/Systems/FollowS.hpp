@@ -6,6 +6,7 @@ class FollowS : public SysBase
 {
 public:
 	FollowS(int targetID=-1);
+	virtual void handleEvent(Event& event) override;
 	virtual void update(float dt) override;
 	bool setTarget(int ID);
 

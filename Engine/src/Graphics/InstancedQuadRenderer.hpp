@@ -14,7 +14,7 @@ class InstancedQuadRenderer
 public:
 	InstancedQuadRenderer(GLuint shaderProgramID, Camera* camera);
 	~InstancedQuadRenderer();
-	void commisionInstance(float xPos, float yPos, float scale, float angle, float r, float g, float b, float a);
+	void commisionInstance(float xPos, float yPos, float scaleX, float scaleY, float angle, float r, float g, float b, float a);
 	void drawInstances();
 	Camera* getCamera();
 
@@ -27,13 +27,13 @@ private:
 		INSTANCES_DATA();
 		void setBufferSize(int size);
 		int getBufferSize();
-		void addInstance(float xPos, float yPos, float scale, float angle, float r, float g, float b, float a);
+		void addInstance(float xPos, float yPos, float scaleX, float scaleY, float angle, float r, float g, float b, float a);
 		void reset();
 		int size();
 		bool empty();
 
 		std::vector<glm::vec2> positions;
-		std::vector<float> sizes;
+		std::vector<glm::vec2> sizes;
 		std::vector<glm::vec4> colors;
 		std::vector<float> angles;
 

@@ -61,6 +61,7 @@ Entity EntityManager::createEntity(EntityTag tag)
 	tags[id] = tag;
 
 	existingEntities.insert(id);
+
 	return Entity(id);
 }
 
@@ -118,6 +119,7 @@ void EntityManager::update()
 			alive[ID] = false;
 			tags[ID] = DefaultTag;
 			existingEntities.erase(ID);
+			ComponentPoolManager::getInstance().disableComponents(ID);
 		}
 	}
 	entitiesToDelete.clear();

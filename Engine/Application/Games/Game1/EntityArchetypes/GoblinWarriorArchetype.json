@@ -17,14 +17,15 @@
       [ 880, 240, 80, 80 ]
     ]
   },
-  "colliderSize": 25,
+  "colliderSize": 40,
   "frameDuration": 20,
   "name": "GoblinWarrior",
   "size": 200,
-  "tag": "enemy",
+  "tag": 2,
   "texture": "Application/Games/Game1/Textures/TestSpritesheet.png",
   "maxHealth": 100,
   "attackDamage": 5,
   "collisionDamage": 5,
-  "speed": 2
+  "speed": 2,
+  "mass": 1
 }

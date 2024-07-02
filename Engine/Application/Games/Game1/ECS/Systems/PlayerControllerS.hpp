@@ -9,8 +9,8 @@ public:
 	PlayerControllerS(InputManager& input);
 	void update(float dt) override;
 
-	float maxVelocity = 100.0f;
-	float velocityIncrease = 1.0f;
+	float velocityIncrease = 5.0f;
+	float dashSpeed = 20;
 private:
 	InputManager& input;
 };

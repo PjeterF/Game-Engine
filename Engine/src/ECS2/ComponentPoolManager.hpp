@@ -20,6 +20,7 @@ public:
 	bool hasComponent(int ID);
 	template<typename T>
 	T& addComponent(int ID, T component);
+	void disableComponents(int ID);
 
 	bool hasComponentTID(int entID, std::type_index typeID);
 private:

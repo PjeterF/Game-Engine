@@ -133,16 +133,6 @@ void Application::handleEvent(Event& event)
 		paused = false;
 	}
 	break;
-	case Event::RouteCreation:
-	{
-		
-	}
-	break;
-	case Event::RouteDeletion:
-	{
-		
-	}
-	break;
 	}
 }
 

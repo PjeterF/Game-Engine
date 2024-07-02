@@ -42,7 +42,7 @@ InstancedQuadRenderer::InstancedQuadRenderer(GLuint shaderProgramID, Camera* cam
 	glVertexAttribDivisor(1, 1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceSize);
-	VAO->setAttributePointer(2, 1, GL_FLOAT, GL_FALSE, 1 * sizeof(float), 0);
+	VAO->setAttributePointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 	glVertexAttribDivisor(2, 1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceColor);
@@ -64,9 +64,9 @@ InstancedQuadRenderer::~InstancedQuadRenderer()
 	glDeleteBuffers(1, &instanceAngle);
 }
 
-void InstancedQuadRenderer::commisionInstance(float xPos, float yPos, float scale, float angle, float r, float g, float b, float a)
+void InstancedQuadRenderer::commisionInstance(float xPos, float yPos, float scaleX, float scaleY, float angle, float r, float g, float b, float a)
 {
-	instanceData.addInstance(xPos, yPos, scale, angle, r, g, b, a);
+	instanceData.addInstance(xPos, yPos, scaleX, scaleY, angle, r, g, b, a);
 }
 
 void InstancedQuadRenderer::drawInstances()
@@ -78,7 +78,7 @@ void InstancedQuadRenderer::drawInstances()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * instanceData.size(), &instanceData.positions[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceSize);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * instanceData.size(), &instanceData.sizes[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * instanceData.size(), &instanceData.sizes[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceColor);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * instanceData.size(), &instanceData.colors[0], GL_STATIC_DRAW);
@@ -143,16 +143,16 @@ int InstancedQuadRenderer::INSTANCES_DATA::getBufferSize()
 	return bufferSize;
 }
 
-void InstancedQuadRenderer::INSTANCES_DATA::addInstance(float xPos, float yPos, float scale, float angle, float r, float g, float b, float a)
+void InstancedQuadRenderer::INSTANCES_DATA::addInstance(float xPos, float yPos, float scaleX, float scaleY, float angle, float r, float g, float b, float a)
 {
 	if (currentIndex >= bufferSize)
 		return;
 
-	if (!camera->isPointInFrustrum({xPos, yPos}))
-		return;
+	/*if (!camera->isPointInFrustrum({xPos, yPos}))
+		return;*/
 
 	positions[currentIndex] = { xPos, yPos };
-	sizes[currentIndex] = scale;
+	sizes[currentIndex] = {scaleX, scaleY};
 	colors[currentIndex] = { r, g, b, a };
 	angles[currentIndex] = angle;
 

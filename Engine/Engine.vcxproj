@@ -145,9 +145,11 @@
     <ClInclude Include="Application\Games\Game1\ECS\Systems\AIDirector.hpp" />
     <ClInclude Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.hpp" />
     <ClInclude Include="Application\Games\Game1\ECS\Systems\FollowS.hpp" />
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\OrbitParentS.hpp" />
     <ClInclude Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.hpp" />
     <ClInclude Include="Application\Games\Game1\Game1.hpp" />
     <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp" />
+    <ClInclude Include="Application\Games\Game1\Utility\Game1Utility.hpp" />
     <ClInclude Include="Application\Tilemap\Tilemap.hpp" />
     <ClInclude Include="Application\UI\View.hpp" />
     <ClInclude Include="Application\UI\UIElement.hpp" />
@@ -571,9 +573,12 @@
     <ClCompile Include="Application\Games\Game1\ECS\Systems\AIDirectorS.cpp" />
     <ClCompile Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.cpp" />
     <ClCompile Include="Application\Games\Game1\ECS\Systems\FollowS.cpp" />
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\HealthBarDrawingS.cpp" />
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\OrbitParentS.cpp" />
     <ClCompile Include="Application\Games\Game1\ECS\Systems\PlayerControllerS.cpp" />
     <ClCompile Include="Application\Games\Game1\Game1.cpp" />
     <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp" />
+    <ClCompile Include="Application\Games\Game1\Utility\Game1Utility.cpp" />
     <ClCompile Include="Application\Tilemap\Tilemap.cpp" />
     <ClCompile Include="Externals\includes\glm\detail\glm.cpp" />
     <ClCompile Include="Externals\includes\imgui\imgui.cpp" />
@@ -642,6 +647,7 @@
   <ItemGroup>
     <None Include="Application\Games\Game1\EntityArchetypes\Ghoul.json" />
     <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />
+    <None Include="Application\Games\Game1\EntityArchetypes\Projectile1.json" />
     <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
     <None Include="Externals\includes\glm\detail\func_common.inl" />
     <None Include="Externals\includes\glm\detail\func_common_simd.inl" />

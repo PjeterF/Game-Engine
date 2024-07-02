@@ -3,29 +3,29 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 
-std::unordered_map<TileType, TileArchetype> TileArchetype::map = std::unordered_map<TileType, TileArchetype>();
+std::unordered_map<std::string, TileArchetype> TileArchetype::map = std::unordered_map<std::string, TileArchetype>();
 
 void TileArchetype::initializeTileArchetypes()
 {
 	
 }
 
-Tilemap::Tilemap(float x, float y, std::vector<Tile> tiles) : tiles(tiles)
+Tilemap::Tilemap(float x, float y, int dimX, int dimY, float tileSize, std::vector<Tile> tiles)
+	: tiles(tiles), dimensions({ dimX, dimY }), position({x, y}), tileSize(tileSize)
 {
-	this->position = { x, y };
 }
 
 void Tilemap::draw(RenderingAPI* API)
 {
-	for (int y = 0; y < TILEMAP_DIM_Y; y++)
+	for (int y = 0; y < dimensions.y; y++)
 	{
-		for (int x = 0; x < TILEMAP_DIM_X; x++)
+		for (int x = 0; x < dimensions.x; x++)
 		{
-			auto& tile = tiles[x + y * TILEMAP_DIM_X];
+			auto& tile = tiles[x + y * dimensions.x];
 			API->addSpriteInstance
 			(
-				{ position.x + x * 2 * TILE_SIZE, position.y + y * 2 * TILE_SIZE },
-				{ TILE_SIZE, TILE_SIZE },
+				{ position.x + x * 2 * tileSize, position.y + y * 2 * tileSize },
+				{ tileSize, tileSize },
 				0,
 				tile.textureRes->getContents(),
 				tile.division

@@ -5,6 +5,7 @@ CollisionResolutionS::CollisionResolutionS()
 	requiredComponents = {
 		std::type_index(typeid(Transform)),
 		std::type_index(typeid(AABB)),
+		std::type_index(typeid(Velocity)),
 		std::type_index(typeid(CharacterStats))
 	};
 }
@@ -13,6 +14,7 @@ void CollisionResolutionS::update(float dt)
 {
 	auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
 	auto statsPool = ComponentPoolManager::getInstance().getPool<CharacterStats>();
+	auto velPool = ComponentPoolManager::getInstance().getPool<Velocity>();
 	auto& entManager = EntityManager::getInstance();
 
 	for (auto ID : entities)
@@ -28,26 +30,26 @@ void CollisionResolutionS::update(float dt)
 
 			switch (tag)
 			{
-			case DefaultTag:
-				break;
-			case Barrier:
-				break;
 			case PlayerCharacter:
-				if (otherTag == Enemy || otherTag == Projectile)
-				{
-					stats.currenthealth = stats.currenthealth - otherStats.attackDamage;
-				}
-
+				if (otherTag == Enemy || otherTag == EnemyProjectile)
+					stats.currenthealth = stats.currenthealth - otherStats.collisionDamage;
 				break;
 			case Enemy:
-				if(otherTag==Projectile)
-					stats.currenthealth = stats.currenthealth - otherStats.attackDamage;
+				if (otherTag == FriendlyProjectile)
+				{
+					stats.currenthealth = stats.currenthealth - otherStats.collisionDamage;
+					auto& vel = velPool->get(ID);
+					vel.x = -3*vel.x;
+					vel.y = -3 * vel.y;
+				}
 				break;
-			case Projectile:
-				if (otherTag != Projectile)
+			case FriendlyProjectile:
+				if (otherTag != FriendlyProjectile && otherTag != EnemyProjectile && otherTag != PlayerCharacter)
 					entManager.deleteEntity(ID);
 				break;
-			default:
+			case EnemyProjectile:
+				if (otherTag != FriendlyProjectile && otherTag != EnemyProjectile && otherTag != Enemy)
+					entManager.deleteEntity(ID);
 				break;
 			}
 
@@ -55,26 +57,4 @@ void CollisionResolutionS::update(float dt)
 				entManager.deleteEntity(ID);
 		}
 	}
-}
-
-void CollisionResolutionS::drawHealthBars(RenderingAPI* API)
-{
-	glm::vec2 barDim = { 200, 5 };
-
-	auto transPool = ComponentPoolManager::getInstance().getPool<Transform>();
-	auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
-	auto statsPool = ComponentPoolManager::getInstance().getPool<CharacterStats>();
-
-	for (auto ID : entities)
-	{
-		auto& trans = transPool->get(ID);
-		auto& col = colPool->get(ID);
-		auto& stats = statsPool->get(ID);
-
-		float healthWidth = barDim.x * stats.currenthealth / stats.maxHealth;
-		float depletedWidth = barDim.x - healthWidth;
-
-		API->addQuadInstance({ trans.x, trans.y + col.height }, { 200, 10 }, 0, { 0, 1, 0, 1 });
-	}
-	API->drawQuadInstances();
 }

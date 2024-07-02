@@ -26,7 +26,7 @@ struct TileArchetype
 	std::string texturePath;
 	glm::vec4 division;
 	bool passable;
-	static std::unordered_map<TileType, TileArchetype> map;
+	static std::unordered_map<std::string, TileArchetype> map;
 	static void initializeTileArchetypes();
 };
 
@@ -42,13 +42,15 @@ struct Tile
 class Tilemap
 {
 public:
-	Tilemap(float x, float y, std::vector<Tile> tiles);
+	Tilemap(float x, float y, int dimX, int dimY, float tileSize, std::vector<Tile> tiles);
 	void draw(RenderingAPI* API);
 	void setTile(int x, int y, Tile tile);
 	nlohmann::json serialize();
 	void deserialize(nlohmann::json j);
 private:
 	glm::vec2 position;
+	glm::vec2 dimensions;
+	float tileSize;
 	std::vector<Tile> tiles;
 	std::vector<glm::vec4> staticColliders;
 };

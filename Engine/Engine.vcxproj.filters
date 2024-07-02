@@ -1290,6 +1290,12 @@
     <ClInclude Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Games\Game1\ECS\Systems\OrbitParentS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game1\Utility\Game1Utility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1500,6 +1506,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\Game1\ECS\Systems\CollisionResolutionS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\HealthBarDrawingS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\ECS\Systems\OrbitParentS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game1\Utility\Game1Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1929,5 +1944,6 @@
     <None Include="src\Shaders\instancedSprite.frag" />
     <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />
     <None Include="Application\Games\Game1\EntityArchetypes\Ghoul.json" />
+    <None Include="Application\Games\Game1\EntityArchetypes\Projectile1.json" />
   </ItemGroup>
 </Project>

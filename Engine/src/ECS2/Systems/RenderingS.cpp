@@ -2,7 +2,12 @@
 
 RenderingS::RenderingS(RenderingAPI* rAPI) : rAPI(rAPI)
 {
-	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(Sprite)), std::type_index(typeid(Sprite)), std::type_index(typeid(Velocity)) };
+	requiredComponents = {
+		std::type_index(typeid(Transform)),
+		std::type_index(typeid(Sprite)),
+		std::type_index(typeid(Sprite)),
+		std::type_index(typeid(Velocity))
+	};
 }
 
 void RenderingS::update(float dt)
@@ -53,7 +58,10 @@ void RenderingS::update(float dt)
 				sprite.flipHorizontally = false;
 
 			rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample, sprite.flipHorizontally);
+				
 		}
+
+			
 	}
 
 	rAPI->drawSpriteInstances();

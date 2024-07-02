@@ -11,12 +11,14 @@
 
 CollisionS::CollisionS(float cellSize) : cellSize(cellSize)
 {
-	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(AABB)) };
+	requiredComponents = {
+		std::type_index(typeid(Transform)),
+		std::type_index(typeid(AABB))
+	};
 }
 
 void CollisionS::handleEvent(Event& event)
 {
-	SysBase::handleEvent(event);
 	switch (event.getType())
 	{
 	case Event::EntityRemoval:
@@ -27,6 +29,9 @@ void CollisionS::handleEvent(Event& event)
 		{
 			if ((*it).second.ID1 == *ID || (*it).second.ID2 == *ID)
 			{
+				auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
+				colPool->get((*it).second.ID1).collidingEntIDs.erase((*it).second.ID2);
+				colPool->get((*it).second.ID2).collidingEntIDs.erase((*it).second.ID1);
 				collisions.erase(it);
 				break;
 			}
@@ -34,9 +39,8 @@ void CollisionS::handleEvent(Event& event)
 		}
 	}
 	break;
-	default:
-		break;
 	}
+	SysBase::handleEvent(event);
 }
 
 void CollisionS::update(float dt)
@@ -191,7 +195,8 @@ void CollisionS::addToGrid(int ID)
 	Transform& trans = transformPool->get(ID);
 	AABB& col = AABBPool->get(ID);
 
-	glm::ivec2 min = { (trans.x - col.width) / cellSize, (trans.y - col.height) / cellSize }, max = { (trans.x + col.width) / cellSize, (trans.y + col.height) / cellSize };
+	glm::ivec2 min = { (trans.x - col.width) / cellSize, (trans.y - col.height) / cellSize };
+	glm::ivec2 max = { (trans.x + col.width) / cellSize, (trans.y + col.height) / cellSize };
 
 	for (int x = min.x; x <= max.x; x++)
 	{

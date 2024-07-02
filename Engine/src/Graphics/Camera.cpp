@@ -21,15 +21,15 @@ void Camera::setZoom(float newZoom)
 		zoom = 3;
 }
 
-bool Camera::isPointInFrustrum(glm::vec2 point)
+bool Camera::isPointInFrustrum(glm::vec2 point, float margin)
 {
-	if (point.x < getFrustrumX().x)
+	if (point.x < getFrustrumX().x-margin)
 		return false;
-	if (point.x > getFrustrumX().y)
+	if (point.x > getFrustrumX().y+margin)
 		return false;
-	if (point.y < getFrustrumY().x)
+	if (point.y < getFrustrumY().x-margin)
 		return false;
-	if (point.y > getFrustrumY().y)
+	if (point.y > getFrustrumY().y+margin)
 		return false;
 
 	return true;

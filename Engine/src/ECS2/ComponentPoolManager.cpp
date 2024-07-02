@@ -7,6 +7,14 @@
 #include "Components/Animation.hpp"
 #include "Components/RenderingLayer.hpp"
 
+void ComponentPoolManager::disableComponents(int ID)
+{
+	for (auto& pool : pools)
+	{
+		pool.second->entityHasComponent[ID] = false;
+	}
+}
+
 bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 {
 	for (int i = 0; i < indices.size(); i++)

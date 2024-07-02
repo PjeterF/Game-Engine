@@ -14,6 +14,22 @@ FollowS::FollowS(int targetID)
 	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(Velocity)) };
 }
 
+void FollowS::handleEvent(Event& event)
+{
+	SysBase::handleEvent(event);
+
+	switch (event.getType())
+	{
+	case Event::EntityRemoval:
+	{
+		int* ID = (int*)event.getPayload();
+		if (*ID == targetID)
+			targetID = -1;
+	}
+	break;
+	}
+}
+
 void FollowS::update(float dt)
 {
 	if (targetID < 0)

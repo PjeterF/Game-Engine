@@ -9,6 +9,8 @@
 #include "../ECS/Systems/PlayerControllerS.hpp"
 #include "../ECS/Systems/FollowS.hpp"
 
+#include "../../Application/Tilemap/Tilemap.hpp"
+
 #include <nlohmann/json.hpp>
 #include <fstream>
 
@@ -22,6 +24,7 @@ public:
 	virtual void input() override;
 
 	int spawnEntity(std::string archetypeFilePath, glm::vec2 pos);
+	Tilemap* tilemap;
 
 	int playerEntID=-1;
 };

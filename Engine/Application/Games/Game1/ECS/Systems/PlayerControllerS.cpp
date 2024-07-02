@@ -31,13 +31,14 @@ void PlayerControllerS::update(float dt)
 		if (input.keyDown[ZE_KEY_A]) {
 			vel.x = vel.x - velocityIncrease;
 		}
-
-		glm::vec2 velVec = { vel.x, vel.y };
-		//velVec = glm::normalize(velVec);
-
-		if (glm::length(velVec) > maxVelocity) {
-			vel.x = velVec.x;
-			vel.y = velVec.y;
+		if (input.keyDown[ZE_KEY_SPACE]) {
+			glm::vec2 dir = { vel.x, vel.y };
+			if (glm::length(dir) != 0)
+			{
+				dir = dashSpeed * glm::normalize(dir);
+				vel.x = dir.x;
+				vel.y = dir.y;
+			}
 		}
 	}
 }

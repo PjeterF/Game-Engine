@@ -17,6 +17,7 @@ class ComponentPool : public ComponentPoolBase
 public:
 	ComponentPool();
 	virtual T& get(int ID);
+	void resetComponent(int ID);
 private:
 	std::vector<T> components;
 	friend class ComponentPoolManager;
@@ -35,4 +36,10 @@ template<typename T>
 inline T& ComponentPool<T>::get(int ID)
 {
 	return components[ID];
+}
+
+template<typename T>
+inline void ComponentPool<T>::resetComponent(int ID)
+{
+	components[ID] = T();
 }

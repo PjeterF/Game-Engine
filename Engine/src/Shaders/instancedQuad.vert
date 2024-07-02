@@ -3,7 +3,7 @@ precision highp float;
 
 layout(location = 0) in vec2 modelPos;
 layout(location = 1) in vec2 positionOffset;
-layout(location = 2) in float size;
+layout(location = 2) in vec2 size;
 layout(location = 3) in vec4 color;
 layout(location = 4) in float angle;
 

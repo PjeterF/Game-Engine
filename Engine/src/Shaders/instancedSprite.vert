@@ -24,11 +24,6 @@ void main()
 		rotation.zw
 	);
 
-	vec2 finalPos = modelPos;
-	finalPos = rot * finalPos;
-	finalPos = dimensions * finalPos;
-	finalPos = position + finalPos;
-
-	gl_Position = projection * vec4(finalPos, 0.0, 1.0);
+	gl_Position = projection * vec4(rot*modelPos*dimensions + position, 0.0, 1.0);
 	finalTexCoord = vec2(texCoord.x*texTransform.z + texTransform.x, texCoord.y*texTransform.w + texTransform.y);
 }

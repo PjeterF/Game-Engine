@@ -1,0 +1,21 @@
+{
+  "animationFrames": {
+    "2": [
+      [ 0, 224, 32, 32 ],
+      [ 32, 224, 32, 32 ],
+      [ 64, 224, 32, 32 ],
+      [ 96, 224, 32, 32 ]
+    ]
+  },
+  "colliderSize": 10,
+  "frameDuration": 20,
+  "name": "Blast1",
+  "size": 30,
+  "tag": 4,
+  "texture": "Application/Games/Game1/Textures/energy_effect_base.png",
+  "maxHealth": 100,
+  "attackDamage": 5,
+  "collisionDamage": 34,
+  "speed": 2,
+  "mass": 0
+}

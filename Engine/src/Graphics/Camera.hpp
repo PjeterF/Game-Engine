@@ -25,7 +25,7 @@ public:
 	glm::vec2 getFrustrumX() { return frustumX_original / zoom + position.x; }
 	glm::vec2 getFrustrumY() { return frustumY_original / zoom + position.y; }
 
-	bool isPointInFrustrum(glm::vec2 point);
+	bool isPointInFrustrum(glm::vec2 point, float margin);
 	glm::vec2 viewPortPointToWorldCoord(glm::vec2 normalizedP);
 private:
 	float zoom = 1;

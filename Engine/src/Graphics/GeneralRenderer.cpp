@@ -46,7 +46,7 @@ void RenderingAPI::drawLine(glm::vec2 p1, glm::vec2 p2, float width, glm::vec3 c
 
 void RenderingAPI::addQuadInstance(glm::vec2 position, glm::vec2 scale, float angle, glm::vec4 colour)
 {
-	instancedQuadRenderer->commisionInstance(position.x, position.y, scale.x, angle, colour.x, colour.y, colour.z, colour.w);
+	instancedQuadRenderer->commisionInstance(position.x, position.y, scale.x, scale.y, angle, colour.x, colour.y, colour.z, colour.w);
 }
 
 void RenderingAPI::drawQuadInstances()

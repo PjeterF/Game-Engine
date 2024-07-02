@@ -42,7 +42,7 @@ QuadRenderer::QuadRenderer(GLuint shaderProgramID, Camera* camera)
 
 void QuadRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, glm::vec4 colour)
 {
-	if (!camera->isPointInFrustrum(position))
+	if (!camera->isPointInFrustrum(position, 50))
 		return;
 
 	glm::mat4 coordTransform = glm::mat4(1.0f);
