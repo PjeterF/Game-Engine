@@ -76,8 +76,6 @@ void GLFWInputManager::update()
 		keyReleased[i] = false;
 	for (int i = 0; i < No_MouseKeys; i++)
 		mouseKeyReleased[i] = false;
-
-	glfwPollEvents();
 }
 
 glm::vec2 GLFWInputManager::getCursorPos()

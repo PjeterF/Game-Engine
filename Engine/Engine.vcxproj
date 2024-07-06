@@ -150,6 +150,14 @@
     <ClInclude Include="Application\Games\Game1\Game1.hpp" />
     <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp" />
     <ClInclude Include="Application\Games\Game1\Utility\Game1Utility.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleComponent.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleShooter.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\RouteS.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\functions.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\ZumaGame.hpp" />
     <ClInclude Include="Application\Tilemap\Tilemap.hpp" />
     <ClInclude Include="Application\UI\View.hpp" />
     <ClInclude Include="Application\UI\UIElement.hpp" />
@@ -507,6 +515,7 @@
     <ClInclude Include="src\ECS2\Components\Transform.hpp" />
     <ClInclude Include="src\ECS2\Components\Velocity.hpp" />
     <ClInclude Include="src\ECS2\EntityManager.hpp" />
+    <ClInclude Include="src\ECS2\Systems\AnimationS.hpp" />
     <ClInclude Include="src\ECS2\Systems\CollisionRepulsionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\MovementS.hpp" />
     <ClInclude Include="src\ECS2\Systems\RenderingS.hpp" />
@@ -579,6 +588,12 @@
     <ClCompile Include="Application\Games\Game1\Game1.cpp" />
     <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp" />
     <ClCompile Include="Application\Games\Game1\Utility\Game1Utility.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\RouteS.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\functions.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\ZumaGame.cpp" />
     <ClCompile Include="Application\Tilemap\Tilemap.cpp" />
     <ClCompile Include="Externals\includes\glm\detail\glm.cpp" />
     <ClCompile Include="Externals\includes\imgui\imgui.cpp" />
@@ -593,6 +608,7 @@
     <ClCompile Include="src\ECS2\ComponentPoolManager.cpp" />
     <ClCompile Include="src\ECS2\Components\Sprite.cpp" />
     <ClCompile Include="src\ECS2\EntityManager.cpp" />
+    <ClCompile Include="src\ECS2\Systems\AnimationS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionRepulsionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\MovementS.cpp" />
@@ -648,6 +664,9 @@
     <None Include="Application\Games\Game1\EntityArchetypes\Ghoul.json" />
     <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />
     <None Include="Application\Games\Game1\EntityArchetypes\Projectile1.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble1.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble2.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble3.json" />
     <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
     <None Include="Externals\includes\glm\detail\func_common.inl" />
     <None Include="Externals\includes\glm\detail\func_common_simd.inl" />

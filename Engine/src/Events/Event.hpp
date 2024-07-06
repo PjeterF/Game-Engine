@@ -7,7 +7,8 @@ enum ObsBin
 	Defualt = 0,
 	ECS,
 	UI,
-	ECS2
+	ECS2,
+	ApplicationBin
 };
 
 class Event

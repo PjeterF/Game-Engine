@@ -16,11 +16,15 @@
 #include "src/Graphics/Camera.hpp"
 
 #include "Application/Games/Game1/Game1.hpp"
+#include "Application/Games/ZumaGame/ZumaGame.hpp"
 
 int main(void)
 {
-    Game1 game1(1920, 1080, "TestGame");
+    /*Game1 game1(1920, 1080, "TestGame");
     game1.initialize();
-    game1.run();
-    return 0;
+    game1.run();*/
+
+    ZumaGame zuma(1920, 1080, "ZumaGame");
+    zuma.initialize();
+    zuma.run();
 }

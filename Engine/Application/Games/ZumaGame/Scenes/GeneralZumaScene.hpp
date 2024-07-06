@@ -3,29 +3,27 @@
 #include "../../src/Managers/Scene/SceneManager.hpp"
 
 #include "../../src/ECS2/Systems/MovementS.hpp"
+#include "../../src/ECS2/Systems/AnimationS.hpp"
 #include "../../src/ECS2/Systems/RenderingS.hpp"
 #include "../../src/ECS2/Systems/CollisionS.hpp"
-#include "../../src/ECS2/Systems/AnimationS.hpp"
 #include "../../src/ECS2/Systems/CollisionRepulsionS.hpp"
-#include "../ECS/Systems/PlayerControllerS.hpp"
-#include "../ECS/Systems/FollowS.hpp"
+#include "../ECS/Systems/ShooterS.hpp"
 
 #include "../../Application/Tilemap/Tilemap.hpp"
 
 #include <nlohmann/json.hpp>
 #include <fstream>
 
-class Game1_scene1 : public Scene
+class GeneralZumaScene : public Scene
 {
 public:
-	Game1_scene1(Camera& camera);
+	GeneralZumaScene(Camera& camera);
 	virtual void initialize() override;
 	virtual void update(float dt) override;
 	virtual void draw(RenderingAPI* renderingAPI) override;
 	virtual void input() override;
-
-	int spawnEntity(std::string archetypeFilePath, glm::vec2 pos);
-	Tilemap* tilemap;
-
-	int playerEntID=-1;
+private:
+	std::string selectedRoute = "";
+	int ctrlPtIdx = -1;
+	bool movingPt = false;
 };

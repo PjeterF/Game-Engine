@@ -15,8 +15,6 @@ void SysBase::handleEvent(Event& event)
         this->removeEntity(*ID);
     }
     break;
-    default:
-        break;
     }
 }
 

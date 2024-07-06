@@ -19,6 +19,6 @@ void main()
 		vec2(sin(angle), cos(angle))
 	);
 
-	gl_Position = projection * vec4(rotation * size * modelPos + positionOffset, 0.0, 1.0);
+	gl_Position = projection * vec4(rotation * modelPos * size + positionOffset, 0.0, 1.0);
 	fragColor = color;
 }

@@ -19,6 +19,7 @@ void Game1_scene1::initialize()
 {
 	addSystem<CollisionRepulsionS>("Repulsion", new CollisionRepulsionS(), true);
 	getSystem<CollisionRepulsionS>("Repulsion")->repulsionStrength = 0.5;
+	addSystem<AnimationS>("Anim", new AnimationS(), true);
 
 	addSystem<CollisionResolutionS>("ColRes", new CollisionResolutionS(), true);
 
@@ -40,6 +41,7 @@ void Game1_scene1::initialize()
 		getSystem<FollowS>("Follow")->setTarget(playerEntID);
 		getSystem<MovementS>("Movement")->addEntity(playerEntID);
 		getSystem<RenderingS>("Rendering")->addEntity(playerEntID);
+		getSystem<AnimationS>("Anim")->addEntity(playerEntID);
 		getSystem<CollisionS>("Collision")->addEntity(playerEntID);
 		getSystem<CollisionRepulsionS>("Repulsion")->addEntity(playerEntID);
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(playerEntID);
@@ -86,6 +88,7 @@ void Game1_scene1::update(float dt)
 
 	getSystem<FollowS>("Follow")->update(dt);
 	getSystem<MovementS>("Movement")->update(dt);
+	getSystem<AnimationS>("Anim")->update(dt);
 
 	getSystem<CollisionRepulsionS>("Repulsion")->update(dt);
 	getSystem<CollisionResolutionS>("ColRes")->update(dt);
@@ -115,6 +118,7 @@ void Game1_scene1::update(float dt)
 
 		getSystem<MovementS>("Movement")->addEntity(newEntID);
 		getSystem<RenderingS>("Rendering")->addEntity(newEntID);
+		getSystem<AnimationS>("Anim")->addEntity(newEntID);
 		getSystem<CollisionS>("Collision")->addEntity(newEntID);
 		getSystem<CollisionRepulsionS>("Repulsion")->addEntity(newEntID);
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(newEntID);
@@ -198,6 +202,7 @@ void Game1_scene1::input()
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(newEntID);
 		getSystem<FollowS>("Follow")->addEntity(newEntID);
 		getSystem<HealthBarDrawingS>("HealthBarDrawing")->addEntity(newEntID);
+		getSystem<AnimationS>("Anim")->addEntity(newEntID);
 	}
 
 	if (input->mouseKeyClicked[ZE_MOUSE_BUTTON_1])
@@ -224,6 +229,7 @@ void Game1_scene1::input()
 
 		getSystem<MovementS>("Movement")->addEntity(newEntID);
 		getSystem<RenderingS>("Rendering")->addEntity(newEntID);
+		getSystem<AnimationS>("Anim")->addEntity(newEntID);
 		getSystem<CollisionS>("Collision")->addEntity(newEntID);
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(newEntID);
 	}

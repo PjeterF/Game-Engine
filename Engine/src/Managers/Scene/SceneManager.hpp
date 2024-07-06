@@ -19,6 +19,8 @@ public:
 	bool addSystem(std::string name, SysBase* system, bool deleteOnSceneEnd=false);
 	template<typename T>
 	T* getSystem(std::string name);
+	template<typename T>
+	std::unordered_map<std::string, SysBase*>* getSystemBin();
 	void setCamera(Camera& camera);
 
 	Camera& camera;
@@ -87,4 +89,14 @@ inline T* Scene::getSystem(std::string name)
 	}
 
 	return nullptr;
+}
+
+template<typename T>
+inline std::unordered_map<std::string, SysBase*>* Scene::getSystemBin()
+{
+	if (systems.find(std::type_index(typeid(T))) != systems.end())
+		return systems[std::type_index(typeid(T))];
+	else
+		return nullptr;
+	
 }

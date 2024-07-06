@@ -1296,6 +1296,33 @@
     <ClInclude Include="Application\Games\Game1\Utility\Game1Utility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\ZumaGame.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\RouteS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleComponent.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS2\Systems\AnimationS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleShooter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1515,6 +1542,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\Game1\Utility\Game1Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\ZumaGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\RouteS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Systems\AnimationS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1945,5 +1993,8 @@
     <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />
     <None Include="Application\Games\Game1\EntityArchetypes\Ghoul.json" />
     <None Include="Application\Games\Game1\EntityArchetypes\Projectile1.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble1.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble2.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble3.json" />
   </ItemGroup>
 </Project>

@@ -19,7 +19,7 @@
 
 #include "Games/Game1/Scenes/Game1_scene1.hpp"
 
-Application::Application(float windowWidth, float windowHeight, std::string windowName) : EventObserver()
+Application::Application(float windowWidth, float windowHeight, std::string windowName) : EventObserver(ApplicationBin)
 {
 	EventManager::getInstance().addObserver(this, UI);
 
@@ -30,7 +30,7 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 	wndName=windowName;
 
 	glfwInit();
-	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), NULL, NULL);
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
@@ -100,6 +100,8 @@ void Application::run()
 
 		SceneManager::getInstance().input();
 
+		glfwPollEvents();
+
 /*======END OF INPUT=========*/
 
 		auto timeEnd = std::chrono::high_resolution_clock::now();
@@ -131,6 +133,11 @@ void Application::handleEvent(Event& event)
 	case Event::Unpause:
 	{
 		paused = false;
+	}
+	break;
+	case Event::TogglePause:
+	{
+		paused = !paused;
 	}
 	break;
 	}
