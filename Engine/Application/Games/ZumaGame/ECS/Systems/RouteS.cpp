@@ -96,6 +96,8 @@ void RouteS::update(float dt)
 		}
 		else
 		{
+			if (intermediatePts.empty())
+				return;
 			if (mComponent.targetPointIdx < 0)
 				mComponent.targetPointIdx = 0;
 			if(mComponent.targetPointIdx >= intermediatePts.size())
@@ -124,6 +126,9 @@ void RouteS::update(float dt)
 
 void RouteS::draw(RenderingAPI* rAPI)
 {
+	if (intermediatePts.empty())
+		return;
+
 	for (int i = 0; i < intermediatePts.size() - 1; i++)
 	{
 		rAPI->drawLine(intermediatePts[i], intermediatePts[i + 1], 5, { 0.33, 0.11, 0.11 });
@@ -131,13 +136,14 @@ void RouteS::draw(RenderingAPI* rAPI)
 
 	for (int i = 0; i < ctrlPts.size(); i++)
 	{
-		glm::vec4 color = {1, 1, 0, 1};
+		glm::vec4 color = {0.5, 1, 1, 1};
 		if (i % 3 == 0)
 			color *= 0.88;
 		if (i % 3 == 1)
-			color *= 0.75;
+			color *= 0.67;
 		if (i % 3 == 2)
-			color *= 0.66;
+			color *= 0.5;
+		color.w = 1;
 		rAPI->addQuadInstance(ctrlPts[i], { 5, 5 }, 0, color);
 	}
 	rAPI->drawQuadInstances();
@@ -145,6 +151,9 @@ void RouteS::draw(RenderingAPI* rAPI)
 
 void RouteS::calculateIntermediatePoints()
 {
+	if (ctrlPts.size() < 4)
+		return;
+
 	std::vector<float> tValues;
 	for (float i = 0; i <= nSamples; i+=1)
 	{

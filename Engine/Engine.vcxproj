@@ -157,10 +157,10 @@
     <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\functions.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\UI\MarbleEditor.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\UI\UIWindow.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\ZumaGame.hpp" />
     <ClInclude Include="Application\Tilemap\Tilemap.hpp" />
-    <ClInclude Include="Application\UI\View.hpp" />
-    <ClInclude Include="Application\UI\UIElement.hpp" />
     <ClInclude Include="Externals\includes\gladES\glad.h" />
     <ClInclude Include="Externals\includes\glad\glad.h" />
     <ClInclude Include="Externals\includes\GLES3\gl3.h" />
@@ -593,6 +593,8 @@
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\functions.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\UI\MarbleEditor.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\UI\UIWindow.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ZumaGame.cpp" />
     <ClCompile Include="Application\Tilemap\Tilemap.cpp" />
     <ClCompile Include="Externals\includes\glm\detail\glm.cpp" />

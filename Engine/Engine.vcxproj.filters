@@ -1251,12 +1251,6 @@
     <ClInclude Include="src\Managers\Tileset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Application\UI\View.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\UI\UIElement.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS2\Systems\UserControllerS.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1321,6 +1315,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\UI\MarbleEditor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\UI\UIWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1563,6 +1563,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\UI\MarbleEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\UI\UIWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,6 +11,8 @@
 
 #include "../../Application/Tilemap/Tilemap.hpp"
 
+#include "../UI/MarbleEditor.hpp"
+
 #include <nlohmann/json.hpp>
 #include <fstream>
 
@@ -26,4 +28,5 @@ private:
 	std::string selectedRoute = "";
 	int ctrlPtIdx = -1;
 	bool movingPt = false;
+	std::vector<UIWindow*> UIElements;
 };

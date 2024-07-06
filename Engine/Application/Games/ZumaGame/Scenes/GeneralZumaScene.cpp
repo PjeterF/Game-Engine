@@ -11,6 +11,8 @@ GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
 
 void GeneralZumaScene::initialize()
 {
+	UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, 100, 100));
+
 	std::vector<glm::vec2> ctrlPts = {
 		{100, 100}, 
 		{200, 400},
@@ -108,6 +110,9 @@ void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 		getSystem<RouteS>("Route1")->setNSamples(nSamples);
 	}
 	ImGui::End();
+
+	for (auto& element : UIElements)
+		element->render();
 }
 
 void GeneralZumaScene::input()
@@ -115,6 +120,8 @@ void GeneralZumaScene::input()
 	auto& input = GLFWInputManager::getInstance();
 
 	auto cursorPos = (input.getCursorPos() / camera.getZoom() + camera.getPosition());
+
+
 
 	if (input.keyClicked[ZE_KEY_SPACE])
 	{
