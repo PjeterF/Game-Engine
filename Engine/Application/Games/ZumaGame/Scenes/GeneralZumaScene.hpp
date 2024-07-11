@@ -12,6 +12,7 @@
 #include "../../Application/Tilemap/Tilemap.hpp"
 
 #include "../UI/MarbleEditor.hpp"
+#include "../UI/ZumaMenu.hpp"
 
 #include <nlohmann/json.hpp>
 #include <fstream>

@@ -17,6 +17,8 @@ public:
 		return instanceImp();
 	}
 
+	glm::ivec2 getWindowDimensions();
+
 	virtual float mouseWheel() override;
 	virtual void update() override;
 	virtual glm::vec2 getCursorPos() override;

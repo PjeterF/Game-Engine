@@ -1323,6 +1323,9 @@
     <ClInclude Include="Application\Games\ZumaGame\UI\UIWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Games\ZumaGame\UI\ZumaMenu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1569,6 +1572,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\ZumaGame\UI\UIWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\UI\ZumaMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

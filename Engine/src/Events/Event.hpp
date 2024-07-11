@@ -42,6 +42,7 @@ public:
 		PlacePoint, // glm::vec2 - cursor position
 		RemoveLastPoint,
 		RouteSelection, // RouteManagementSystem*
+		UpdateMarbleArchetypes,
 
 		//ECS
 		EntityRemoval, // Ent*

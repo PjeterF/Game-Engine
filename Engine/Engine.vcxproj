@@ -74,9 +74,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,9 +93,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,9 +111,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,9 +130,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,6 +161,7 @@
     <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\functions.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\UI\ZumaMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\MarbleEditor.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\UIWindow.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\ZumaGame.hpp" />
@@ -595,6 +600,7 @@
     <ClCompile Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\MarbleEditor.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\UIWindow.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\UI\ZumaMenu.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ZumaGame.cpp" />
     <ClCompile Include="Application\Tilemap\Tilemap.cpp" />
     <ClCompile Include="Externals\includes\glm\detail\glm.cpp" />

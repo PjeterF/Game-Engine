@@ -30,7 +30,7 @@ void LineRenderer::draw(float x1, float y1, float x2, float y2, float width, flo
 
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	transform = glm::translate(transform, glm::vec3(camera->getZoom()*0.5*(x1+x2)+camera->getPosition().x, camera->getZoom() * 0.5 * (y1 + y2) + camera->getPosition().y, 0));
+	transform = glm::translate(transform, glm::vec3(camera->getZoom() * (0.5 * (x1+x2) - camera->getPosition().x), camera->getZoom() * (0.5 * (y1 + y2) - camera->getPosition().y), 0));
 	transform = glm::rotate(transform, atan(vec.y/vec.x), glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(camera->getZoom() * length, camera->getZoom() * length, 1));
 

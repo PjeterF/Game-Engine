@@ -2,8 +2,8 @@
 
 #include "../../functions.hpp"
 
-RouteS::RouteS(std::string systemID, std::vector<glm::vec2> ctrlPts, unsigned int nSamples, float speed, int nMarbles)
-	: ctrlPts(ctrlPts), nSamples(nSamples), speed(speed), nMarbles(nMarbles), systemID(systemID)
+RouteS::RouteS(std::string systemID, std::vector<glm::vec2> ctrlPts, unsigned int nSamples, float speed, int nMarbles, bool deleteOnSceneEnd)
+	: ctrlPts(ctrlPts), nSamples(nSamples), remainingMarbles(nSamples), speed(speed), nMarbles(nMarbles), systemID(systemID), SysBase(deleteOnSceneEnd)
 {
 	requiredComponents = {
 		std::type_index(typeid(Transform)),
@@ -126,14 +126,6 @@ void RouteS::update(float dt)
 
 void RouteS::draw(RenderingAPI* rAPI)
 {
-	if (intermediatePts.empty())
-		return;
-
-	for (int i = 0; i < intermediatePts.size() - 1; i++)
-	{
-		rAPI->drawLine(intermediatePts[i], intermediatePts[i + 1], 5, { 0.33, 0.11, 0.11 });
-	}
-
 	for (int i = 0; i < ctrlPts.size(); i++)
 	{
 		glm::vec4 color = {0.5, 1, 1, 1};
@@ -147,6 +139,14 @@ void RouteS::draw(RenderingAPI* rAPI)
 		rAPI->addQuadInstance(ctrlPts[i], { 5, 5 }, 0, color);
 	}
 	rAPI->drawQuadInstances();
+
+	if (intermediatePts.empty())
+		return;
+
+	for (int i = 0; i < intermediatePts.size() - 1; i++)
+	{
+		rAPI->drawLine(intermediatePts[i], intermediatePts[i + 1], 5, { 0.33, 0.11, 0.11 });
+	}
 }
 
 void RouteS::calculateIntermediatePoints()
@@ -246,12 +246,12 @@ void RouteS::spawnMarbleAtOrigin(std::string marbleArchetypeFilepath, MovementS&
 
 void RouteS::spawnMarbleIfPossible(std::string marbleArchetypeFilepath, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys)
 {
-	if (ctrlPts.empty() || nMarbles<=0)
+	if (ctrlPts.empty() || remainingMarbles<=0)
 		return;
 
 	if (marbles.empty())
 	{
-		nMarbles--;
+		remainingMarbles--;
 		spawnMarbleAtOrigin(marbleArchetypeFilepath, msys, rsys, csys, asys);
 		return;
 	}
@@ -261,7 +261,7 @@ void RouteS::spawnMarbleIfPossible(std::string marbleArchetypeFilepath, Movement
 		
 	if (glm::length(glm::vec2(transform.x - ctrlPts[0].x, transform.y - ctrlPts[0].y))>distanceBetween*0.9)
 	{
-		nMarbles--;
+		remainingMarbles--;
 		spawnMarbleAtOrigin(marbleArchetypeFilepath, msys, rsys, csys, asys);
 		return;
 	}
@@ -314,7 +314,7 @@ bool RouteS::insertAt(int entID, int inserteeID)
 				}
 
 				if (glm::distance(currentPos, inserteePos) <= glm::distance(nextPos, inserteePos))
-					//it++;
+					it++;
 
 				if (it != marbles.end())
 				{
@@ -350,6 +350,19 @@ bool RouteS::insertAt(int entID, int inserteeID)
 	}
 
 	return false;
+}
+
+void RouteS::reset()
+{
+	for (int entID : marbles)
+		EntityManager::getInstance().deleteEntity(entID);
+
+	remainingMarbles = nMarbles;
+}
+
+void RouteS::setNumberOfMarbles(int n)
+{
+	nMarbles = n;
 }
 
 int RouteS::ctrlPointIntersection(glm::vec2 pos)

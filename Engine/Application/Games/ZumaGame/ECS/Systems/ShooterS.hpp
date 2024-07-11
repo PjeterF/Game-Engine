@@ -24,6 +24,7 @@ public:
 	virtual void handleEvent(Event& event) override;
 	
 private:
+	std::string archetypesDirectoryFilepath = "Application/Games/ZumaGame/MarbleArchetypes";
 	std::vector<std::string> marbleArchetypeFilepaths;
 	MovementS& msys;
 	RenderingS& rsys;

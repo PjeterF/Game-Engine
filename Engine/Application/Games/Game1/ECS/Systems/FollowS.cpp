@@ -51,6 +51,15 @@ void FollowS::update(float dt)
 			direction.x += rand() % 2 - 0.5f;
 			direction.y += rand() % 2 - 0.5f;
 		}
+		if (glm::length(glm::vec2(targetTransform.x - transform.x, targetTransform.y - transform.y)) > rePositioningDistance)
+		{
+			glm::vec2 randomDir = { ((float)(rand() % 100) - 50) / 50, ((float)(rand() % 100) - 50) / 50 };
+			if (glm::length(randomDir) < 0.001)
+				randomDir.x = 1;
+			randomDir =  glm::normalize(randomDir);
+			transform.x = teleportDistance * randomDir.x + targetTransform.x;
+			transform.y = teleportDistance * randomDir.y + targetTransform.y;
+		}
 
 		direction = (acceleration) * glm::normalize(direction);
 

@@ -59,6 +59,13 @@ void GLFWInputManager::mouse_button_callback(GLFWwindow* window, int button, int
 	}
 }
 
+glm::ivec2 GLFWInputManager::getWindowDimensions()
+{
+	glm::ivec2 result;
+	glfwGetWindowSize(window, &result.x, &result.y);
+	return result;
+}
+
 float GLFWInputManager::mouseWheel()
 {
 	float temp = wheel;

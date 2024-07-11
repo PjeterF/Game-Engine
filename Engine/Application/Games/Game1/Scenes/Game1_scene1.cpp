@@ -60,23 +60,29 @@ void Game1_scene1::initialize()
 	
 	tilemap = new Tilemap(-tileSize*dimX, -tileSize * dimY, dimX, dimY, tileSize, tiles);
 
-	//for (int i = 0; i < 0; i++)
-	//{
-	//	Entity ent = EntityManager::getInstance().createEntity();
-	//	ent.addComponent<Transform>(Transform(rand() % 2000 - 200, rand() % 2000 - 200, 30, 30));
-	//	ent.addComponent<Velocity>(Velocity(2 * (1 * float(rand() % 100) / 100 - 1), 1 * (2 * float(rand() % 100) / 100 - 1), 0, -0.0, 0.9));
-	//	ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand() % fruitDivisions.size()]));
-	//	AABB& col = ent.addComponent<AABB>(AABB(15, 15));
-	//	if (rand() % 100 < 0)
-	//		col.enabled = false;
+	/*std::vector<glm::vec4> tiles2 = utility::sampling::sampleEvenly(16*3, 16*3, 16*3, 16*2, 3, 3);
+	for (int i = 0; i < dimX * dimY; i++)
+		tiles.push_back(Tile("Application/Games/Game1/Textures/Tilesets/FantasyForest/Tiles/Tileset.png", tiles2[rand() % tiles2.size()], true));
 
-	//	getSystem<MovementS>("Movement")->addEntity(ent);
-	//	getSystem<RenderingS>("Rendering")->addEntity(ent);
-	//	getSystem<CollisionS>("Collision")->addEntity(ent);
-	//	//getSystem<FollowS>("Follow")->addEntity(ent);
-	//	getSystem<CollisionRepulsionS>("Repulsion")->addEntity(ent);
-	//	
-	//}
+	tilemap = new Tilemap(-tileSize * dimX, -tileSize * dimY, dimX, dimY, tileSize, tiles);*/
+
+	for (int i = 0; i < 1000; i++)
+	{
+		Entity ent = EntityManager::getInstance().createEntity();
+		ent.addComponent<Transform>(Transform(rand() % 2000 - 200, rand() % 2000 - 200, 30, 30));
+		ent.addComponent<Velocity>(Velocity(2 * (1 * float(rand() % 100) / 100 - 1), 1 * (2 * float(rand() % 100) / 100 - 1), 0, -0.0, 0.9));
+		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand() % fruitDivisions.size()]));
+		AABB& col = ent.addComponent<AABB>(AABB(15, 15, 1));
+		if (rand() % 100 < 0)
+			col.enabled = false;
+
+		getSystem<MovementS>("Movement")->addEntity(ent);
+		getSystem<RenderingS>("Rendering")->addEntity(ent);
+		getSystem<CollisionS>("Collision")->addEntity(ent);
+		//getSystem<FollowS>("Follow")->addEntity(ent);
+		getSystem<CollisionRepulsionS>("Repulsion")->addEntity(ent);
+		
+	}
 }
 
 void Game1_scene1::update(float dt)
@@ -155,34 +161,19 @@ void Game1_scene1::input()
 	float rate = 10.0f/camera.getZoom();
 	auto normalizedCursorPos = input->getNormalizedCursorPos();
 
-	if (normalizedCursorPos.x < scrollRegionWidth)
-	{
-		auto cameraPosition = camera.getPosition();
-		camera.setPosition(cameraPosition.x - rate, cameraPosition.y);
-	}
-	if (normalizedCursorPos.x > 1.0f - scrollRegionWidth)
-	{
-		auto cameraPosition = camera.getPosition();
-		camera.setPosition(cameraPosition.x + rate, cameraPosition.y);
-	}
-	if (normalizedCursorPos.y < scrollRegionWidth)
-	{
-		auto cameraPosition = camera.getPosition();
-		camera.setPosition(cameraPosition.x, cameraPosition.y - rate);
-	}
-	if (normalizedCursorPos.y > 1.0f - scrollRegionWidth)
-	{
-		auto cameraPosition = camera.getPosition();
-		camera.setPosition(cameraPosition.x, cameraPosition.y + rate);
-	}
-
-	
+	auto cameraPosition = camera.getPosition();
 	float wheel = input->mouseWheel();
 	float zoomRate = 0.02;
+	if (normalizedCursorPos.x < scrollRegionWidth)
+		camera.setPosition(cameraPosition.x - rate, cameraPosition.y);
+	if (normalizedCursorPos.x > 1.0f - scrollRegionWidth)
+		camera.setPosition(cameraPosition.x + rate, cameraPosition.y);
+	if (normalizedCursorPos.y < scrollRegionWidth)
+		camera.setPosition(cameraPosition.x, cameraPosition.y - rate);
+	if (normalizedCursorPos.y > 1.0f - scrollRegionWidth)
+		camera.setPosition(cameraPosition.x, cameraPosition.y + rate);
 	if (wheel != 0)
-	{
 		camera.changeZoom(wheel * zoomRate);
-	}
 
 	/*if (input->keyClicked[ZE_KEY_F])
 		EntityManager::getInstance().reset();*/

@@ -47,7 +47,7 @@ void QuadRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, glm::v
 
 	glm::mat4 coordTransform = glm::mat4(1.0f);
 	coordTransform = glm::ortho(camera->getOriginalFrustrumX().x, camera->getOriginalFrustrumX().y, camera->getOriginalFrustrumY().x, camera->getOriginalFrustrumY().y, -1.0f, 1.0f);
-	coordTransform = glm::translate(coordTransform, glm::vec3(camera->getZoom() * position.x - camera->getPosition().x, camera->getZoom() * position.y - camera->getPosition().y, 0));
+	coordTransform = glm::translate(coordTransform, glm::vec3(camera->getZoom() * (position.x - camera->getPosition().x), camera->getZoom() * (position.y - camera->getPosition().y), 0));
 	coordTransform = glm::rotate(coordTransform, glm::radians(angle + 0), glm::vec3(0, 0, 1));
 	coordTransform = glm::scale(coordTransform, glm::vec3(camera->getZoom() * scale.x, camera->getZoom() * scale.y, 1));
 	

@@ -1,10 +1,6 @@
 #include "SysBase.hpp"
 #include "../ComponentPoolManager.hpp"
 
-SysBase::SysBase() : EventObserver(ECS2)
-{
-}
-
 void SysBase::handleEvent(Event& event)
 {
     switch (event.getType())
@@ -44,5 +40,9 @@ void SysBase::removeEntity(int ID)
 }
 
 void SysBase::lateUpdate(float dt)
+{
+}
+
+SysBase::SysBase(bool deleteOnSceneEnd) : deleteOnSceneEnd(deleteOnSceneEnd), EventObserver(ECS2)
 {
 }

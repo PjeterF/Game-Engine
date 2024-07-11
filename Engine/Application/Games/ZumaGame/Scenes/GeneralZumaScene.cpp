@@ -11,13 +11,16 @@ GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
 
 void GeneralZumaScene::initialize()
 {
-	UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, 100, 100));
+	glm::ivec2 windowDimensions = GLFWInputManager::getInstance().getWindowDimensions();
+
+	UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, 300, windowDimensions.y/2, "Application/Games/ZumaGame/MarbleArchetypes"));
+	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, 300, windowDimensions.y / 2, systems[std::type_index(typeid(RouteS))]));
 
 	std::vector<glm::vec2> ctrlPts = {
 		{100, 100}, 
 		{200, 400},
 		{300, 500}, 
-		{1000, 100},
+		{700, 400},
 		{1100, 300},
 		{1200, 500},
 		{1300, 100}
@@ -50,41 +53,35 @@ void GeneralZumaScene::initialize()
 
 	getSystem<RenderingS>("Rend")->addEntity(shooter.getID());
 	getSystem<ShooterS>("S0")->addEntity(shooter.getID());
-
-	for (int i = 0; i < 1; i++)
-	{
-		getSystem<RouteS>("Route1")->spawnMarbleAtOrigin(
-			"Application/Games/ZumaGame/MarbleArchetypes/marble1.json",
-			*getSystem<MovementS>("Mov"),
-			*getSystem<RenderingS>("Rend"),
-			*getSystem<CollisionS>("Col"),
-			*getSystem<AnimationS>("Anim")
-
-		);
-	}
 }
 
 void GeneralZumaScene::update(float dt)
 {
-	static int iteration = 9990;
 	static std::vector<std::string> marbleArchetypes = {
 		"Application/Games/ZumaGame/MarbleArchetypes/marble1.json",
 		"Application/Games/ZumaGame/MarbleArchetypes/marble2.json",
 		"Application/Games/ZumaGame/MarbleArchetypes/marble3.json"
 	};
 
-	getSystem<RouteS>("Route1")->spawnMarbleIfPossible(
-		marbleArchetypes[rand()%marbleArchetypes.size()],
-		*getSystem<MovementS>("Mov"),
-		*getSystem<RenderingS>("Rend"),
-		*getSystem<CollisionS>("Col"),
-		*getSystem<AnimationS>("Anim")
-	);
+	for (auto& item : systems[std::type_index(typeid(RouteS))])
+	{
+		((RouteS*)item.second)->spawnMarbleIfPossible(
+			marbleArchetypes[rand() % marbleArchetypes.size()],
+			*getSystem<MovementS>("Mov"),
+			*getSystem<RenderingS>("Rend"),
+			*getSystem<CollisionS>("Col"),
+			*getSystem<AnimationS>("Anim")
+		);
+	}
 
 	getSystem<CollisionS>("Col")->update(dt);
 
 	getSystem<ShooterS>("S0")->update(dt);
-	getSystem<RouteS>("Route1")->update(dt);
+	for (auto& item : systems[std::type_index(typeid(RouteS))])
+	{
+		RouteS* route = (RouteS*)item.second;
+		route->update(dt);
+	}
 	getSystem<MarbleCollisionResolutionS>("ColRes")->update(dt);
 	getSystem<AnimationS>("Anim")->update(dt);
 
@@ -97,19 +94,12 @@ void GeneralZumaScene::update(float dt)
 
 void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 {
-	renderingAPI->addQuadInstance({ 100, 100 }, { 50, 50 }, 1, { 1, 1, 1, 1 });
-	renderingAPI->drawQuadInstances();
-
-	getSystem<RouteS>("Route1")->draw(renderingAPI);
-	getSystem<RenderingS>("Rend")->update(0);
-
-	ImGui::Begin("Debug");
-	static int nSamples = 10;
-	if (ImGui::InputInt("nSegments", &nSamples))
+	for (auto& item : systems[std::type_index(typeid(RouteS))])
 	{
-		getSystem<RouteS>("Route1")->setNSamples(nSamples);
+		((RouteS*)item.second)->draw(renderingAPI);
 	}
-	ImGui::End();
+
+	getSystem<RenderingS>("Rend")->update(0);
 
 	for (auto& element : UIElements)
 		element->render();
@@ -121,24 +111,51 @@ void GeneralZumaScene::input()
 
 	auto cursorPos = (input.getCursorPos() / camera.getZoom() + camera.getPosition());
 
+	float scrollRegionWidth = 0.01f;
+	float rate = 10.0f / camera.getZoom();
+	auto normalizedCursorPos = input.getNormalizedCursorPos();
+	auto cameraPosition = camera.getPosition();
+	float wheel = input.mouseWheel();
+	float zoomRate = 0.02;
 
+	if (normalizedCursorPos.x < scrollRegionWidth)
+		camera.setPosition(cameraPosition.x - rate, cameraPosition.y);
+	if (normalizedCursorPos.x > 1.0f - scrollRegionWidth)
+		camera.setPosition(cameraPosition.x + rate, cameraPosition.y);
+	if (normalizedCursorPos.y < scrollRegionWidth)
+		camera.setPosition(cameraPosition.x, cameraPosition.y - rate);
+	if (normalizedCursorPos.y > 1.0f - scrollRegionWidth)
+		camera.setPosition(cameraPosition.x, cameraPosition.y + rate);
+	if (wheel != 0)
+		camera.changeZoom(wheel * zoomRate);
+
+	for (auto& element : UIElements)
+	{
+		if (element->isHovered())
+		{
+			input.update();
+			return;
+		}
+	}
 
 	if (input.keyClicked[ZE_KEY_SPACE])
-	{
 		EventManager::getInstance().notify(Event(Event::TogglePause, nullptr), ApplicationBin);
-	}
 	if (input.keyClicked[ZE_KEY_Q])
 	{
-		getSystem<RouteS>("Route1")->addSegment(cursorPos);
+		auto it = systems[std::type_index(typeid(RouteS))].find(selectedRoute);
+		if(it != systems[std::type_index(typeid(RouteS))].end())
+			getSystem<RouteS>(selectedRoute)->addSegment(cursorPos);
 	}
+		
 	if (input.keyClicked[ZE_KEY_E])
 	{
-		getSystem<RouteS>("Route1")->removeLastSegment();
+		auto it = systems[std::type_index(typeid(RouteS))].find(selectedRoute);
+		if (it != systems[std::type_index(typeid(RouteS))].end())
+			getSystem<RouteS>(selectedRoute)->removeLastSegment();
 	}
 	if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1])
-	{
 		EventManager::getInstance().notify(Event(Event::Shoot, &cursorPos), ECS2);
-	}
+
 	if (movingPt)
 	{
 		auto route = getSystem<RouteS>(selectedRoute);
@@ -146,7 +163,6 @@ void GeneralZumaScene::input()
 
 		if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_2])
 		{
-			selectedRoute = "";
 			ctrlPtIdx = -1;
 			movingPt = false;
 		}

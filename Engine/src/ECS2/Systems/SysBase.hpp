@@ -17,7 +17,7 @@ public:
 	virtual void update(float dt) = 0;
 	virtual void lateUpdate(float dt);
 protected:
-	SysBase();
+	SysBase(bool deleteOnSceneEnd=false);
 	std::vector<std::type_index> requiredComponents;
 	std::set<int> entities;
 	bool deleteOnSceneEnd = false;

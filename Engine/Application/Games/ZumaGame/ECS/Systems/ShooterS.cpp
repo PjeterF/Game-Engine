@@ -2,6 +2,8 @@
 
 #include "../../functions.hpp"
 
+#include <filesystem>
+
 ShooterS::ShooterS(std::vector<std::string> marbleArchetypeFilepaths, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys, MarbleCollisionResolutionS& mrsys)
 	: marbleArchetypeFilepaths(marbleArchetypeFilepaths), msys(msys), rsys(rsys), csys(csys), asys(asys), mrsys(mrsys)
 {
@@ -97,6 +99,19 @@ void ShooterS::handleEvent(Event& event)
 			shooterC.counter = shooterC.cooldown;
 
 			transform.rot = atan2(-dir.y, dir.x)-3.14/2;
+		}
+	}
+	case Event::UpdateMarbleArchetypes:
+	{
+		namespace fs = std::filesystem;
+
+		fs::path dirPath(archetypesDirectoryFilepath);
+
+		marbleArchetypeFilepaths.clear();
+		for (auto& entry : fs::directory_iterator(dirPath))
+		{
+			std::string fileName = entry.path().string();
+			marbleArchetypeFilepaths.push_back(fileName);
 		}
 	}
 	break;
