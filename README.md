@@ -1,5 +1,5 @@
 ## Description
-Basic game engine capable of supporting creation of 2D games.
+A versitile game engine designed for creation of a variaty of 2D games.
 ## Features
 - Entity Component System (ECS) Object Model
   - Efficient and modular management of game entities and components
