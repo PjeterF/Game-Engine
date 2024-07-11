@@ -17,5 +17,3 @@ A versitile game engine designed for creation of a variaty of 2D games.
 - OpenGL
 - ImGUI
 - Nlohmann Json
-## Showcase
-![showcase](pic.png)
