@@ -14,6 +14,8 @@
 #include "../UI/MarbleEditor.hpp"
 #include "../UI/ZumaMenu.hpp"
 
+#include "../../src/Graphics/ParticleEmitter.hpp"
+
 #include <nlohmann/json.hpp>
 #include <fstream>
 
@@ -26,6 +28,8 @@ public:
 	virtual void draw(RenderingAPI* renderingAPI) override;
 	virtual void input() override;
 private:
+	ParticeEmitter* emitter;
+
 	std::string selectedRoute = "";
 	int ctrlPtIdx = -1;
 	bool movingPt = false;

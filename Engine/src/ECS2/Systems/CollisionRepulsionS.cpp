@@ -32,7 +32,7 @@ void CollisionRepulsionS::update(float dt)
 				direction.y += rand() % 2 - 0.5f;
 			}
 
-			direction = col1.mass*col2.mass * glm::normalize(direction);
+			direction = repulsionStrength * col1.mass*col2.mass * glm::normalize(direction);
 
 			vel1.x += direction.x;
 			vel1.y += direction.y;

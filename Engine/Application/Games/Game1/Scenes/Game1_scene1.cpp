@@ -66,23 +66,23 @@ void Game1_scene1::initialize()
 
 	tilemap = new Tilemap(-tileSize * dimX, -tileSize * dimY, dimX, dimY, tileSize, tiles);*/
 
-	for (int i = 0; i < 1000; i++)
+	/*for (int i = 0; i < 1000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
-		ent.addComponent<Transform>(Transform(rand() % 2000 - 200, rand() % 2000 - 200, 30, 30));
+		ent.addComponent<Transform>(Transform(rand() % 2000 - 200, rand() % 2000 - 200, 30, 30, 0, false));
 		ent.addComponent<Velocity>(Velocity(2 * (1 * float(rand() % 100) / 100 - 1), 1 * (2 * float(rand() % 100) / 100 - 1), 0, -0.0, 0.9));
 		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand() % fruitDivisions.size()]));
-		AABB& col = ent.addComponent<AABB>(AABB(15, 15, 1));
+		AABB& col = ent.addComponent<AABB>(AABB(15, 15, 0.4));
 		if (rand() % 100 < 0)
 			col.enabled = false;
 
 		getSystem<MovementS>("Movement")->addEntity(ent);
 		getSystem<RenderingS>("Rendering")->addEntity(ent);
 		getSystem<CollisionS>("Collision")->addEntity(ent);
-		//getSystem<FollowS>("Follow")->addEntity(ent);
+		getSystem<FollowS>("Follow")->addEntity(ent);
 		getSystem<CollisionRepulsionS>("Repulsion")->addEntity(ent);
 		
-	}
+	}*/
 }
 
 void Game1_scene1::update(float dt)
@@ -139,13 +139,13 @@ void Game1_scene1::draw(RenderingAPI* renderingAPI)
 
 	tilemap->draw(renderingAPI);
 
-	getSystem<RenderingS>("Rendering")->ySortLayer(0);
+	//getSystem<RenderingS>("Rendering")->ySortLayer(0);
 	getSystem<RenderingS>("Rendering")->update(0);
 
 	getSystem<HealthBarDrawingS>("HealthBarDrawing")->update(0);
 
 	ImGui::Begin("Test");
-	ImGui::SliderFloat("RepulsionStrength", &getSystem<CollisionRepulsionS>("Repulsion")->repulsionStrength, 0, 1);
+	ImGui::SliderFloat("RepulsionStrength", &getSystem<CollisionRepulsionS>("Repulsion")->repulsionStrength, 0, 5);
 	ImGui::SliderFloat("FollowAcceleration", &getSystem<FollowS>("Follow")->acceleration, 0, 1);
 	ImGui::Text("Text");
 	ImGui::End();
@@ -164,13 +164,13 @@ void Game1_scene1::input()
 	auto cameraPosition = camera.getPosition();
 	float wheel = input->mouseWheel();
 	float zoomRate = 0.02;
-	if (normalizedCursorPos.x < scrollRegionWidth)
+	if (normalizedCursorPos.x < scrollRegionWidth || input->keyDown[ZE_KEY_LEFT])
 		camera.setPosition(cameraPosition.x - rate, cameraPosition.y);
-	if (normalizedCursorPos.x > 1.0f - scrollRegionWidth)
+	if (normalizedCursorPos.x > 1.0f - scrollRegionWidth || input->keyDown[ZE_KEY_RIGHT])
 		camera.setPosition(cameraPosition.x + rate, cameraPosition.y);
-	if (normalizedCursorPos.y < scrollRegionWidth)
+	if (normalizedCursorPos.y < scrollRegionWidth || input->keyDown[ZE_KEY_DOWN])
 		camera.setPosition(cameraPosition.x, cameraPosition.y - rate);
-	if (normalizedCursorPos.y > 1.0f - scrollRegionWidth)
+	if (normalizedCursorPos.y > 1.0f - scrollRegionWidth || input->keyDown[ZE_KEY_UP])
 		camera.setPosition(cameraPosition.x, cameraPosition.y + rate);
 	if (wheel != 0)
 		camera.changeZoom(wheel * zoomRate);

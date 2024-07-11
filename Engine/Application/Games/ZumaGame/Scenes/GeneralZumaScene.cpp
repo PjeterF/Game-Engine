@@ -53,6 +53,18 @@ void GeneralZumaScene::initialize()
 
 	getSystem<RenderingS>("Rend")->addEntity(shooter.getID());
 	getSystem<ShooterS>("S0")->addEntity(shooter.getID());
+
+	emitter = new ParticeEmitter(0, 2000, 10000);
+	emitter->defaultProperties.xPosVar = glm::vec2(-50, 50);
+	emitter->defaultProperties.yPosVar = glm::vec2(0, 25);
+	emitter->defaultProperties.yVelVar = glm::vec2(1, 2);
+	emitter->defaultProperties.xVelVar = glm::vec2(-0.5, 0.5);
+	emitter->defaultProperties.startColour = glm::vec4(1, 0.9, 0.3, 1);
+	emitter->defaultProperties.endColour = glm::vec4(0.8, 0.1, 0.1, 0.5);
+	emitter->defaultProperties.startSize = 15;
+	emitter->defaultProperties.endSize = 0;
+	emitter->defaultProperties.velocityDecay = 0.9999;
+	emitter->defaultProperties.particleLifetime = { 100, 300 };
 }
 
 void GeneralZumaScene::update(float dt)
@@ -90,6 +102,11 @@ void GeneralZumaScene::update(float dt)
 	getSystem<CollisionS>("Col")->lateUpdate(dt);
 
 	EntityManager::getInstance().update();
+
+	for(int i=0;i<10;i++)
+		emitter->emit();
+	emitter->applyForceInverseToSize(0.1, 0.1);
+	emitter->update();
 }
 
 void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
@@ -103,6 +120,8 @@ void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 
 	for (auto& element : UIElements)
 		element->render();
+
+	emitter->draw(renderingAPI);
 }
 
 void GeneralZumaScene::input()

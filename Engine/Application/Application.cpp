@@ -30,7 +30,7 @@ Application::Application(float windowWidth, float windowHeight, std::string wind
 	wndName=windowName;
 
 	glfwInit();
-	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), NULL, NULL);
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
