@@ -17,3 +17,6 @@ A versitile game engine designed for creation of a variaty of 2D games.
 - OpenGL
 - ImGUI
 - Nlohmann Json
+## Examples
+#### Fire effect made with the partice system
+![Fire Effect](FireEffect.gif)
