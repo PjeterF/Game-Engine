@@ -29,7 +29,6 @@ void RenderingS::update(float dt)
 				sprite.flipHorizontally = false;
 
 			rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample, sprite.flipHorizontally);
-				
 		}	
 	}
 
@@ -40,9 +39,6 @@ bool RenderingS::addEntity(int ID)
 {
 	if (!SysBase::addEntity(ID))
 		return false;
-	
-	if (ComponentPoolManager::getInstance().hasComponent<Animation>(ID))
-		animatedEntities.insert(ID);
 
 	layers[ComponentPoolManager::getInstance().getComponent<RenderingLayer>(ID).layer].push_back(ID);
 
@@ -57,7 +53,6 @@ bool RenderingS::addEntity(Entity ent)
 void RenderingS::removeEntity(int ID)
 {
 	SysBase::removeEntity(ID);
-	animatedEntities.erase(ID);
 
 	Entity ent(ID);
 

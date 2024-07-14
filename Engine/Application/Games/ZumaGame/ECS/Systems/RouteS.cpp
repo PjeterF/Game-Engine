@@ -47,6 +47,9 @@ void RouteS::update(float dt)
 	float delta = 10;
 	glm::vec2 distanceDelta = {20, 40};
 
+	if (!marbles.empty())
+		mCompPool->get(marbles.front()).separated = false;
+
 	for (auto it = marbles.begin(); it != marbles.end(); it++)
 	{
 		int marbleID = *it;
@@ -71,6 +74,8 @@ void RouteS::update(float dt)
 			nextDistance = glm::length(diff);
 		}
 
+		bool shouldMerge = false;
+
 		if (it != marbles.begin())
 		{
 			itPrev--;
@@ -81,21 +86,24 @@ void RouteS::update(float dt)
 
 			glm::vec2 diff = { transform.x - transform2.x, transform.y - transform2.y };
 			prevDistance = glm::length(diff);
+
+			if (mCompPool->get(*itPrev).separated == false && mComponent.separated == true)
+				shouldMerge = true;
 		}
 
-		bool shouldMove;
-		if (prevDistance < distanceBetween && nextDistance > distanceBetween*0.9)
-			shouldMove = true;
-		else
-			shouldMove = false;
-
-		if (!shouldMove)
+		if (prevDistance > distanceBetween || nextDistance < distanceBetween * 0.9)
 		{
 			velocity.x = 0;
 			velocity.y = 0;
 		}
 		else
 		{
+			if (shouldMerge)
+			{
+				if (popSame(it))
+					return;
+			}
+
 			if (intermediatePts.empty())
 				return;
 			if (mComponent.targetPointIdx < 0)
@@ -324,10 +332,10 @@ bool RouteS::insertAt(int entID, int inserteeID)
 					inserteeTransform.y = itTrans.y;
 				}
 
-				marbles.insert(it, inserteeID);
-
+				it = marbles.insert(it, inserteeID);
 				if (popSame(it))
 					return true;
+				it++;
 
 
 				while (it != marbles.end())
@@ -425,14 +433,15 @@ bool RouteS::popSame(std::list<int>::iterator it)
 
 	if (count >= popThreshold)
 	{
-		do
-		{
-			EntityManager::getInstance().deleteEntity(*itBackwards);
-		} while (++itBackwards != itForwards);
-
 		if (itForwards != marbles.end())
-			EntityManager::getInstance().deleteEntity(*itForwards);
+			marbleCPool->get(*itForwards).separated = true;
 
+		auto itCurrent = itBackwards;
+		while (itCurrent != itForwards)
+		{
+			EntityManager::getInstance().deleteEntity(*itCurrent);
+			itCurrent = marbles.erase(itCurrent);  // Erase and move to the next element
+		}
 		return true;
 	}
 

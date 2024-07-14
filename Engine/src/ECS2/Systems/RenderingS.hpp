@@ -23,6 +23,5 @@ public:
 	void ySortLayer(int layer);
 private:
 	RenderingAPI* rAPI;
-	std::set<int> animatedEntities;
 	std::map<int, std::vector<int>> layers;
 };

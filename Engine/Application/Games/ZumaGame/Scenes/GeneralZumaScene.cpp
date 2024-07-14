@@ -96,7 +96,6 @@ void GeneralZumaScene::update(float dt)
 	}
 	getSystem<MarbleCollisionResolutionS>("ColRes")->update(dt);
 	getSystem<AnimationS>("Anim")->update(dt);
-
 	getSystem<MovementS>("Mov")->update(dt);
 
 	getSystem<CollisionS>("Col")->lateUpdate(dt);
