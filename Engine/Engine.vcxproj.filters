@@ -1326,6 +1326,9 @@
     <ClInclude Include="Application\Games\ZumaGame\UI\ZumaMenu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS2\SystemsManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">

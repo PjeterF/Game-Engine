@@ -520,6 +520,7 @@
     <ClInclude Include="src\ECS2\Components\Transform.hpp" />
     <ClInclude Include="src\ECS2\Components\Velocity.hpp" />
     <ClInclude Include="src\ECS2\EntityManager.hpp" />
+    <ClInclude Include="src\ECS2\SystemsManager.hpp" />
     <ClInclude Include="src\ECS2\Systems\AnimationS.hpp" />
     <ClInclude Include="src\ECS2\Systems\CollisionRepulsionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\MovementS.hpp" />
