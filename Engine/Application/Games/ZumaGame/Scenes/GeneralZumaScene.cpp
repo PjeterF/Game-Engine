@@ -2,8 +2,14 @@
 
 #include "../../src/Input/Windows/GLFWInputManager.hpp"
 
-#include "../ECS/Systems/RouteS.hpp"
 #include "../ECS/Systems/MarbleCollisionResolutionS.hpp"
+#include "../../src/ECS2/SystemsManager.hpp"
+
+std::vector<std::string> marbleArchetypeFilepaths = {
+	"Application/Games/ZumaGame/MarbleArchetypes/marble1.json",
+	"Application/Games/ZumaGame/MarbleArchetypes/marble2.json",
+	"Application/Games/ZumaGame/MarbleArchetypes/marble3.json",
+};
 
 GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
 {
@@ -13,8 +19,12 @@ void GeneralZumaScene::initialize()
 {
 	glm::ivec2 windowDimensions = GLFWInputManager::getInstance().getWindowDimensions();
 
-	UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, 300, windowDimensions.y/2, "Application/Games/ZumaGame/MarbleArchetypes"));
-	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, 300, windowDimensions.y / 2, systems[std::type_index(typeid(RouteS))]));
+	float UIElementWidth = 300;
+
+	UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, UIElementWidth, windowDimensions.y/2, "Application/Games/ZumaGame/MarbleArchetypes"));
+	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2));
+	UIElements.push_back(new EntitiesMenu("Entities", windowDimensions.x-UIElementWidth, 0, UIElementWidth, windowDimensions.y / 2));
+	UIElements.push_back(new PropertiesMenu("Properties", windowDimensions.x-UIElementWidth, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2));
 
 	std::vector<glm::vec2> ctrlPts = {
 		{100, 100}, 
@@ -25,24 +35,14 @@ void GeneralZumaScene::initialize()
 		{1200, 500},
 		{1300, 100}
 	};
-	addSystem<RouteS>("Route1", new RouteS("Route1", ctrlPts, 10, 2, 10), true);
-	addSystem<CollisionS>("Col", new CollisionS(30), true);
-	addSystem<MovementS>("Mov", new MovementS(), true);
-	addSystem<AnimationS>("Anim", new AnimationS(), true);
-	addSystem<MarbleCollisionResolutionS>("ColRes", new MarbleCollisionResolutionS(systems[std::type_index(typeid(RouteS))]));
 
-	std::vector<std::string> marbleArchetypeFilepaths = {
-		"Application/Games/ZumaGame/MarbleArchetypes/marble1.json",
-		"Application/Games/ZumaGame/MarbleArchetypes/marble2.json",
-		"Application/Games/ZumaGame/MarbleArchetypes/marble3.json",
-	};
-	addSystem<ShooterS>("S0", new ShooterS(
-		marbleArchetypeFilepaths,
-		*getSystem<MovementS>("Mov"),
-		*getSystem<RenderingS>("Rend"),
-		*getSystem<CollisionS>("Col"),
-		*getSystem<AnimationS>("Anim"), 
-		*getSystem<MarbleCollisionResolutionS>("ColRes")), true);
+	SystemsManager::getInstance().addSystem<RouteS>(new RouteS("R1", ctrlPts, 10, 2, 10), "R1");
+	SystemsManager::getInstance().addSystem<MarbleCollisionResolutionS>(new MarbleCollisionResolutionS());
+	SystemsManager::getInstance().addSystem<CollisionS>(new CollisionS(30));
+	SystemsManager::getInstance().addSystem<MovementS>(new MovementS());
+	SystemsManager::getInstance().addSystem<AnimationS>(new AnimationS());
+
+	SystemsManager::getInstance().addSystem<ShooterS>(new ShooterS(marbleArchetypeFilepaths));
 
 	Entity shooter = EntityManager::getInstance().createEntity();
 	shooter.addComponent<Transform>(Transform(1000, 1000, 100, 100));
@@ -51,8 +51,8 @@ void GeneralZumaScene::initialize()
 	shooter.addComponent<MarbleShooter>(MarbleShooter(6, 30));
 	shooter.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("Application/Games/ZumaGame/Textures/frog.png")));
 
-	getSystem<RenderingS>("Rend")->addEntity(shooter.getID());
-	getSystem<ShooterS>("S0")->addEntity(shooter.getID());
+	SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
+	SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());
 
 	emitter = new ParticeEmitter(0, 2000, 10000);
 	emitter->defaultProperties.xPosVar = glm::vec2(-50, 50);
@@ -65,40 +65,35 @@ void GeneralZumaScene::initialize()
 	emitter->defaultProperties.endSize = 0;
 	emitter->defaultProperties.velocityDecay = 0.9999;
 	emitter->defaultProperties.particleLifetime = { 100, 300 };
+
+	SystemsManager::getInstance().addSystem<ParticleS>(new ParticleS());
+	SystemsManager::getInstance().addSystem<CounterKillerS>(new CounterKillerS());
 }
 
 void GeneralZumaScene::update(float dt)
 {
-	static std::vector<std::string> marbleArchetypes = {
-		"Application/Games/ZumaGame/MarbleArchetypes/marble1.json",
-		"Application/Games/ZumaGame/MarbleArchetypes/marble2.json",
-		"Application/Games/ZumaGame/MarbleArchetypes/marble3.json"
-	};
+	SystemsManager::getInstance().getSystem<ParticleS>()->update(dt);
+	SystemsManager::getInstance().getSystem<CounterKillerS>()->update(dt);
 
-	for (auto& item : systems[std::type_index(typeid(RouteS))])
+	for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
 	{
 		((RouteS*)item.second)->spawnMarbleIfPossible(
-			marbleArchetypes[rand() % marbleArchetypes.size()],
-			*getSystem<MovementS>("Mov"),
-			*getSystem<RenderingS>("Rend"),
-			*getSystem<CollisionS>("Col"),
-			*getSystem<AnimationS>("Anim")
-		);
+			marbleArchetypeFilepaths[rand() % marbleArchetypeFilepaths.size()]);
 	}
 
-	getSystem<CollisionS>("Col")->update(dt);
+	SystemsManager::getInstance().getSystem<CollisionS>()->update(dt);
 
-	getSystem<ShooterS>("S0")->update(dt);
-	for (auto& item : systems[std::type_index(typeid(RouteS))])
+	SystemsManager::getInstance().getSystem<ShooterS>()->update(dt);
+	for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
 	{
 		RouteS* route = (RouteS*)item.second;
 		route->update(dt);
 	}
-	getSystem<MarbleCollisionResolutionS>("ColRes")->update(dt);
-	getSystem<AnimationS>("Anim")->update(dt);
-	getSystem<MovementS>("Mov")->update(dt);
+	SystemsManager::getInstance().getSystem<MarbleCollisionResolutionS>()->update(dt);
+	SystemsManager::getInstance().getSystem<AnimationS>()->update(dt);
+	SystemsManager::getInstance().getSystem<MovementS>()->update(dt);
 
-	getSystem<CollisionS>("Col")->lateUpdate(dt);
+	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
 
 	EntityManager::getInstance().update();
 
@@ -110,12 +105,14 @@ void GeneralZumaScene::update(float dt)
 
 void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 {
-	for (auto& item : systems[std::type_index(typeid(RouteS))])
+	SystemsManager::getInstance().getSystem<ParticleS>()->draw(renderingAPI);
+
+	for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
 	{
 		((RouteS*)item.second)->draw(renderingAPI);
 	}
 
-	getSystem<RenderingS>("Rend")->update(0);
+	SystemsManager::getInstance().getSystem<RenderingS>()->update(0);
 
 	for (auto& element : UIElements)
 		element->render();
@@ -160,23 +157,23 @@ void GeneralZumaScene::input()
 		EventManager::getInstance().notify(Event(Event::TogglePause, nullptr), ApplicationBin);
 	if (input.keyClicked[ZE_KEY_Q])
 	{
-		auto it = systems[std::type_index(typeid(RouteS))].find(selectedRoute);
-		if(it != systems[std::type_index(typeid(RouteS))].end())
-			getSystem<RouteS>(selectedRoute)->addSegment(cursorPos);
+		auto it = SystemsManager::getInstance().getSystemBin<RouteS>().find(selectedRoute);
+		if(it != SystemsManager::getInstance().getSystemBin<RouteS>().end())
+			SystemsManager::getInstance().getSystem<RouteS>(selectedRoute)->addSegment(cursorPos);
 	}
 		
 	if (input.keyClicked[ZE_KEY_E])
 	{
-		auto it = systems[std::type_index(typeid(RouteS))].find(selectedRoute);
-		if (it != systems[std::type_index(typeid(RouteS))].end())
-			getSystem<RouteS>(selectedRoute)->removeLastSegment();
+		auto it = SystemsManager::getInstance().getSystemBin<RouteS>().find(selectedRoute);
+		if (it != SystemsManager::getInstance().getSystemBin<RouteS>().end())
+			SystemsManager::getInstance().getSystem<RouteS>(selectedRoute)->removeLastSegment();
 	}
 	if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1])
 		EventManager::getInstance().notify(Event(Event::Shoot, &cursorPos), ECS2);
 
 	if (movingPt)
 	{
-		auto route = getSystem<RouteS>(selectedRoute);
+		auto route = SystemsManager::getInstance().getSystem<RouteS>(selectedRoute);
 		route->setControlPointPos(ctrlPtIdx, cursorPos);
 
 		if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_2])
@@ -189,7 +186,7 @@ void GeneralZumaScene::input()
 	{
 		if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_2])
 		{
-			for (auto& route : systems[std::type_index(typeid(RouteS))])
+			for (auto& route : SystemsManager::getInstance().getSystemBin<RouteS>())
 			{
 				int result = ((RouteS*)route.second)->ctrlPointIntersection(cursorPos);
 				if (result == -1)

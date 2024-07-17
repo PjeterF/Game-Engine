@@ -29,7 +29,7 @@ ParticeEmitter::~ParticeEmitter()
 
 void ParticeEmitter::update()
 {
-	/*for (int i = 0; i < particlePool.size(); i++)
+	for (int i = 0; i < particlePool.size(); i++)
 	{
 		if (!particlePool[i].emitted)
 			continue;
@@ -45,9 +45,9 @@ void ParticeEmitter::update()
 		particlePool[i].size = (1-(float)particlePool[i].lifetime / (float)particlePool[i].maxLifetime) * (particlePool[i].endSize - particlePool[i].startSize)+ particlePool[i].startSize;
 		particlePool[i].vel = particlePool[i].velocityDecay * particlePool[i].vel;
 		particlePool[i].lifetime--;
-	}*/
+	}
 
-	int nThreads = 8;
+	/*int nThreads = 8;
 	std::vector<int> ranges;
 
 	for (int i = 0; i <= nThreads; i++)
@@ -65,7 +65,7 @@ void ParticeEmitter::update()
 	for (auto& thread : threads)
 	{
 		thread.join();
-	}
+	}*/
 }
 
 void ParticeEmitter::draw(RenderingAPI* renderer)

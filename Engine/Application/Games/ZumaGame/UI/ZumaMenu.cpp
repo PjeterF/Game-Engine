@@ -1,12 +1,14 @@
 #include "ZumaMenu.hpp"
 
-ZumaMenu::ZumaMenu(std::string name, int x, int y, int width, int height, std::unordered_map<std::string, SysBase*>& routes) : UIWindow(name, x, y, width, height), routes(routes)
+ZumaMenu::ZumaMenu(std::string name, int x, int y, int width, int height) : UIWindow(name, x, y, width, height)
 {
 }
 
 void ZumaMenu::render()
 {
-	windowConfig();
+	windowBegin();
+
+	auto& routes = SystemsManager::getInstance().getSystemBin<RouteS>();
 
 	ImGui::Separator();
 	ImGui::Text("Routes");

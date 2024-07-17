@@ -13,7 +13,7 @@ public:
 	virtual void render() = 0;
 	bool isHovered();
 protected:
-	virtual void windowConfig();
+	virtual void windowBegin();
 	virtual void windowEnd();
 	bool hovered=false;
 

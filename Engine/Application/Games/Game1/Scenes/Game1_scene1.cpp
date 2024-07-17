@@ -2,8 +2,6 @@
 
 #include "../../src/Managers/Resource/ResourceManager.hpp"
 #include "../../src/Graphics/ParticleEmitter.hpp"
-#include "../../src/ECS/Entity/EntManager.hpp"
-#include "../../src/ECS/Systems/SystemsManager.hpp"
 #include "../../src/Graphics/InstancedSpriteRenderer.hpp"
 #include "../../src/Input/Windows/GLFWInputManager.hpp"
 #include "../ECS/Systems/CollisionResolutionS.hpp"

@@ -5,7 +5,7 @@ bool UIWindow::isHovered()
 	return hovered;
 }
 
-void UIWindow::windowConfig()
+void UIWindow::windowBegin()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(width, height));

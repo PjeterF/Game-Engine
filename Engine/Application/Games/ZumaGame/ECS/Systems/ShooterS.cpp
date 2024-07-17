@@ -1,11 +1,11 @@
 #include "ShooterS.hpp"
 
 #include "../../functions.hpp"
+#include "../../src/ECS2/SystemsManager.hpp"
 
 #include <filesystem>
 
-ShooterS::ShooterS(std::vector<std::string> marbleArchetypeFilepaths, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys, MarbleCollisionResolutionS& mrsys)
-	: marbleArchetypeFilepaths(marbleArchetypeFilepaths), msys(msys), rsys(rsys), csys(csys), asys(asys), mrsys(mrsys)
+ShooterS::ShooterS(std::vector<std::string> marbleArchetypeFilepaths) : marbleArchetypeFilepaths(marbleArchetypeFilepaths)
 {
 	requiredComponents = {
 		std::type_index(typeid(Transform)),
@@ -44,11 +44,11 @@ void ShooterS::update(float dt)
 		{
 			int marbleID = ZumaFn::spawnMarble(marbleArchetypeFilepaths[rand() % marbleArchetypeFilepaths.size()], { transform.x, transform.y }, "");
 
-			msys.addEntity(marbleID);
-			rsys.addEntity(marbleID);
-			csys.addEntity(marbleID);
-			asys.addEntity(marbleID);
-			mrsys.addEntity(marbleID);
+			SystemsManager::getInstance().getSystem<MovementS>()->addEntity(marbleID);
+			SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(marbleID);
+			SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(marbleID);
+			SystemsManager::getInstance().getSystem<AnimationS>()->addEntity(marbleID);
+			SystemsManager::getInstance().getSystem<MarbleCollisionResolutionS>()->addEntity(marbleID);
 
 			shooterC.nextShotID = marbleID;
 		}

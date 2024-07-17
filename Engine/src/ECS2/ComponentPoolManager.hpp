@@ -3,6 +3,8 @@
 #include "ComponentPool.hpp"
 
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 #include <typeinfo>
 #include <typeindex>
 
@@ -28,6 +30,7 @@ private:
 	std::unordered_map<std::type_index, ComponentPoolBase*> pools;
 	std::vector<std::type_index> indices;
 	std::vector<ComponentPoolBase*> poolsVec;
+	std::vector<std::unordered_set<std::type_index>> hasComponents;
 };
 
 template<typename T>

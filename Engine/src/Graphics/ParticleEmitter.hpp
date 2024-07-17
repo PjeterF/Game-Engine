@@ -34,7 +34,7 @@ public:
 		glm::vec2 xPosVar = glm::vec2(0, 0), yPosVar = glm::vec2(0, 0);
 		glm::vec4 startColour = glm::vec4(0.8, 0.8, 0.8, 0.7), endColour = glm::vec4(0.6, 0.2, 0.1, 0.7);
 		glm::vec2 rotVar = glm::vec2(0, 360);
-		float startSize = 3;
+		float startSize = 5;
 		float endSize = 0;
 		glm::vec2 particleLifetime = glm::vec2(50, 100);
 		float velocityDecay = 1;

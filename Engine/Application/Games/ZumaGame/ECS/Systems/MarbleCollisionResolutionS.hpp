@@ -14,9 +14,8 @@
 class MarbleCollisionResolutionS : public SysBase
 {
 public:
-	MarbleCollisionResolutionS(std::unordered_map<std::string, SysBase*>& routes);
+	MarbleCollisionResolutionS();
 	virtual void update(float dt) override;
 private:
-	std::unordered_map<std::string, SysBase*>& routes;
 	std::vector<int> entitiesToRemove;
 };

@@ -138,3 +138,8 @@ void EntityManager::reset()
 	for (int i = MAX_ENTITIES - 1; i >= 0; i--)
 		availableID.push(i);
 }
+
+const std::unordered_set<int>& EntityManager::getExistingEntities()
+{
+	return existingEntities;
+}

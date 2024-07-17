@@ -1,4 +1,6 @@
-#include "RenderingS.hpp"
+#include "RenderingS.hpp"  
+
+#include<algorithm>
 
 RenderingS::RenderingS(RenderingAPI* rAPI) : rAPI(rAPI)
 {

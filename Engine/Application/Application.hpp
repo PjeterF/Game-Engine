@@ -8,14 +8,6 @@
 #include <GLFW/glfw3.h>
 
 #include "../src/Graphics/GeneralRenderer.hpp"
-#include "../src/ECS/Systems/CollisionSystem.hpp"
-#include "../src/ECS/Systems/MovementSystem.hpp"
-#include "../src/ECS/Systems/SpriteRenderingSystem.hpp"
-#include "../src/ECS/Systems/TestCollisionResponse.hpp"
-#include "../src/ECS/Systems/InputMovementSystem.hpp"
-#include "../src/ECS/Systems/LayeredRenderingSystem.hpp"
-#include "../src/ECS/Systems/ParticleSystem.hpp"
-#include "../src/ECS/Systems/CounterKillerSystem.hpp"
 
 #include "../src/OpenGL/FrameBuffer.hpp"
 

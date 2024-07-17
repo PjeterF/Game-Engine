@@ -4,8 +4,6 @@
 #include <thread>
 #include "../src/Managers/Resource/ResourceManager.hpp"
 #include "../src/Graphics/ParticleEmitter.hpp"
-#include "../src/ECS/Entity/EntManager.hpp"
-#include "../src/ECS/Systems/SystemsManager.hpp"
 #include "../src/Managers/Scene/SceneManager.hpp"
 
 #include "../src/Graphics/InstancedSpriteRenderer.hpp"

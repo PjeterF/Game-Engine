@@ -12,7 +12,6 @@ struct Animation
 		: currentFrame(currentFrame), frameDuration(frameDuration), framesMap(framesMap), counter(counter), state(state) {}
 	int currentFrame;
 	int frameDuration;
-	std::vector<glm::vec4> frames;
 	std::map<State, std::vector<glm::vec4>> framesMap;
 	int counter;
 	State state;

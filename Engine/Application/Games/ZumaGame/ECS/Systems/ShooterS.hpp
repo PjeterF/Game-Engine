@@ -19,16 +19,11 @@
 class ShooterS : public SysBase
 {
 public:
-	ShooterS(std::vector<std::string> marbleArchetypeFilepaths, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys, MarbleCollisionResolutionS& mrsys);
+	ShooterS(std::vector<std::string> marbleArchetypeFilepaths);
 	virtual void update(float dt) override;
 	virtual void handleEvent(Event& event) override;
 	
 private:
 	std::string archetypesDirectoryFilepath = "Application/Games/ZumaGame/MarbleArchetypes";
 	std::vector<std::string> marbleArchetypeFilepaths;
-	MovementS& msys;
-	RenderingS& rsys;
-	CollisionS& csys;
-	AnimationS& asys;
-	MarbleCollisionResolutionS& mrsys;
 };

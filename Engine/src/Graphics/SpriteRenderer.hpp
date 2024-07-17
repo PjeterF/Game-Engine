@@ -11,14 +11,11 @@
 #include "../Events/EventPackage.hpp"
 #include "../Graphics/Camera.hpp"
 
-#include "../ECS/Components/AnimatedSpriteC.hpp"
-
 class SpriteRenderer : public EventObserver
 {
 public:
 	SpriteRenderer(GLuint shaderProgramID, Camera* camera);
 	void draw(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture);
-	void draw(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, TextureDivision division);
 
 	virtual void handleEvent(Event& event) override;
 

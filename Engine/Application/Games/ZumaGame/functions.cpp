@@ -39,7 +39,7 @@ namespace ZumaFn
 		else
 			ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>(j["texture"]), frames[0]));
 		ent.addComponent<RenderingLayer>(RenderingLayer());
-		ent.addComponent<MarbleComponent>(MarbleComponent(j["type"], routeID));
+		ent.addComponent<MarbleComponent>(MarbleComponent(j["type"], {j["color"][0], j["color"][1], j["color"][2] }, routeID));
 
 		return ent.getID();
 	}

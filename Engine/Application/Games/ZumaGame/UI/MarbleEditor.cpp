@@ -17,7 +17,7 @@ MarbleEditor::MarbleEditor(std::string name, int x, int y, int width, int height
 
 void MarbleEditor::render()
 {
-	windowConfig();
+	windowBegin();
 
 	fs::path dirPath(archetypeDirectoryPath);
 

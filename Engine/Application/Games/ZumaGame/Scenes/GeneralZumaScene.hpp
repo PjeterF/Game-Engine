@@ -7,12 +7,17 @@
 #include "../../src/ECS2/Systems/RenderingS.hpp"
 #include "../../src/ECS2/Systems/CollisionS.hpp"
 #include "../../src/ECS2/Systems/CollisionRepulsionS.hpp"
+#include "../../src/ECS2/Systems/ParticleS.hpp"
 #include "../ECS/Systems/ShooterS.hpp"
+#include "../ECS/Systems/CounterKillerS.hpp"
+#include "../ECS/Systems/RouteS.hpp"
 
 #include "../../Application/Tilemap/Tilemap.hpp"
 
 #include "../UI/MarbleEditor.hpp"
 #include "../UI/ZumaMenu.hpp"
+#include "../UI/EntitiesMenu.hpp"
+#include "../UI/PropertiesMenu.hpp"
 
 #include "../../src/Graphics/ParticleEmitter.hpp"
 

@@ -6,6 +6,8 @@
 #include "Components/AABB.hpp"
 #include "Components/Animation.hpp"
 #include "Components/RenderingLayer.hpp"
+#include "Components/Emitter.hpp"
+#include "Components/Counter.hpp"
 
 void ComponentPoolManager::disableComponents(int ID)
 {
@@ -32,12 +34,16 @@ bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 
 ComponentPoolManager::ComponentPoolManager()
 {
+	hasComponents = std::vector(MAX_ENTITIES, std::unordered_set<std::type_index>());
+
 	addPool<Transform>();
 	addPool<Velocity>();
 	addPool<Sprite>();
 	addPool<AABB>();
 	addPool<Animation>();
 	addPool<RenderingLayer>();
+	addPool<Emitter>();
+	addPool<Counter>();
 }
 
 ComponentPoolManager& ComponentPoolManager::getInstance()

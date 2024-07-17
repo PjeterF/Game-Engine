@@ -20,7 +20,7 @@
 
 int main(void)
 {
-    /*Game1 game1(1920, 1080, "TestGame");
+   /* Game1 game1(1920, 1080, "TestGame");
     game1.initialize();
     game1.run();*/
 

@@ -22,7 +22,6 @@ public:
 	void setCamera(Camera* camera);
 
 	void drawSprite(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture);
-	void drawSpriteSampled(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, TextureDivision division);
 	void drawQuad(glm::vec2 position, glm::vec2 scale, float angle, glm::vec4 colour);
 	void drawLine(glm::vec2 p1, glm::vec2 p2, float width, glm::vec3 colour);
 	void addQuadInstance(glm::vec2 position, glm::vec2 scale, float angle, glm::vec4 colour);

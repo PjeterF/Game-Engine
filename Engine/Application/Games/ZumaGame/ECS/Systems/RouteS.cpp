@@ -2,6 +2,10 @@
 
 #include "../../functions.hpp"
 
+#include "../../src/ECS2/SystemsManager.hpp"
+#include "../../src/ECS2/Systems/ParticleS.hpp"
+#include "../../ECS/Systems/CounterKillerS.hpp"
+
 RouteS::RouteS(std::string systemID, std::vector<glm::vec2> ctrlPts, unsigned int nSamples, float speed, int nMarbles, bool deleteOnSceneEnd)
 	: ctrlPts(ctrlPts), nSamples(nSamples), remainingMarbles(nSamples), speed(speed), nMarbles(nMarbles), systemID(systemID), SysBase(deleteOnSceneEnd)
 {
@@ -229,7 +233,7 @@ void RouteS::removeLastSegment()
 	calculateIntermediatePoints();
 }
 
-void RouteS::spawnMarbleAtOrigin(std::string marbleArchetypeFilepath, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys)
+void RouteS::spawnMarbleAtOrigin(std::string marbleArchetypeFilepath)
 {
 	if (ctrlPts.empty())
 		return;
@@ -243,16 +247,16 @@ void RouteS::spawnMarbleAtOrigin(std::string marbleArchetypeFilepath, MovementS&
 	if (!intermediatePts.empty())
 		marble.getComponent<MarbleComponent>().targetPointIdx = 0;
 
-	msys.addEntity(marbleID);
-	rsys.addEntity(marbleID);
-	csys.addEntity(marbleID);
-	asys.addEntity(marbleID);
+	SystemsManager::getInstance().getSystem<MovementS>()->addEntity(marbleID);
+	SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(marbleID);
+	SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(marbleID);
+	SystemsManager::getInstance().getSystem<AnimationS>()->addEntity(marbleID);
 	this->addEntity(marbleID);
 
 	marbles.push_front(marbleID);
 }
 
-void RouteS::spawnMarbleIfPossible(std::string marbleArchetypeFilepath, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys)
+void RouteS::spawnMarbleIfPossible(std::string marbleArchetypeFilepath)
 {
 	if (ctrlPts.empty() || remainingMarbles<=0)
 		return;
@@ -260,7 +264,7 @@ void RouteS::spawnMarbleIfPossible(std::string marbleArchetypeFilepath, Movement
 	if (marbles.empty())
 	{
 		remainingMarbles--;
-		spawnMarbleAtOrigin(marbleArchetypeFilepath, msys, rsys, csys, asys);
+		spawnMarbleAtOrigin(marbleArchetypeFilepath);
 		return;
 	}
 
@@ -270,7 +274,7 @@ void RouteS::spawnMarbleIfPossible(std::string marbleArchetypeFilepath, Movement
 	if (glm::length(glm::vec2(transform.x - ctrlPts[0].x, transform.y - ctrlPts[0].y))>distanceBetween*0.9)
 	{
 		remainingMarbles--;
-		spawnMarbleAtOrigin(marbleArchetypeFilepath, msys, rsys, csys, asys);
+		spawnMarbleAtOrigin(marbleArchetypeFilepath);
 		return;
 	}
 }
@@ -436,11 +440,32 @@ bool RouteS::popSame(std::list<int>::iterator it)
 		if (itForwards != marbles.end())
 			marbleCPool->get(*itForwards).separated = true;
 
+		auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+
 		auto itCurrent = itBackwards;
 		while (itCurrent != itForwards)
 		{
+			auto& transform = transformPool->get(*itCurrent);
+			auto& marbleInfo = marbleCPool->get(*itCurrent);
+			
+			Entity particleBurst = EntityManager::getInstance().createEntity();
+			particleBurst.addComponent<Transform>(Transform(transform.x, transform.y));
+			particleBurst.addComponent<Counter>(Counter(0, 90));
+			auto& emitter = particleBurst.addComponent<Emitter>(Emitter(150, 150, 10, 10));
+
+			emitter.emitter.defaultProperties.particleLifetime = { 20, 50 };
+			emitter.emitter.defaultProperties.velocityDecay = 0.95;
+			emitter.emitter.defaultProperties.yVelVar = { -3, 3 };
+			emitter.emitter.defaultProperties.xVelVar = { -3, 3 };
+			emitter.emitter.defaultProperties.startSize = 10;
+			emitter.emitter.defaultProperties.startColour = { marbleInfo.color.x, marbleInfo.color.y, marbleInfo.color.z, 1 };
+			emitter.emitter.defaultProperties.endColour = { marbleInfo.color.x, marbleInfo.color.y, marbleInfo.color.z, 0 };
+
+			SystemsManager::getInstance().getSystem<ParticleS>()->addEntity(particleBurst.getID());
+			SystemsManager::getInstance().getSystem<CounterKillerS>()->addEntity(particleBurst.getID());
+
 			EntityManager::getInstance().deleteEntity(*itCurrent);
-			itCurrent = marbles.erase(itCurrent);  // Erase and move to the next element
+			itCurrent = marbles.erase(itCurrent);
 		}
 		return true;
 	}

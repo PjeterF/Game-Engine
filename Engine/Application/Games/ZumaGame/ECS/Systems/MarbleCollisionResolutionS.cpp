@@ -1,6 +1,8 @@
 #include "MarbleCollisionResolutionS.hpp"
 
-MarbleCollisionResolutionS::MarbleCollisionResolutionS(std::unordered_map<std::string, SysBase*>& routes) : routes(routes)
+#include "../../src/ECS2/SystemsManager.hpp"
+
+MarbleCollisionResolutionS::MarbleCollisionResolutionS()
 {
 	requiredComponents = {
 		std::type_index(typeid(Transform)),
@@ -14,6 +16,8 @@ void MarbleCollisionResolutionS::update(float dt)
 	auto marbleCPool = ComponentPoolManager::getInstance().getPool<MarbleComponent>();
 	auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
 	auto velPool = ComponentPoolManager::getInstance().getPool<Velocity>();
+
+	std::unordered_map<std::string, SysBase*>& routes = SystemsManager::getInstance().getSystemBin<RouteS>();
 
 	for (auto ID : entities)
 	{

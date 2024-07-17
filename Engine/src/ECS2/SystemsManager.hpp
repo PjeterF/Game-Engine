@@ -10,13 +10,15 @@
 class SystemsManager
 {
 public:
+	static SystemsManager& getInstance();
 	template<typename T>
 	bool addSystem(SysBase* system, std::string name="DEFAULT");
 	template<typename T>
 	T* getSystem(std::string name="DEFAULT");
 	template<typename T>
-	std::unordered_map<std::string, SysBase*>* getSystemBin();
+	std::unordered_map<std::string, SysBase*>& getSystemBin();
 private:
+	SystemsManager();
 	std::unordered_map<std::type_index, std::unordered_map<std::string, SysBase*>> systems;
 };
 
@@ -27,7 +29,6 @@ inline bool SystemsManager::addSystem(SysBase* system, std::string name)
 	if (it == systems.end())
 	{
 		systems[std::type_index(typeid(T))][name] = system;
-		system->deleteOnSceneEnd = deleteOnSceneEnd;
 	}
 	else
 	{
@@ -35,7 +36,6 @@ inline bool SystemsManager::addSystem(SysBase* system, std::string name)
 		if (it2 == (*it).second.end())
 		{
 			(*it).second[name] = system;
-			system->deleteOnSceneEnd = deleteOnSceneEnd;
 		}
 		else
 		{
@@ -71,11 +71,8 @@ inline T* SystemsManager::getSystem(std::string name)
 }
 
 template<typename T>
-inline std::unordered_map<std::string, SysBase*>* SystemsManager::getSystemBin()
+inline std::unordered_map<std::string, SysBase*>& SystemsManager::getSystemBin()
 {
-	if (systems.find(std::type_index(typeid(T))) != systems.end())
-		return systems[std::type_index(typeid(T))];
-	else
-		return nullptr;
-
+	assert(systems.find(std::type_index(typeid(T))) != systems.end());
+	return systems[std::type_index(typeid(T))];
 }

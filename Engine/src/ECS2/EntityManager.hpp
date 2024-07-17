@@ -48,6 +48,7 @@ public:
 	void setTag(int ID, EntityTag tag);
 	void update();
 	void reset();
+	const std::unordered_set<int>& getExistingEntities();
 private:
 	EntityManager();
 	std::stack<int> availableID;

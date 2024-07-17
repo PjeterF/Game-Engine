@@ -25,8 +25,8 @@ public:
 	void setNSamples(unsigned int nSamples);
 	void addSegment(glm::vec2 endPoint);
 	void removeLastSegment();
-	void spawnMarbleAtOrigin(std::string marbleArchetypeFilepath, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys);
-	void spawnMarbleIfPossible(std::string marbleArchetypeFilepath, MovementS& msys, RenderingS& rsys, CollisionS& csys, AnimationS& asys);
+	void spawnMarbleAtOrigin(std::string marbleArchetypeFilepath);
+	void spawnMarbleIfPossible(std::string marbleArchetypeFilepath);
 	void setControlPointPos(int index, glm::vec2 newPos);
 	const std::string& getID();
 	bool insertAt(int entID, int inserteeID);
