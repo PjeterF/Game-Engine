@@ -11,9 +11,9 @@
 
 void ComponentPoolManager::disableComponents(int ID)
 {
-	for (auto& pool : pools)
+	for (auto& pool : poolsVec)
 	{
-		pool.second->entityHasComponent[ID] = false;
+		pool->entityHasComponent[ID] = false;
 	}
 }
 
