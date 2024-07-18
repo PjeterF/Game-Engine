@@ -20,7 +20,6 @@ public:
 	void resetComponent(int ID);
 private:
 	std::vector<T> components;
-	std::unordered_map<int, int> entCompMap;
 	friend class ComponentPoolManager;
 };
 
