@@ -24,12 +24,9 @@ bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 		if (indices[i] == typeID)
 		{
 			auto pool = poolsVec[i];
-			return pool->entityHasComponent[entID] = true;
+			return pool->entityHasComponent[entID];
 		}
 	}
-
-	/*auto pool = pools[typeID];
-	return pool->entityHasComponent[entID];*/
 }
 
 ComponentPoolManager::ComponentPoolManager()

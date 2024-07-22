@@ -5,14 +5,23 @@
 #include "../ECS/Systems/MarbleCollisionResolutionS.hpp"
 #include "../../src/ECS2/SystemsManager.hpp"
 
-std::vector<std::string> marbleArchetypeFilepaths = {
-	"Application/Games/ZumaGame/MarbleArchetypes/marble1.json",
-	"Application/Games/ZumaGame/MarbleArchetypes/marble2.json",
-	"Application/Games/ZumaGame/MarbleArchetypes/marble3.json",
-};
-
 GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
 {
+}
+
+void GeneralZumaScene::handleEvent(Event& event)
+{
+	switch (event.getType())
+	{
+	case Event::TogglePause:
+		paused = !paused;
+	break;
+	case Event::UpdateMarbleArchetypes:
+	{
+		updateMarbleArchetypes("Application/Games/ZumaGame/MarbleArchetypes");
+	}
+	break;
+	}
 }
 
 void GeneralZumaScene::initialize()
@@ -25,6 +34,8 @@ void GeneralZumaScene::initialize()
 	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2));
 	UIElements.push_back(new EntitiesMenu("Entities", windowDimensions.x-UIElementWidth, 0, UIElementWidth, windowDimensions.y / 2));
 	UIElements.push_back(new PropertiesMenu("Properties", windowDimensions.x-UIElementWidth, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2));
+
+	updateMarbleArchetypes("Application/Games/ZumaGame/MarbleArchetypes");
 
 	std::vector<glm::vec2> ctrlPts = {
 		{100, 100}, 
@@ -43,6 +54,8 @@ void GeneralZumaScene::initialize()
 	SystemsManager::getInstance().addSystem<AnimationS>(new AnimationS());
 
 	SystemsManager::getInstance().addSystem<ShooterS>(new ShooterS(marbleArchetypeFilepaths));
+
+	auto test = (ResourceManager::getInstance().getResource<Texture>("Application/Games/ZumaGame/Textures/frog.png"));
 
 	Entity shooter = EntityManager::getInstance().createEntity();
 	shooter.addComponent<Transform>(Transform(1000, 1000, 100, 100));
@@ -168,8 +181,22 @@ void GeneralZumaScene::input()
 		if (it != SystemsManager::getInstance().getSystemBin<RouteS>().end())
 			SystemsManager::getInstance().getSystem<RouteS>(selectedRoute)->removeLastSegment();
 	}
+
 	if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1])
 		EventManager::getInstance().notify(Event(Event::Shoot, &cursorPos), ECS2);
+	if (paused)
+	{
+		
+	}
+	else
+	{
+		/*if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1]) {
+			auto vec = SystemsManager::getInstance().getSystem<CollisionS>()->pointPick(cursorPos);
+			if(!vec.empty())
+				EventManager::getInstance().notify(Event(Event::EntitySelection, &vec[0]), UI);
+		}*/
+	}
+	
 
 	if (movingPt)
 	{
@@ -193,6 +220,9 @@ void GeneralZumaScene::input()
 					continue;
 
 				selectedRoute = route.first;
+				EventManager::getInstance().notify(Event(Event::RouteSelection, &selectedRoute), UI);
+				EventManager::getInstance().notify(Event(Event::RouteSelection, &selectedRoute), ECS2);
+
 				ctrlPtIdx = result;
 				movingPt = true;
 				break;
@@ -201,4 +231,33 @@ void GeneralZumaScene::input()
 	}
 
 	input.update();
+}
+
+void GeneralZumaScene::serialize(std::string filepath)
+{
+	auto path = std::filesystem::path(filepath);
+
+	nlohmann::json jOut;
+
+	jOut["Routes"] = nlohmann::json::array();
+	for (auto& route : SystemsManager::getInstance().getSystemBin<RouteS>())
+	{
+		nlohmann::json jRoute = ((RouteS*)(route.second))->serialize();
+		jOut["Routes"].push_back(jRoute);
+	}
+
+	jOut["Shooters"] = nlohmann::json::array();
+}
+
+void GeneralZumaScene::deSerialize(std::string filepath)
+{
+}
+
+void GeneralZumaScene::updateMarbleArchetypes(std::string folderpath)
+{
+	marbleArchetypeFilepaths.clear();
+	for (const auto& entry : std::filesystem::directory_iterator(folderpath))
+	{
+		marbleArchetypeFilepaths.push_back(entry.path().string());
+	}
 }

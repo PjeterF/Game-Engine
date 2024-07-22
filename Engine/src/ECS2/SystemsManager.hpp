@@ -17,6 +17,9 @@ public:
 	T* getSystem(std::string name="DEFAULT");
 	template<typename T>
 	std::unordered_map<std::string, SysBase*>& getSystemBin();
+	template<typename T>
+	bool deleteSystem(std::string name = "DEFAULT");
+
 private:
 	SystemsManager();
 	std::unordered_map<std::type_index, std::unordered_map<std::string, SysBase*>> systems;
@@ -75,4 +78,21 @@ inline std::unordered_map<std::string, SysBase*>& SystemsManager::getSystemBin()
 {
 	assert(systems.find(std::type_index(typeid(T))) != systems.end());
 	return systems[std::type_index(typeid(T))];
+}
+
+template<typename T>
+inline bool SystemsManager::deleteSystem(std::string name)
+{
+	auto typeIndex = std::type_index(typeid(T));
+	if (systems.find(typeIndex) == systems.end())
+		return false;
+
+	auto& system = systems[typeIndex];
+	if (system.find(name) == system.end())
+		return false;
+
+	delete system[name];
+	system.erase(name);
+
+	return true;
 }

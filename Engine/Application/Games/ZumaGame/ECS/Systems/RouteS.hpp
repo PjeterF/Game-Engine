@@ -13,11 +13,14 @@
 
 #include <vector>
 #include <list>
+#include <nlohmann/json.hpp>
 
 class RouteS : public SysBase
 {
 public:
 	RouteS(std::string systemID, std::vector<glm::vec2> ctrlPts = { {0, 0} }, unsigned int nSamples = 10, float speed = 2, int nMarbles = 100, bool deleteOnSceneEnd = true);
+	RouteS(nlohmann::json jRoute);
+	virtual ~RouteS();
 	virtual void handleEvent(Event& event) override;
 	virtual void update(float dt) override;
 	void draw(RenderingAPI* rAPI);
@@ -35,9 +38,12 @@ public:
 
 	int ctrlPointIntersection(glm::vec2 pos);
 
+	nlohmann::json serialize();
+
 	float speed;
 	int popThreshold = 3;
 	float distanceBetween = 40;
+	bool highlight = false;
 private:
 	bool popSame(std::list<int>::iterator it);
 

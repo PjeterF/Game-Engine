@@ -23,20 +23,31 @@
 
 #include <nlohmann/json.hpp>
 #include <fstream>
+#include <filesystem>
 
-class GeneralZumaScene : public Scene
+class GeneralZumaScene : public Scene, public EventObserver
 {
 public:
 	GeneralZumaScene(Camera& camera);
+	virtual void handleEvent(Event& event) override;
+
 	virtual void initialize() override;
 	virtual void update(float dt) override;
 	virtual void draw(RenderingAPI* renderingAPI) override;
 	virtual void input() override;
+
+	void serialize(std::string filepath);
+	void deSerialize(std::string filepath);
 private:
+	void updateMarbleArchetypes(std::string folderpath);
+
 	ParticeEmitter* emitter;
 
+	std::vector<std::string> marbleArchetypeFilepaths;
 	std::string selectedRoute = "";
 	int ctrlPtIdx = -1;
 	bool movingPt = false;
 	std::vector<UIWindow*> UIElements;
+
+	bool paused = false;
 };

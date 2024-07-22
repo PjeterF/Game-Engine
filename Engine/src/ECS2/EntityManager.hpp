@@ -27,6 +27,8 @@ public:
 	template<typename T>
 	T& addComponent(T component);
 	template<typename T>
+	void removeComponent();
+	template<typename T>
 	T& getComponent();
 	EntityTag getTag();
 	void setTag(EntityTag tag);
@@ -68,6 +70,12 @@ template<typename T>
 inline T& Entity::addComponent(T component)
 {
 	return ComponentPoolManager::getInstance().addComponent<T>(this->ID, component);
+}
+
+template<typename T>
+inline void Entity::removeComponent()
+{
+	ComponentPoolManager::getInstance().removeComponent<T>(this->ID);
 }
 
 template<typename T>

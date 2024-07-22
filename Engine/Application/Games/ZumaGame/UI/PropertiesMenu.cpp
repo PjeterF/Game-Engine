@@ -31,11 +31,34 @@ void PropertiesMenu::render()
 		return;
 	}
 
+	Entity ent(selectedEntID);
+
 	if (ImGui::BeginCombo("##Add component", "Add component"))
 	{
-		if (ImGui::Selectable("Transform"))
+		if (!ent.hasComponent<Transform>())
 		{
-
+			if (ImGui::Selectable("Transform##A"))
+				ent.addComponent<Transform>(Transform());
+		}
+		if (!ent.hasComponent<Velocity>())
+		{
+			if (ImGui::Selectable("Velocity##A"))
+				ent.addComponent<Velocity>(Velocity());
+		}
+		if (!ent.hasComponent<AABB>())
+		{
+			if (ImGui::Selectable("AABB##A"))
+				ent.addComponent<AABB>(AABB());
+		}
+		if (!ent.hasComponent<Sprite>())
+		{
+			if (ImGui::Selectable("Sprite##A"))
+				ent.addComponent<Sprite>(Sprite());
+		}
+		if (!ent.hasComponent<Animation>())
+		{
+			if (ImGui::Selectable("Animation##A"))
+				ent.addComponent<Animation>(Animation());
 		}
 
 		ImGui::EndCombo();
@@ -43,9 +66,30 @@ void PropertiesMenu::render()
 
 	if (ImGui::BeginCombo("##Remove component", "Remove component"))
 	{
-		if (ImGui::Selectable("Transform"))
+		if (ent.hasComponent<Transform>())
 		{
-
+			if (ImGui::Selectable("Transform##R"))
+				ent.removeComponent<Transform>();
+		}
+		if (ent.hasComponent<Velocity>())
+		{
+			if (ImGui::Selectable("Velocity##R"))
+				ent.removeComponent<Velocity>();
+		}
+		if (ent.hasComponent<AABB>())
+		{
+			if (ImGui::Selectable("AABB##R"))
+				ent.removeComponent<AABB>();
+		}
+		if (ent.hasComponent<Sprite>())
+		{
+			if (ImGui::Selectable("Sprite##R"))
+				ent.removeComponent<Sprite>();
+		}
+		if (ent.hasComponent<Animation>())
+		{
+			if (ImGui::Selectable("Animation##R"))
+				ent.removeComponent<Animation>();
 		}
 
 		ImGui::EndCombo();
@@ -67,8 +111,6 @@ void PropertiesMenu::render()
 		windowEnd();
 		return;
 	}
-
-	Entity ent(selectedEntID);
 
 	ImGui::BeginChild("##List");
 

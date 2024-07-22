@@ -29,6 +29,8 @@ void MarbleEditor::render()
 
 		outFile << newArchetype.serialize().dump(4);
 		outFile.close();
+
+		EventManager::getInstance().notify(Event(Event::UpdateMarbleArchetypes, nullptr));
 	}
 
 	for (auto& entry : fs::directory_iterator(dirPath))
@@ -73,7 +75,6 @@ void MarbleEditor::render()
 	if (ImGui::BeginPopupModal("Marble Attributes"))
 	{
 		hovered = ImGui::IsWindowHovered();
-
 
 		ImGui::Text("File name");
 		ImGui::InputText("##File Name", &newName[0], 100);
@@ -153,6 +154,7 @@ void MarbleEditor::render()
 			std::string label = "Delete##" + std::to_string(i);
 			if (ImGui::Button(label.c_str()))
 			{
+				EventManager::getInstance().notify(Event(Event::UpdateMarbleArchetypes, nullptr));
 				marbleArchetype.frames.erase(std::next(marbleArchetype.frames.begin(), i));
 			}
 		}
@@ -165,6 +167,7 @@ void MarbleEditor::render()
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
+		
 		if (ImGui::Button("Commit changes", ImVec2(0, 20)))
 		{
 			fs::remove(fs::path(selectedArchetypePath));
@@ -180,6 +183,14 @@ void MarbleEditor::render()
 			outputFile.close();
 
 			EventManager::getInstance().notify(Event(Event::UpdateMarbleArchetypes, nullptr), ECS2);
+
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete", ImVec2(0, 20)))
+		{
+			std::filesystem::remove(std::filesystem::path(selectedArchetypePath));
+			EventManager::getInstance().notify(Event(Event::UpdateMarbleArchetypes, nullptr));
 
 			ImGui::CloseCurrentPopup();
 		}

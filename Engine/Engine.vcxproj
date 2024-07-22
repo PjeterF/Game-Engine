@@ -162,6 +162,7 @@
     <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\functions.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\Serialization\serialization.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\EntitiesMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\PropertiesMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\ZumaMenu.hpp" />
@@ -543,7 +544,6 @@
     <ClInclude Include="src\Events\EventManager.hpp" />
     <ClInclude Include="src\Events\EventObserver.hpp" />
     <ClInclude Include="src\Events\EventPackage.hpp" />
-    <ClInclude Include="src\Graphics\Animation.hpp" />
     <ClInclude Include="src\Graphics\Camera.hpp" />
     <ClInclude Include="src\Graphics\GeneralRenderer.hpp" />
     <ClInclude Include="src\Graphics\InstancedQuadRenderer.hpp" />
@@ -584,6 +584,7 @@
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\RouteS.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\functions.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\Maps\test.json" />
     <ClCompile Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\EntitiesMenu.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\MarbleEditor.cpp" />
@@ -617,7 +618,6 @@
     <ClCompile Include="src\Graphics\InstancedSpriteRenderer.cpp" />
     <ClCompile Include="src\Events\EventManager.cpp" />
     <ClCompile Include="src\Events\EventObserver.cpp" />
-    <ClCompile Include="src\Graphics\Animation.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="src\Graphics\GeneralRenderer.cpp" />
     <ClCompile Include="src\Graphics\InstancedQuadRenderer.cpp" />

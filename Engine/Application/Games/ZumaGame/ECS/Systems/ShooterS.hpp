@@ -12,16 +12,21 @@
 #include "../Components/MarbleShooter.hpp"
 #include"../../src/ECS2/Components/Transform.hpp"
 #include"../../src/ECS2/Components/Velocity.hpp"
+#include"../../src/ECS2/Components/Sprite.hpp"
 
 #include <vector>
 #include <list>
+#include <nlohmann/json.hpp>
 
 class ShooterS : public SysBase
 {
 public:
-	ShooterS(std::vector<std::string> marbleArchetypeFilepaths);
+	ShooterS(std::vector<std::string>& marbleArchetypeFilepaths);
 	virtual void update(float dt) override;
 	virtual void handleEvent(Event& event) override;
+
+	nlohmann::json serialize();
+	nlohmann::json deSerialize();
 	
 private:
 	std::string archetypesDirectoryFilepath = "Application/Games/ZumaGame/MarbleArchetypes";

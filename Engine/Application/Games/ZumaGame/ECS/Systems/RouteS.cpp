@@ -17,6 +17,25 @@ RouteS::RouteS(std::string systemID, std::vector<glm::vec2> ctrlPts, unsigned in
 	};
 
 	calculateIntermediatePoints();
+} 
+
+RouteS::RouteS(nlohmann::json jRoute)
+{
+	speed = jRoute["speed"];
+	popThreshold = jRoute["popThreshold"];
+	distanceBetween = jRoute["distanceBetween"];
+	nMarbles = jRoute["nMarbles"];
+	nSamples = jRoute["nSamples"];
+	systemID = jRoute["systemID"];
+
+	for (int i = 0; i < jRoute["ctrlPts"].size(); i++)
+		ctrlPts.push_back({ jRoute["ctrlPts"][i][0], jRoute["ctrlPts"][i][1] });
+}
+
+RouteS::~RouteS()
+{
+	for (auto marble : marbles)
+		EntityManager::getInstance().deleteEntity(marble);
 }
 
 void RouteS::handleEvent(Event& event)
@@ -36,6 +55,15 @@ void RouteS::handleEvent(Event& event)
 				break;
 			}
 		}
+	}
+	case Event::RouteSelection:
+	{
+		std::string* routeName = (std::string*)event.getPayload();
+
+		if (*routeName == this->systemID)
+			highlight = true;
+		else
+			highlight = false;
 	}
 	break;
 	}
@@ -155,9 +183,12 @@ void RouteS::draw(RenderingAPI* rAPI)
 	if (intermediatePts.empty())
 		return;
 
+	glm::vec3 lineColor = { 0.33, 0.11, 0.11 };
+	if (highlight)
+		lineColor = 3.0f * lineColor;
 	for (int i = 0; i < intermediatePts.size() - 1; i++)
 	{
-		rAPI->drawLine(intermediatePts[i], intermediatePts[i + 1], 5, { 0.33, 0.11, 0.11 });
+		rAPI->drawLine(intermediatePts[i], intermediatePts[i + 1], 5, lineColor);
 	}
 }
 
@@ -391,6 +422,24 @@ int RouteS::ctrlPointIntersection(glm::vec2 pos)
 	}
 
 	return -1;
+}
+
+nlohmann::json RouteS::serialize()
+{
+	nlohmann::json j;
+
+	j["speed"] = speed;
+	j["popThreshold"] = popThreshold;
+	j["distanceBetween"] = distanceBetween;
+	j["nMarbles"] = nMarbles;
+	j["nSamples"] = nSamples;
+	j["systemID"] = systemID;
+
+	j["ctrlPts"] = nlohmann::json::array();
+	for (auto& point : ctrlPts)
+		j["ctrlPts"].push_back({ point.x, point.y });
+
+	return j;
 }
 
 bool RouteS::popSame(std::list<int>::iterator it)

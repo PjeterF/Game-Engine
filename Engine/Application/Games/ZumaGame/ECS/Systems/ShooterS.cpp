@@ -5,7 +5,7 @@
 
 #include <filesystem>
 
-ShooterS::ShooterS(std::vector<std::string> marbleArchetypeFilepaths) : marbleArchetypeFilepaths(marbleArchetypeFilepaths)
+ShooterS::ShooterS(std::vector<std::string>& marbleArchetypeFilepaths) : marbleArchetypeFilepaths(marbleArchetypeFilepaths)
 {
 	requiredComponents = {
 		std::type_index(typeid(Transform)),
@@ -116,4 +116,39 @@ void ShooterS::handleEvent(Event& event)
 	}
 	break;
 	}
+}
+
+nlohmann::json ShooterS::serialize()
+{
+	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+	auto shooterCPool = ComponentPoolManager::getInstance().getPool<MarbleShooter>();
+	auto spritePool = ComponentPoolManager::getInstance().getPool<Sprite>();
+
+	nlohmann::json jOut;
+	for (auto ID : entities)
+	{
+		auto& transform = transformPool->get(ID);
+		auto& shooterC = shooterCPool->get(ID);
+
+		jOut["transform"]["pos"] = { transform.x, transform.y };
+		jOut["transform"]["size"] = { transform.width, transform.height };
+
+		jOut["shooterC"]["cooldown"] = shooterC.cooldown;
+		jOut["shooterC"]["shotSpeed"] = shooterC.shotSpeed;
+
+		if (spritePool->entityHasComponent[ID])
+		{
+			auto& sprite = spritePool->get(ID);
+
+			jOut["Sprite"]["texture"] = sprite.getTexture()->getContents()->getFilepath();
+			jOut["Sprite"]["sample"] = { sprite.textureSample.x, sprite.textureSample.y, sprite.textureSample.z, sprite.textureSample.w };
+		}
+	}
+
+	return jOut;
+}
+
+nlohmann::json ShooterS::deSerialize()
+{
+	return nlohmann::json();
 }
