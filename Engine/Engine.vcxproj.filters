@@ -1284,6 +1284,9 @@
     <ClInclude Include="Application\Games\ZumaGame\Serialization\serialization.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS2\Components\CBase.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1485,6 +1488,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\ZumaGame\Maps\test.json">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Components\CBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Components\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Components\Velocity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
