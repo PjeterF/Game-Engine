@@ -1487,9 +1487,6 @@
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\CounterKillerS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Games\ZumaGame\Maps\test.json">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ECS2\Components\CBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1503,6 +1500,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS2\Components\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Components\Counter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Components\RenderingLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\ZumaGame\ECS\Components\MarbleShooter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

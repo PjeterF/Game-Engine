@@ -18,5 +18,7 @@ void ZumaGame::initialize()
 	GeneralZumaScene* generalScene = new GeneralZumaScene(*cam1);
 
 	generalScene->initialize();
-	SceneManager::getInstance().setScene(generalScene);
+
+	SceneManager::getInstance().addScene("GeneralScene", generalScene);
+	SceneManager::getInstance().setCurrentScene("GeneralScene");
 }

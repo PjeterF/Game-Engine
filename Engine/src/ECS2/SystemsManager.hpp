@@ -20,9 +20,11 @@ public:
 	template<typename T>
 	bool deleteSystem(std::string name = "DEFAULT");
 
+	void update();
 private:
 	SystemsManager();
 	std::unordered_map<std::type_index, std::unordered_map<std::string, SysBase*>> systems;
+	std::unordered_map < std::type_index, std::vector<std::string>> systemsToDelete;
 };
 
 template<typename T>
@@ -87,12 +89,11 @@ inline bool SystemsManager::deleteSystem(std::string name)
 	if (systems.find(typeIndex) == systems.end())
 		return false;
 
-	auto& system = systems[typeIndex];
-	if (system.find(name) == system.end())
+	auto& nameSystemMap = systems[typeIndex];
+	if (nameSystemMap.find(name) == nameSystemMap.end())
 		return false;
 
-	delete system[name];
-	system.erase(name);
+	systemsToDelete[typeIndex].push_back(name);
 
 	return true;
 }

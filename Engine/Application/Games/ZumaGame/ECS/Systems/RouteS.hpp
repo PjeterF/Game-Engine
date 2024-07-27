@@ -39,6 +39,7 @@ public:
 	int ctrlPointIntersection(glm::vec2 pos);
 
 	nlohmann::json serialize();
+	void deSerialize(nlohmann::json j);
 
 	float speed;
 	int popThreshold = 3;
@@ -50,7 +51,7 @@ private:
 	unsigned int nSamples;
 	unsigned int nMarbles;
 	unsigned int remainingMarbles;
-	
+
 	std::string systemID;
 
 	std::list<int> marbles;

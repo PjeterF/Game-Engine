@@ -3,6 +3,8 @@
 #include "../../functions.hpp"
 #include "../../src/ECS2/SystemsManager.hpp"
 
+#include "../../src/ECS2/Systems/RenderingS.hpp"
+
 #include <filesystem>
 
 ShooterS::ShooterS(std::vector<std::string>& marbleArchetypeFilepaths) : marbleArchetypeFilepaths(marbleArchetypeFilepaths)
@@ -11,6 +13,19 @@ ShooterS::ShooterS(std::vector<std::string>& marbleArchetypeFilepaths) : marbleA
 		std::type_index(typeid(Transform)),
 		std::type_index(typeid(MarbleShooter))
 	};
+}
+
+ShooterS::~ShooterS()
+{
+	auto shooterCPool = ComponentPoolManager::getInstance().getPool<MarbleShooter>();
+	for (auto ID : entities)
+	{
+		EntityManager::getInstance().deleteEntity(ID);
+		if(shooterCPool->get(ID).currentShotID!=-1)
+			EntityManager::getInstance().deleteEntity(shooterCPool->get(ID).currentShotID);
+		if (shooterCPool->get(ID).nextShotID != -1)
+			EntityManager::getInstance().deleteEntity(shooterCPool->get(ID).nextShotID);
+	}
 }
 
 void ShooterS::update(float dt)
@@ -35,7 +50,7 @@ void ShooterS::update(float dt)
 		{
 			Transform& currTrans = transformPool->get(shooterC.currentShotID);
 
-			glm::vec2 offset =  transform.height * glm::vec2(cos(transform.rot), -sin(transform.rot));
+			glm::vec2 offset =  transform.height * glm::vec2(cos(transform.rot+1.57), -sin(transform.rot + 1.57));
 			currTrans.x = transform.x + offset.x;
 			currTrans.y = transform.y + offset.y;
 		}
@@ -91,6 +106,10 @@ void ShooterS::handleEvent(Event& event)
 				dir = glm::normalize(dir);
 
 			Velocity& shotVel = velocityPool->get(shooterC.currentShotID);
+			Transform& shotTrans = transformPool->get(shooterC.currentShotID);
+
+			shotTrans.x = transform.x + transform.height * dir.x;
+			shotTrans.y = transform.y + transform.height * dir.y;
 
 			shotVel.x = shooterC.shotSpeed * dir.x;
 			shotVel.y = shooterC.shotSpeed * dir.y;
@@ -123,32 +142,84 @@ nlohmann::json ShooterS::serialize()
 	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
 	auto shooterCPool = ComponentPoolManager::getInstance().getPool<MarbleShooter>();
 	auto spritePool = ComponentPoolManager::getInstance().getPool<Sprite>();
+	auto layerPool = ComponentPoolManager::getInstance().getPool<RenderingLayer>();
 
-	nlohmann::json jOut;
+	nlohmann::json jOut = nlohmann::json::array();
 	for (auto ID : entities)
 	{
-		auto& transform = transformPool->get(ID);
-		auto& shooterC = shooterCPool->get(ID);
+		nlohmann::json jEnt;
+		jEnt["Components"] = nlohmann::json::array();
 
-		jOut["transform"]["pos"] = { transform.x, transform.y };
-		jOut["transform"]["size"] = { transform.width, transform.height };
-
-		jOut["shooterC"]["cooldown"] = shooterC.cooldown;
-		jOut["shooterC"]["shotSpeed"] = shooterC.shotSpeed;
-
+		jEnt["Components"].push_back(shooterCPool->get(ID).serialize());
+		jEnt["Components"].push_back(transformPool->get(ID).serialize());
 		if (spritePool->entityHasComponent[ID])
-		{
-			auto& sprite = spritePool->get(ID);
+			jEnt["Components"].push_back(spritePool->get(ID).serialize());
+		if (layerPool->entityHasComponent[ID])
+			jEnt["Components"].push_back(layerPool->get(ID).serialize());
 
-			jOut["Sprite"]["texture"] = sprite.getTexture()->getContents()->getFilepath();
-			jOut["Sprite"]["sample"] = { sprite.textureSample.x, sprite.textureSample.y, sprite.textureSample.z, sprite.textureSample.w };
-		}
+		jOut.push_back(jEnt);
 	}
 
 	return jOut;
 }
 
-nlohmann::json ShooterS::deSerialize()
+void ShooterS::deSerialize(nlohmann::json j)
 {
-	return nlohmann::json();
+	auto shooterCPool = ComponentPoolManager::getInstance().getPool<MarbleShooter>();
+	for (auto ID : entities)
+	{
+		auto& shooterC = shooterCPool->get(ID);
+		if(shooterC.currentShotID != -1)
+			EntityManager::getInstance().deleteEntity(shooterC.currentShotID);
+		if (shooterC.nextShotID != -1)
+			EntityManager::getInstance().deleteEntity(shooterC.nextShotID);
+
+		EntityManager::getInstance().deleteEntity(ID);
+	}
+	EntityManager::getInstance().update();
+
+	for (int i = 0; i < j.size(); i++)
+	{
+		Entity newEnt = EntityManager::getInstance().createEntity();
+
+		for (int i2 = 0; i2 < j[i]["Components"].size(); i2++)
+		{
+			int type = j[i]["Components"][i2]["type"];
+			switch (type)
+			{
+			case CBase::Transform:
+			{
+				Transform comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<Transform>(comp);
+			}
+			break;
+			case CBase::MarbleShooter:
+			{
+				MarbleShooter comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<MarbleShooter>(comp);
+			}
+			break;
+			case CBase::Sprite:
+			{
+				Sprite comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<Sprite>(comp);
+			}
+			break;
+			case CBase::RenderingLayer:
+			{
+				RenderingLayer comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<RenderingLayer>(comp);
+			}
+			break;
+			}
+		}
+
+		newEnt.addComponent<Velocity>(Velocity());
+		SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(newEnt.getID());
+		this->addEntity(newEnt.getID());
+	}
 }

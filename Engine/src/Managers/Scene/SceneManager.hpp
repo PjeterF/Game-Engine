@@ -6,6 +6,8 @@
 #include "../../Graphics/GeneralRenderer.hpp"
 #include "../../ECS2/Systems/SysBase.hpp"
 
+#include <optional>
+
 class Scene
 {
 public:
@@ -35,9 +37,14 @@ public:
 	void update(float dt=0);
 	void draw(RenderingAPI* renderingAPI);
 	void input();
-	void setScene(Scene* scene);
-	Scene* getScene();
+
+	bool addScene(std::string name, Scene* scene);
+	bool deleteScene(std::string name);
+	bool setCurrentScene(std::string name);
+	Scene* getCurrentScene();
 private:
+	std::optional<std::string> currentSceneName;
+	std::unordered_map<std::string, Scene*> scenes;
 	Scene* currentScene=nullptr;
 };
 

@@ -25,11 +25,14 @@ RouteS::RouteS(nlohmann::json jRoute)
 	popThreshold = jRoute["popThreshold"];
 	distanceBetween = jRoute["distanceBetween"];
 	nMarbles = jRoute["nMarbles"];
+	remainingMarbles = jRoute["nMarbles"];
 	nSamples = jRoute["nSamples"];
 	systemID = jRoute["systemID"];
 
+	ctrlPts.clear();
 	for (int i = 0; i < jRoute["ctrlPts"].size(); i++)
 		ctrlPts.push_back({ jRoute["ctrlPts"][i][0], jRoute["ctrlPts"][i][1] });
+	calculateIntermediatePoints();
 }
 
 RouteS::~RouteS()
@@ -160,6 +163,9 @@ void RouteS::update(float dt)
 
 			velocity.x = dir.x;
 			velocity.y = dir.y;
+
+			//transform.x += velocity.x;
+			//transform.y += velocity.y;
 		}
 	}
 }
@@ -368,6 +374,12 @@ bool RouteS::insertAt(int entID, int inserteeID)
 				}
 
 				it = marbles.insert(it, inserteeID);
+				auto& inserteeVelocity = velocityPool->get(inserteeID);
+				auto& itVelocity = velocityPool->get(*it);
+
+				inserteeVelocity.x = itVelocity.x;
+				inserteeVelocity.y = itVelocity.y;
+
 				if (popSame(it))
 					return true;
 				it++;
@@ -376,11 +388,27 @@ bool RouteS::insertAt(int entID, int inserteeID)
 				while (it != marbles.end())
 				{
 					auto& vel = velocityPool->get(*it);
-					marbleCPool->get(*it).targetPointIdx++;
-					glm::vec2 dir = glm::normalize(glm::vec2(vel.x, vel.y));
+					auto& trans = transformPool->get(*it);
+					auto& marbleC = marbleCPool->get(*it);
 
-					vel.x = distanceBetween*dir.x;
-					vel.y = distanceBetween*dir.y;
+					if (glm::length(glm::vec2(vel.x, vel.y)) < 0.001)
+					{
+						glm::vec2 diff = intermediatePts[marbleC.targetPointIdx] - glm::vec2(trans.x, trans.y);
+						if(glm::length(diff)<0.001)
+							diff = intermediatePts[marbleC.targetPointIdx+1] - glm::vec2(trans.x, trans.y);
+
+						glm::vec2 dir = glm::normalize(diff);
+						vel.x = distanceBetween * dir.x;
+						vel.y = distanceBetween * dir.y;
+					}
+					else
+					{
+						glm::vec2 dir = glm::normalize(glm::vec2(vel.x, vel.y));
+						vel.x = distanceBetween * dir.x;
+						vel.y = distanceBetween * dir.y;
+					}
+
+					marbleCPool->get(*it).targetPointIdx++;
 
 					it++;
 				}
@@ -442,6 +470,22 @@ nlohmann::json RouteS::serialize()
 	return j;
 }
 
+void RouteS::deSerialize(nlohmann::json j)
+{
+	speed = j["speed"];
+	popThreshold = j["popThreshold"];
+	distanceBetween = j["distanceBetween"];
+	nMarbles = j["nMarbles"];
+	remainingMarbles = j["nMarbles"];
+	nSamples = j["nSamples"];
+	systemID = j["systemID"];
+
+	ctrlPts.clear();
+	for (int i = 0; i < j["ctrlPts"].size(); i++)
+		ctrlPts.push_back({ j["ctrlPts"][0], j["ctrlPts"][1] });
+	calculateIntermediatePoints();
+}
+
 bool RouteS::popSame(std::list<int>::iterator it)
 {
 	if (marbles.empty())
@@ -450,9 +494,14 @@ bool RouteS::popSame(std::list<int>::iterator it)
 		return false;
 
 	auto marbleCPool = ComponentPoolManager::getInstance().getPool<MarbleComponent>();
+	auto velocityPool = ComponentPoolManager::getInstance().getPool<Velocity>();
 
 	int type = marbleCPool->get(*it).type;
 	int count = 0;
+
+	bool wasOriginalMoving = true;
+	if (glm::length(glm::vec2(velocityPool->get(*it).x, velocityPool->get(*it).y))<0.001)
+		wasOriginalMoving = false;
 
 	auto itForwards = it;
 	itForwards++;
@@ -460,7 +509,12 @@ bool RouteS::popSame(std::list<int>::iterator it)
 
 	while (itForwards != marbles.end())
 	{
-		if (marbleCPool->get(*itForwards).type != type)
+		auto& velocity = velocityPool->get(*itForwards);
+		bool isMoving=true;
+		if (glm::length(glm::vec2(velocity.x, velocity.y)) < 0.001)
+			isMoving = false;
+
+		if (marbleCPool->get(*itForwards).type != type || wasOriginalMoving!=isMoving)
 			break;
 
 		count++;
@@ -470,7 +524,12 @@ bool RouteS::popSame(std::list<int>::iterator it)
 
 	while (1)
 	{
-		if (marbleCPool->get(*itBackwards).type != type)
+		auto& velocity = velocityPool->get(*itBackwards);
+		bool isMoving = true;
+		if (glm::length(glm::vec2(velocity.x, velocity.y)) < 0.001)
+			isMoving = false;
+
+		if (marbleCPool->get(*itBackwards).type != type || wasOriginalMoving!=isMoving)
 		{
 			itBackwards++;
 			break;
@@ -497,21 +556,40 @@ bool RouteS::popSame(std::list<int>::iterator it)
 			auto& transform = transformPool->get(*itCurrent);
 			auto& marbleInfo = marbleCPool->get(*itCurrent);
 			
-			Entity particleBurst = EntityManager::getInstance().createEntity();
-			particleBurst.addComponent<Transform>(Transform(transform.x, transform.y));
-			particleBurst.addComponent<Counter>(Counter(0, 90));
-			auto& emitter = particleBurst.addComponent<Emitter>(Emitter(150, 150, 10, 10));
+			{
+				Entity particleBurst = EntityManager::getInstance().createEntity();
+				particleBurst.addComponent<Transform>(Transform(transform.x, transform.y));
+				particleBurst.addComponent<Counter>(Counter(0, 90));
+				auto& emitter = particleBurst.addComponent<Emitter>(Emitter(150, 150, 10, 10));
 
-			emitter.emitter.defaultProperties.particleLifetime = { 20, 50 };
-			emitter.emitter.defaultProperties.velocityDecay = 0.95;
-			emitter.emitter.defaultProperties.yVelVar = { -3, 3 };
-			emitter.emitter.defaultProperties.xVelVar = { -3, 3 };
-			emitter.emitter.defaultProperties.startSize = 10;
-			emitter.emitter.defaultProperties.startColour = { marbleInfo.color.x, marbleInfo.color.y, marbleInfo.color.z, 1 };
-			emitter.emitter.defaultProperties.endColour = { marbleInfo.color.x, marbleInfo.color.y, marbleInfo.color.z, 0 };
+				emitter.emitter.defaultProperties.particleLifetime = { 20, 50 };
+				emitter.emitter.defaultProperties.velocityDecay = 0.95;
+				emitter.emitter.defaultProperties.yVelVar = { -3, 3 };
+				emitter.emitter.defaultProperties.xVelVar = { -3, 3 };
+				emitter.emitter.defaultProperties.startSize = 10;
+				emitter.emitter.defaultProperties.startColour = { marbleInfo.color.x, marbleInfo.color.y, marbleInfo.color.z, 1 };
+				emitter.emitter.defaultProperties.endColour = { marbleInfo.color.x, marbleInfo.color.y, marbleInfo.color.z, 1 };
 
-			SystemsManager::getInstance().getSystem<ParticleS>()->addEntity(particleBurst.getID());
-			SystemsManager::getInstance().getSystem<CounterKillerS>()->addEntity(particleBurst.getID());
+				SystemsManager::getInstance().getSystem<ParticleS>()->addEntity(particleBurst.getID());
+				SystemsManager::getInstance().getSystem<CounterKillerS>()->addEntity(particleBurst.getID());
+			}
+			{
+				Entity particleBurst = EntityManager::getInstance().createEntity();
+				particleBurst.addComponent<Transform>(Transform(transform.x, transform.y));
+				particleBurst.addComponent<Counter>(Counter(0, 90));
+				auto& emitter = particleBurst.addComponent<Emitter>(Emitter(150, 150, 10, 10));
+
+				emitter.emitter.defaultProperties.particleLifetime = { 20, 50 };
+				emitter.emitter.defaultProperties.velocityDecay = 0.97;
+				emitter.emitter.defaultProperties.yVelVar = { -4, 4 };
+				emitter.emitter.defaultProperties.xVelVar = { -4, 4 };
+				emitter.emitter.defaultProperties.startSize = 10;
+				emitter.emitter.defaultProperties.startColour = { 0, 0, 0, 1 };
+				emitter.emitter.defaultProperties.endColour = { 0.3, 0.3, 0.3, 0.5 };
+
+				SystemsManager::getInstance().getSystem<ParticleS>()->addEntity(particleBurst.getID());
+				SystemsManager::getInstance().getSystem<CounterKillerS>()->addEntity(particleBurst.getID());
+			}
 
 			EntityManager::getInstance().deleteEntity(*itCurrent);
 			itCurrent = marbles.erase(itCurrent);

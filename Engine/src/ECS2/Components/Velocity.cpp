@@ -3,6 +3,7 @@
 nlohmann::json Velocity::serialize()
 {
     nlohmann::json j;
+    j["type"] = CBase::Velocity;
 
     j["velocity"] = { x, y };
     j["acceleration"] = { ax, ay };

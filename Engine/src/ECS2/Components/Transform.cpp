@@ -3,6 +3,7 @@
 nlohmann::json Transform::serialize()
 {
     nlohmann::json j;
+    j["type"] = CBase::Transform;
 
     j["position"] = { x, y };
     j["size"] = { width, height };

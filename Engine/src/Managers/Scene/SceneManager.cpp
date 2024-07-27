@@ -8,33 +8,61 @@ SceneManager& SceneManager::getInstance()
 
 void SceneManager::update(float dt)
 {
-    if (currentScene == nullptr)
+    if (!currentSceneName.has_value())
         return;
-    currentScene->update(dt);
+    scenes[currentSceneName.value()]->update(dt);
 }
 
 void SceneManager::draw(RenderingAPI* renderingAPI)
 {
-    if (currentScene == nullptr)
+    if (!currentSceneName.has_value())
         return;
-    currentScene->draw(renderingAPI);
+    scenes[currentSceneName.value()]->draw(renderingAPI);
 }
 
 void SceneManager::input()
 {
-    if (currentScene == nullptr)
+    if (!currentSceneName.has_value())
         return;
-    currentScene->input();
+    scenes[currentSceneName.value()]->input();
 }
 
-void SceneManager::setScene(Scene* scene)
+bool SceneManager::addScene(std::string name, Scene* scene)
 {
-    this->currentScene = scene;
+    if (scenes.find(name) != scenes.end())
+        return false;
+    scenes[name] = scene;
+    return true;
 }
 
-Scene* SceneManager::getScene()
+bool SceneManager::deleteScene(std::string name)
 {
-    return currentScene;
+    if (scenes.find(name) == scenes.end())
+        return false;
+
+    if (name == currentSceneName)
+        currentSceneName.reset();
+
+    delete scenes[name];
+    scenes.erase(name);
+
+    return true;
+}
+
+bool SceneManager::setCurrentScene(std::string name)
+{
+    if (scenes.find(name) == scenes.end())
+        return false;
+    currentSceneName = name;
+    return true;
+}
+
+Scene* SceneManager::getCurrentScene()
+{
+    if (!currentSceneName.has_value())
+        return nullptr;
+
+    return scenes[currentSceneName.value()];
 }
 
 Scene::Scene(Camera& camera) : camera(camera)

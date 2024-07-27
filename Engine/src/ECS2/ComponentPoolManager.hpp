@@ -35,6 +35,9 @@ private:
 	std::vector<std::type_index> indices;
 	std::vector<ComponentPoolBase*> poolsVec;
 	std::vector<std::unordered_set<std::type_index>> hasComponents;
+
+	friend class EntityManager;
+	friend class Entity;
 };
 
 template<typename T>

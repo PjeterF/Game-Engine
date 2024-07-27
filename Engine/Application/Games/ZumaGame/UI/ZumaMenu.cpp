@@ -89,23 +89,56 @@ void ZumaMenu::render()
 		}
 		if (ImGui::BeginTabItem("Shooters"))
 		{
+			if (ImGui::Button("Create Shooter"))
+			{
+				Entity shooter = EntityManager::getInstance().createEntity();
+				shooter.addComponent<MarbleShooter>(MarbleShooter(1, 10));
+				shooter.addComponent<Transform>(Transform(0, 0, 100, 100));
+				shooter.addComponent<Velocity>(Velocity());
+				shooter.addComponent<Sprite>(Sprite());
+
+				SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
+				SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());
+
+				int payload = shooter.getID();
+				EventManager::getInstance().notify(Event(Event::EntitySelection, &payload), UI);
+			}
+
+			for (auto& ID : SystemsManager::getInstance().getSystem<ShooterS>()->getEntitySet())
+			{
+				if (ImGui::Selectable(std::to_string(ID).c_str()))
+				{
+					int payload = ID;
+					EventManager::getInstance().notify(Event(Event::EntitySelection, &payload), UI);
+				}	
+			}
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("De/Serialization"))
 		{
+			std::string p = "Application/Games/ZumaGame/Maps";
+			GeneralZumaScene* scene = (GeneralZumaScene*)SceneManager::getInstance().getCurrentScene();
+
+			static char serializationName[100]="";
+			ImGui::InputText("File Name", serializationName, 100);
 			if (ImGui::Button("Serialize"))
 			{
-
+				if (std::strcmp(serializationName, "")!=0) {
+					scene->serialize(p + "/" + serializationName);
+					std::strcpy(serializationName, "");
+				}
 			}
 			
-			auto path = std::filesystem::path("Application/Games/ZumaGame/Maps");
+			auto path = std::filesystem::path(p);
+			ImGui::Separator();
 			ImGui::Text("Saved maps");
+			ImGui::Separator();
 			for (auto& item : std::filesystem::directory_iterator(path))
 			{
-				if (ImGui::Selectable(item.path().string().c_str()))
-				{
-
-				}
+				std::string itemName = item.path().string();
+				itemName.erase(0, p.size()+1);
+				if (ImGui::Selectable(itemName.c_str()))
+					scene->deSerialize(item.path().string().c_str());
 			}
 
 			ImGui::EndTabItem();

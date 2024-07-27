@@ -26,5 +26,6 @@ void Game1::initialize()
 
 	scene1->initialize();
 
-	SceneManager::getInstance().setScene(scene1);
+	SceneManager::getInstance().addScene("HordeDefense", scene1);
+	SceneManager::getInstance().setCurrentScene("HordeDefense");
 }

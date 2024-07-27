@@ -10,12 +10,14 @@
 class SysBase : public EventObserver
 {
 public:
+	virtual ~SysBase();
 	virtual void handleEvent(Event& event) override;
 	virtual bool addEntity(int ID);
 	virtual bool addEntity(Entity entity);
 	virtual void removeEntity(int ID);
 	virtual void update(float dt) = 0;
 	virtual void lateUpdate(float dt);
+	const std::set<int>& getEntitySet();
 protected:
 	SysBase(bool deleteOnSceneEnd=false);
 	std::vector<std::type_index> requiredComponents;

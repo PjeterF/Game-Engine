@@ -5,6 +5,8 @@
 #include "../ECS/Systems/MarbleCollisionResolutionS.hpp"
 #include "../../src/ECS2/SystemsManager.hpp"
 
+#include <fstream>
+
 GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
 {
 }
@@ -61,11 +63,13 @@ void GeneralZumaScene::initialize()
 	shooter.addComponent<Transform>(Transform(1000, 1000, 100, 100));
 	shooter.addComponent<Velocity>(Velocity());
 	shooter.addComponent<RenderingLayer>(RenderingLayer());
-	shooter.addComponent<MarbleShooter>(MarbleShooter(6, 30));
+	shooter.addComponent<MarbleShooter>(MarbleShooter(10, 30));
 	shooter.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("Application/Games/ZumaGame/Textures/frog.png")));
 
 	SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
 	SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());
+
+	//SystemsManager::getInstance().getSystem<ShooterS>()->deSerialize(SystemsManager::getInstance().getSystem<ShooterS>()->serialize());
 
 	emitter = new ParticeEmitter(0, 2000, 10000);
 	emitter->defaultProperties.xPosVar = glm::vec2(-50, 50);
@@ -81,6 +85,8 @@ void GeneralZumaScene::initialize()
 
 	SystemsManager::getInstance().addSystem<ParticleS>(new ParticleS());
 	SystemsManager::getInstance().addSystem<CounterKillerS>(new CounterKillerS());
+
+	this->serialize("Application/Games/ZumaGame/Maps/serializationTest.json");
 }
 
 void GeneralZumaScene::update(float dt)
@@ -181,21 +187,12 @@ void GeneralZumaScene::input()
 		if (it != SystemsManager::getInstance().getSystemBin<RouteS>().end())
 			SystemsManager::getInstance().getSystem<RouteS>(selectedRoute)->removeLastSegment();
 	}
-
+	
 	if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1])
 		EventManager::getInstance().notify(Event(Event::Shoot, &cursorPos), ECS2);
-	if (paused)
-	{
-		
-	}
-	else
-	{
-		/*if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1]) {
-			auto vec = SystemsManager::getInstance().getSystem<CollisionS>()->pointPick(cursorPos);
-			if(!vec.empty())
-				EventManager::getInstance().notify(Event(Event::EntitySelection, &vec[0]), UI);
-		}*/
-	}
+
+	if (input.keyClicked[ZE_KEY_Z])
+		this->deSerialize("Application/Games/ZumaGame/Maps/serializationTest.json");
 	
 
 	if (movingPt)
@@ -229,14 +226,12 @@ void GeneralZumaScene::input()
 			}
 		}
 	}
-
+	SceneManager::getInstance();
 	input.update();
 }
 
 void GeneralZumaScene::serialize(std::string filepath)
 {
-	auto path = std::filesystem::path(filepath);
-
 	nlohmann::json jOut;
 
 	jOut["Routes"] = nlohmann::json::array();
@@ -246,11 +241,36 @@ void GeneralZumaScene::serialize(std::string filepath)
 		jOut["Routes"].push_back(jRoute);
 	}
 
-	jOut["Shooters"] = nlohmann::json::array();
+	jOut["Shooters"] = SystemsManager::getInstance().getSystem<ShooterS>()->serialize();
+
+	std::ofstream file(filepath);
+	file <<jOut.dump(4);
 }
 
 void GeneralZumaScene::deSerialize(std::string filepath)
 {
+	std::ifstream file(filepath);
+	if (!file.is_open())
+		return;
+
+	auto& routeSysBin = SystemsManager::getInstance().getSystemBin<RouteS>();
+	for (auto& route : routeSysBin)
+		SystemsManager::getInstance().deleteSystem<RouteS>(route.first);
+
+	SystemsManager::getInstance().update();
+	EntityManager::getInstance().update();
+
+	nlohmann::json j = nlohmann::json::parse(file);
+
+	for (int i = 0; i < j["Routes"].size(); i++)
+	{
+		RouteS* newRoute = new RouteS(j["Routes"][i]);
+		SystemsManager::getInstance().addSystem<RouteS>(newRoute, newRoute->getID());
+	}
+
+	auto test = j["Shooters"].dump(4);
+
+	SystemsManager::getInstance().getSystem<ShooterS>()->deSerialize(j["Shooters"]);
 }
 
 void GeneralZumaScene::updateMarbleArchetypes(std::string folderpath)

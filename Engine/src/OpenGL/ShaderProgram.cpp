@@ -5,8 +5,6 @@
 		const char* vertexSource = readFile(vertexSourceFilepath);
 		const char* fragmentSource = readFile(fragmentSourceFilepath);
 
-		//std::cout << vertexSource << std::endl << fragmentSource;
-
 		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexShader, 1, &vertexSource, NULL);
 		glCompileShader(vertexShader);
@@ -18,7 +16,6 @@
 			GLint maxLength = 0;
 			glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
 
-			// The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
 			std::cout << "Vertex shader errorlog:" << std::endl;
@@ -57,6 +54,9 @@
 
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
+
+		delete vertexSource;
+		delete fragmentSource;
 	}
 
 	void ShaderProgram::bind()

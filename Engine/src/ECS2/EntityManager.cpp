@@ -35,6 +35,24 @@ void Entity::delete_()
 	EntityManager::getInstance().deleteEntity(this->ID);
 }
 
+nlohmann::json Entity::serialize()
+{
+	nlohmann::json j;
+
+	std::vector<std::type_index>& componentTypes = ComponentPoolManager::getInstance().indices;
+	std::vector<ComponentPoolBase*>& pools = ComponentPoolManager::getInstance().poolsVec;
+
+	for (int i = 0; i < componentTypes.size(); i++)
+	{
+		if (pools[i]->entityHasComponent[ID])
+		{
+
+		}
+	}
+
+	return j;
+}
+
 EntityManager::EntityManager()
 {
 	for (int i = MAX_ENTITIES - 1; i >= 0; i--)

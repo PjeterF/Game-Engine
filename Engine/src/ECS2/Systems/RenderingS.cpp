@@ -30,7 +30,9 @@ void RenderingS::update(float dt)
 			else
 				sprite.flipHorizontally = false;
 
-			rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample, sprite.flipHorizontally);
+			
+			if(sprite.getTexture()!=nullptr)
+				rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample, sprite.flipHorizontally);
 		}	
 	}
 

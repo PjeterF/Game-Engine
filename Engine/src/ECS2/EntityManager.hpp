@@ -5,6 +5,7 @@
 #include <stack>
 #include <set>
 #include <unordered_set>
+#include <nlohmann/json.hpp>
 
 enum EntityTag
 {
@@ -33,6 +34,8 @@ public:
 	EntityTag getTag();
 	void setTag(EntityTag tag);
 	void delete_();
+
+	nlohmann::json serialize();
 private:
 	int ID;
 	bool valid;

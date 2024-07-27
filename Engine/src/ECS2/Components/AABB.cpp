@@ -3,6 +3,7 @@
 nlohmann::json AABB::serialize()
 {
     nlohmann::json j;
+    j["type"] = CBase::AABB;
 
     j["size"] = { width, height };
     j["mass"] = mass;

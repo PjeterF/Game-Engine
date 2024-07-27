@@ -22,12 +22,12 @@ class ShooterS : public SysBase
 {
 public:
 	ShooterS(std::vector<std::string>& marbleArchetypeFilepaths);
+	virtual ~ShooterS();
 	virtual void update(float dt) override;
 	virtual void handleEvent(Event& event) override;
 
 	nlohmann::json serialize();
-	nlohmann::json deSerialize();
-	
+	void deSerialize(nlohmann::json j);
 private:
 	std::string archetypesDirectoryFilepath = "Application/Games/ZumaGame/MarbleArchetypes";
 	std::vector<std::string> marbleArchetypeFilepaths;

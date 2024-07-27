@@ -1,6 +1,10 @@
 #include "SysBase.hpp"
 #include "../ComponentPoolManager.hpp"
 
+SysBase::~SysBase()
+{
+}
+
 void SysBase::handleEvent(Event& event)
 {
     switch (event.getType())
@@ -41,6 +45,11 @@ void SysBase::removeEntity(int ID)
 
 void SysBase::lateUpdate(float dt)
 {
+}
+
+const std::set<int>& SysBase::getEntitySet()
+{
+    return entities;
 }
 
 SysBase::SysBase(bool deleteOnSceneEnd) : deleteOnSceneEnd(deleteOnSceneEnd), EventObserver(ECS2)
