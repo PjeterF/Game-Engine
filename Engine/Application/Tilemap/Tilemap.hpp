@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include <glm/glm.hpp>
+#include "../../src/Managers/Resource/ResourceManager.hpp"
 
 #include <nlohmann/json.hpp>
 

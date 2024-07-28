@@ -24,10 +24,10 @@ InstancedQuadRenderer::InstancedQuadRenderer(GLuint shaderProgramID, Camera* cam
 	VAO = new VertexArray;
 	VAO->bind();
 
-	VBO = new ArrayBuffer(vertices);
+	VBO = new VertexBuffer(vertices);
 	VBO->bind();
 
-	EBO = new ElementArrayBuffer(indices);
+	EBO = new ElementBuffer(indices);
 	EBO->bind();
 
 	VAO->setAttributePointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);

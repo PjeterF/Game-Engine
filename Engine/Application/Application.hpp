@@ -12,6 +12,7 @@
 #include "../src/OpenGL/FrameBuffer.hpp"
 
 #include "../src/Input/Windows/GLFWInputManager.hpp"
+#include "../src/Events/EventManager.hpp"
 
 #include <string>
 

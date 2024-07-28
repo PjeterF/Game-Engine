@@ -1,16 +1,19 @@
 #pragma once
-#include "../OpenGL/package.hpp"
-#include "glm/vec2.hpp"
+
+#include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "GLFW/glfw3.h"
+
 #include <iostream>
 #include <unordered_map>
+#include <math.h>
 
-#include "../Events/EventPackage.hpp"
+#include "../OpenGL/VertexArray.hpp"
+#include "../OpenGL/VertexBuffer.hpp"
+#include "../OpenGL/ElementBuffer.hpp"
+#include "../OpenGL/Texture.hpp"
 #include "../Graphics/Camera.hpp"
-#include "../Managers/Resource/ResourceManager.hpp"
 
 #define SPRITE_RENDERER_MAX_TEX_SLOTS 8
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "../Events/EventPackage.hpp"
 
 class Camera
 {

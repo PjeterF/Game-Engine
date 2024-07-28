@@ -2,7 +2,6 @@
 
 #include "LineRenderer.hpp"
 #include "SpriteRenderer.hpp"
-#include "TextRenderer.hpp"
 #include "QuadRenderer.hpp"
 #include "InstancedQuadRenderer.hpp"
 #include "InstancedSpriteRenderer.hpp"

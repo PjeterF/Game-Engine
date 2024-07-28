@@ -1,12 +1,17 @@
-#include "../OpenGL/package.hpp"
-#include "glm/vec2.hpp"
+#pragma once
+
+#include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "GLFW/glfw3.h"
-#include <iostream>
 
-#include "../Events/EventPackage.hpp"
+#include <iostream>
+#include <math.h>
+
+#include "../OpenGL/VertexArray.hpp"
+#include "../OpenGL/VertexBuffer.hpp"
+#include "../OpenGL/ElementBuffer.hpp"
+#include "../OpenGL/Texture.hpp"
 #include "../Graphics/Camera.hpp"
 
 class InstancedQuadRenderer
@@ -43,9 +48,9 @@ private:
 		int bufferSize = 100000;
 	};
 
-	ArrayBuffer* VBO;
+	VertexBuffer* VBO;
 	VertexArray* VAO;
-	ElementArrayBuffer* EBO;
+	ElementBuffer* EBO;
 	GLuint shaderProgramID;
 
 	INSTANCES_DATA instanceData;

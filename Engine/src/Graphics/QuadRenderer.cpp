@@ -29,10 +29,10 @@ QuadRenderer::QuadRenderer(GLuint shaderProgramID, Camera* camera)
 	VAO = new VertexArray;
 	VAO->bind();
 
-	VBO = new ArrayBuffer(vertices);
+	VBO = new VertexBuffer(vertices);
 	VBO->bind();
 
-	EBO = new ElementArrayBuffer(indices);
+	EBO = new ElementBuffer(indices);
 	EBO->bind();
 
 	VAO->setAttributePointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -62,22 +62,4 @@ void QuadRenderer::draw(glm::vec2 position, glm::vec2 scale, float angle, glm::v
 	VAO->bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	
-}
-
-void QuadRenderer::handleEvent(Event& event)
-{
-	switch (event.getType())
-	{
-	case Event::ZoomChange:
-	{
-		float* newZoom = (float*)event.getPayload();
-		//this->setZoom(*newZoom);
-	}
-	break;
-	case Event::CameraPan:
-	{
-		glm::vec2* pan = (glm::vec2*)event.getPayload();
-	}
-	break;
-	}
 }

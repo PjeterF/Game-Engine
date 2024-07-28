@@ -544,7 +544,6 @@
     <ClInclude Include="src\Events\Event.hpp" />
     <ClInclude Include="src\Events\EventManager.hpp" />
     <ClInclude Include="src\Events\EventObserver.hpp" />
-    <ClInclude Include="src\Events\EventPackage.hpp" />
     <ClInclude Include="src\Graphics\Camera.hpp" />
     <ClInclude Include="src\Graphics\GeneralRenderer.hpp" />
     <ClInclude Include="src\Graphics\InstancedQuadRenderer.hpp" />
@@ -552,7 +551,6 @@
     <ClInclude Include="src\Graphics\ParticleEmitter.hpp" />
     <ClInclude Include="src\Graphics\QuadRenderer.hpp" />
     <ClInclude Include="src\Graphics\SpriteRenderer.hpp" />
-    <ClInclude Include="src\Graphics\TextRenderer.hpp" />
     <ClInclude Include="src\Input\InputMap.hpp" />
     <ClInclude Include="src\Input\Windows\GLFWInputManager.hpp" />
     <ClInclude Include="src\Input\InputManager.hpp" />
@@ -560,7 +558,6 @@
     <ClInclude Include="src\Managers\Resource\ResourceManager.hpp" />
     <ClInclude Include="src\OpenGL\ElementBuffer.hpp" />
     <ClInclude Include="src\OpenGL\FrameBuffer.hpp" />
-    <ClInclude Include="src\OpenGL\package.hpp" />
     <ClInclude Include="src\OpenGL\ShaderProgram.hpp" />
     <ClInclude Include="src\OpenGL\Texture.hpp" />
     <ClInclude Include="src\OpenGL\Utility.hpp" />
@@ -633,7 +630,6 @@
     <ClCompile Include="src\Graphics\ParticleEmitter.cpp" />
     <ClCompile Include="src\Graphics\QuadRenderer.cpp" />
     <ClCompile Include="src\Graphics\SpriteRenderer.cpp" />
-    <ClCompile Include="src\Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\Input\InputMap.cpp" />
     <ClCompile Include="src\Input\Windows\GLFWInputManager.cpp" />
     <ClCompile Include="src\Managers\Scene\SceneManager.cpp" />

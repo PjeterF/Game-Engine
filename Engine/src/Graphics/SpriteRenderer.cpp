@@ -1,23 +1,5 @@
 #include "SpriteRenderer.hpp"
 
-void SpriteRenderer::handleEvent(Event& event)
-{
-	switch (event.getType())
-	{
-	case Event::ZoomChange:
-	{
-		float* newZoom = (float*)event.getPayload();
-		//this->setZoom(*newZoom);
-	}
-	break;
-	case Event::CameraPan:
-	{
-		glm::vec2* pan = (glm::vec2*)event.getPayload();
-	}
-	break;
-	}
-}
-
 SpriteRenderer::SpriteRenderer(GLuint shaderProgramID, Camera* camera)
 {
 	this->shaderProgramID = shaderProgramID;
@@ -55,10 +37,10 @@ SpriteRenderer::SpriteRenderer(GLuint shaderProgramID, Camera* camera)
 	VAO = new VertexArray;
 	VAO->bind();
 
-	VBO = new ArrayBuffer(vertices);
+	VBO = new VertexBuffer(vertices);
 	VBO->bind();
 
-	EBO = new ElementArrayBuffer(indices);
+	EBO = new ElementBuffer(indices);
 	EBO->bind();
 
 	VAO->setAttributePointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);

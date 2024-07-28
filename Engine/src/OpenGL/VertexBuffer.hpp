@@ -1,10 +1,12 @@
+#pragma once
+
 #include <gladES/glad.h>
 #include <vector>
 
-	class ArrayBuffer
+	class VertexBuffer
 	{
 	public:
-		ArrayBuffer(std::vector<float>& vertices);
+		VertexBuffer(std::vector<float>& vertices);
 		void bind();
 		void unbind();
 		void bufferVertices(std::vector<float>& vertices);

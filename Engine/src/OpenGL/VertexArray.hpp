@@ -1,3 +1,5 @@
+#pragma once
+
 #include <gladES/glad.h>
 
 	class VertexArray
