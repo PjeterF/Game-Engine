@@ -31,7 +31,7 @@ bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 
 ComponentPoolManager::ComponentPoolManager()
 {
-	hasComponents = std::vector(MAX_ENTITIES, std::unordered_set<std::type_index>());
+	hasComponents = std::vector<std::unordered_set<std::type_index>>(MAX_ENTITIES, std::unordered_set<std::type_index>());
 
 	addPool<Transform>();
 	addPool<Velocity>();
