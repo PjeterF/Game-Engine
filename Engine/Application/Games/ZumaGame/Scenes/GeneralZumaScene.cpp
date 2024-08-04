@@ -54,6 +54,7 @@ void GeneralZumaScene::initialize()
 	SystemsManager::getInstance().addSystem<CollisionS>(new CollisionS(30));
 	SystemsManager::getInstance().addSystem<MovementS>(new MovementS());
 	SystemsManager::getInstance().addSystem<AnimationS>(new AnimationS());
+	SystemsManager::getInstance().addSystem<CollisionRepulsionS>(new CollisionRepulsionS());
 
 	SystemsManager::getInstance().addSystem<ShooterS>(new ShooterS(marbleArchetypeFilepaths));
 

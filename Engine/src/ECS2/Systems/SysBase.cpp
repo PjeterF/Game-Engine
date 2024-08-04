@@ -52,6 +52,14 @@ const std::set<int>& SysBase::getEntitySet()
     return entities;
 }
 
+bool SysBase::entityIsIncluded(int ID)
+{
+    if (entities.find(ID) != entities.end())
+        return true;
+    else
+        return false;
+}
+
 SysBase::SysBase(bool deleteOnSceneEnd) : deleteOnSceneEnd(deleteOnSceneEnd), EventObserver(ECS2)
 {
 }

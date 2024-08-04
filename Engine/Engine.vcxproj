@@ -162,7 +162,6 @@
     <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\ShooterS.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\functions.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp" />
-    <ClInclude Include="Application\Games\ZumaGame\Serialization\serialization.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\EntitiesMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\PropertiesMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\ZumaMenu.hpp" />
@@ -540,7 +539,6 @@
     <ClInclude Include="src\Input\keyCodes.h" />
     <ClInclude Include="src\Managers\Scene\SceneManager.hpp" />
     <ClInclude Include="src\Managers\Tileset.hpp" />
-    <ClInclude Include="src\Serialization\serialization.hpp" />
     <ClInclude Include="src\Events\Event.hpp" />
     <ClInclude Include="src\Events\EventManager.hpp" />
     <ClInclude Include="src\Events\EventObserver.hpp" />

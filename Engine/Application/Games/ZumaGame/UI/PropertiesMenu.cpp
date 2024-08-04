@@ -8,6 +8,13 @@
 #include "../../src/ECS2/Components/Sprite.hpp"
 #include "../../src/ECS2/Components/Animation.hpp"
 	
+#include "../../src/ECS2/SystemsManager.hpp"
+#include "../../src/ECS2/Systems/RenderingS.hpp"
+#include "../../src/ECS2/Systems/CollisionS.hpp"
+#include "../../src/ECS2/Systems/MovementS.hpp"
+#include "../../src/ECS2/Systems/ParticleS.hpp"
+#include "../../src/ECS2/Systems/CollisionRepulsionS.hpp"
+
 PropertiesMenu::PropertiesMenu(std::string name, int x, int y, int width, int height) : UIWindow(name, x, y, width, height), EventObserver(UI)
 {
 }
@@ -90,6 +97,88 @@ void PropertiesMenu::render()
 		{
 			if (ImGui::Selectable("Animation##R"))
 				ent.removeComponent<Animation>();
+		}
+
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::BeginCombo("##Add to system", "Add to system"))
+	{
+		{
+			auto sys = SystemsManager::getInstance().getSystem<RenderingS>();
+			if (!sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Rendering"))
+					sys->addEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<MovementS>();
+			if (!sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Movement"))
+					sys->addEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<CollisionS>();
+			if (!sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Collision"))
+					sys->addEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<CollisionRepulsionS>();
+			if (!sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("RendCollisionRepulsionS"))
+					sys->addEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<ParticleS>();
+			if (!sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Particle"))
+					sys->addEntity(selectedEntID);
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::BeginCombo("##Remove from system", "Remove from system"))
+	{
+		{
+			auto sys = SystemsManager::getInstance().getSystem<RenderingS>();
+			if (sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Rendering"))
+					sys->removeEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<MovementS>();
+			if (sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Movement"))
+					sys->removeEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<CollisionS>();
+			if (sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Collision"))
+					sys->removeEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<CollisionRepulsionS>();
+			if (sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("RendCollisionRepulsionS"))
+					sys->removeEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<ParticleS>();
+			if (sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Particle"))
+					sys->removeEntity(selectedEntID);
+			}
 		}
 
 		ImGui::EndCombo();
