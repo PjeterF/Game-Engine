@@ -31,10 +31,8 @@ public:
 	bool hasComponentTID(int entID, std::type_index typeID);
 private:
 	ComponentPoolManager();
-	std::unordered_map<std::type_index, ComponentPoolBase*> pools;
 	std::vector<std::type_index> indices;
 	std::vector<ComponentPoolBase*> poolsVec;
-	std::vector<std::unordered_set<std::type_index>> hasComponents;
 
 	friend class EntityManager;
 	friend class Entity;
@@ -50,6 +48,8 @@ inline bool ComponentPoolManager::addPool()
 	}
 	indices.push_back(std::type_index(typeid(T)));
 	poolsVec.push_back(new ComponentPool<T>());
+
+	return true;
 }
 
 template<typename T>
@@ -71,7 +71,7 @@ inline T& ComponentPoolManager::getComponent(int ID)
 	{
 		if (indices[i] == std::type_index(typeid(T)))
 		{
-			return ((ComponentPool<T>*)poolsVec[i])->components[ID];
+			return ((ComponentPool<T>*)poolsVec[i])->get(ID);
 		}
 	}
 }
@@ -83,7 +83,9 @@ inline bool ComponentPoolManager::hasComponent(int ID)
 	{
 		if (indices[i] == std::type_index(typeid(T)))
 		{
-			return ((ComponentPool<T>*)poolsVec[i])->entityHasComponent[ID];
+			ComponentPool<T>* pool = (ComponentPool<T>*)poolsVec[i];
+			
+			return pool->has(ID);
 		}
 	}
 }
@@ -96,9 +98,7 @@ inline T& ComponentPoolManager::addComponent(int ID, T component)
 		if (indices[i] == std::type_index(typeid(T)))
 		{
 			ComponentPool<T>* pool = ((ComponentPool<T>*)poolsVec[i]);
-			pool->entityHasComponent[ID] = true;
-			pool->components[ID] = component;
-			return pool->components[ID];
+			return pool->add(ID, component);
 		}
 	}
 }
@@ -111,8 +111,11 @@ inline void ComponentPoolManager::removeComponent(int ID)
 		if (indices[i] == std::type_index(typeid(T)))
 		{
 			ComponentPool<T>* pool = ((ComponentPool<T>*)poolsVec[i]);
-			pool->entityHasComponent[ID] = false;
-			EventManager::getInstance().notify(Event(Event::ComponentRemoval, &ID), ECS2);
+
+			if(pool->remove(ID))
+				EventManager::getInstance().notify(Event(Event::ComponentRemoval, &ID), ECS2);
+			
+			return;
 		}
 	}
 }

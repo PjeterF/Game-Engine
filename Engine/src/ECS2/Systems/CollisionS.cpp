@@ -51,10 +51,20 @@ void CollisionS::update(float dt)
 	for (auto& col : collisions)
 	{
 		int ID1 = col.second.ID1;
+		if (!AABBPool->has(ID1))
+			continue;
+		if (!transformPool->has(ID1))
+			continue;
+
 		Transform& t1 = transformPool->get(ID1);
 		AABB& c1 = AABBPool->get(ID1);
 
 		int ID2 = col.second.ID2;
+		if (!AABBPool->has(ID2))
+			continue;
+		if (!transformPool->has(ID2))
+			continue;
+
 		Transform& t2 = transformPool->get(ID2);
 		AABB& c2 = AABBPool->get(ID2);
 
@@ -83,6 +93,11 @@ void CollisionS::update(float dt)
 		for (int i = 0; i < cell.second.size(); i++)
 		{
 			int ID1 = cell.second[i];
+			if(!AABBPool->has(ID1))
+				continue;
+			if (!transformPool->has(ID1))
+				continue;
+
 			AABB& c1 = AABBPool->get(ID1);
 			if (!c1.enabled)
 				continue;
@@ -91,6 +106,11 @@ void CollisionS::update(float dt)
 			for (int j = i + 1; j < cell.second.size(); j++)
 			{
 				int ID2 = cell.second[j];
+				if (!AABBPool->has(ID2))
+					continue;
+				if (!transformPool->has(ID2))
+					continue;
+
 				AABB& c2 = AABBPool->get(ID2);
 				if (!c2.enabled)
 					continue;

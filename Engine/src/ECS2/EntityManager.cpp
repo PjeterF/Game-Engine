@@ -137,8 +137,12 @@ void EntityManager::update()
 			alive[ID] = false;
 			tags[ID] = DefaultTag;
 			existingEntities.erase(ID);
-			ComponentPoolManager::getInstance().disableComponents(ID);
 		}
+	}
+
+	for (auto& ID : entitiesToDelete)
+	{
+		EventManager::getInstance().notify(Event(Event::EntityRemoval, &ID), ComponentPools);
 	}
 	entitiesToDelete.clear();
 }

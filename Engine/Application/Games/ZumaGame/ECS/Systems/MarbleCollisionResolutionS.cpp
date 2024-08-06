@@ -26,7 +26,7 @@ void MarbleCollisionResolutionS::update(float dt)
 
 		for (auto colID : collider.collidingEntIDs)
 		{
-			if (marbleCPool->entityHasComponent[colID])
+			if (marbleCPool->sparse[colID]>=0)
 			{
 				auto& otherMarbleC = marbleCPool->get(colID);
 

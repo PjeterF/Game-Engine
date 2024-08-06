@@ -88,7 +88,7 @@ void GeneralZumaScene::initialize()
 	SystemsManager::getInstance().addSystem<ParticleS>(new ParticleS());
 	SystemsManager::getInstance().addSystem<CounterKillerS>(new CounterKillerS());
 
-	this->serialize("Application/Games/ZumaGame/Maps/serializationTest.json");
+	//this->serialize("Application/Games/ZumaGame/Maps/serializationTest.json");
 }
 
 void GeneralZumaScene::update(float dt)

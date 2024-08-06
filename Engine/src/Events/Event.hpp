@@ -8,6 +8,7 @@ enum ObsBin
 	ECS,
 	UI,
 	ECS2,
+	ComponentPools,
 	ApplicationBin
 };
 
@@ -53,7 +54,7 @@ public:
 		//UI
 		EntitySelection, //Ent*
 		MouseClick, // glm::vec2 - pos
-		MoveCtrlPoints // Spline*
+		MoveCtrlPoints, // Spline*
 	};
 
 	Event(EventType type, void* payload) : type(type), payload(payload) {}

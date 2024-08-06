@@ -13,7 +13,8 @@ void ComponentPoolManager::disableComponents(int ID)
 {
 	for (auto& pool : poolsVec)
 	{
-		pool->entityHasComponent[ID] = false;
+		auto cpool = (ComponentPool<int>*)pool;
+		
 	}
 }
 
@@ -23,16 +24,13 @@ bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 	{
 		if (indices[i] == typeID)
 		{
-			auto pool = poolsVec[i];
-			return pool->entityHasComponent[entID];
+			return ((ComponentPool<int>*)poolsVec[i])->has(entID);
 		}
 	}
 }
 
 ComponentPoolManager::ComponentPoolManager()
 {
-	hasComponents = std::vector<std::unordered_set<std::type_index>>(MAX_ENTITIES, std::unordered_set<std::type_index>());
-
 	addPool<Transform>();
 	addPool<Velocity>();
 	addPool<Sprite>();
