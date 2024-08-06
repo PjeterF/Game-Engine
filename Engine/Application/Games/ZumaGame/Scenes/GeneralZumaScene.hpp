@@ -18,6 +18,7 @@
 #include "../UI/ZumaMenu.hpp"
 #include "../UI/EntitiesMenu.hpp"
 #include "../UI/PropertiesMenu.hpp"
+#include "../UI/TextureManager.hpp"
 
 #include "../../src/Graphics/ParticleEmitter.hpp"
 

@@ -17,8 +17,6 @@ MarbleEditor::MarbleEditor(std::string name, int x, int y, int width, int height
 
 void MarbleEditor::render()
 {
-	windowBegin();
-
 	fs::path dirPath(archetypeDirectoryPath);
 
 	if (ImGui::Button("Create new archetype"))
@@ -197,8 +195,6 @@ void MarbleEditor::render()
 		ImGui::Separator();
 		ImGui::EndPopup();
 	}
-
-	windowEnd();
 }
 
 nlohmann::json MarbleEditor::MarbleArchetype::serialize()

@@ -3,9 +3,9 @@
 
 int ZumaMenu::nextRouteID = 0;
 
-ZumaMenu::ZumaMenu(std::string name, int x, int y, int width, int height) : UIWindow(name, x, y, width, height), EventObserver(UI)
+ZumaMenu::ZumaMenu(std::string name, int x, int y, int width, int height, std::string archetypesFilepath) : UIWindow(name, x, y, width, height), EventObserver(UI)
 {
-	
+	mEditor = new MarbleEditor("MarbleEditor", x, y, width, height, archetypesFilepath);
 }
 
 void ZumaMenu::render()
@@ -114,7 +114,7 @@ void ZumaMenu::render()
 			}
 			ImGui::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("De/Serialization"))
+		if (ImGui::BeginTabItem("Saving/Loading"))
 		{
 			std::string p = "Application/Games/ZumaGame/Maps";
 			GeneralZumaScene* scene = (GeneralZumaScene*)SceneManager::getInstance().getCurrentScene();
@@ -143,6 +143,14 @@ void ZumaMenu::render()
 
 			ImGui::EndTabItem();
 		}
+
+		if (ImGui::BeginTabItem("Marble Editor"))
+		{
+			mEditor->render();
+
+			ImGui::EndTabItem();
+		}
+
 		ImGui::EndTabBar();
 	}
 

@@ -32,8 +32,9 @@ void GeneralZumaScene::initialize()
 
 	float UIElementWidth = 300;
 
-	UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, UIElementWidth, windowDimensions.y/2, "Application/Games/ZumaGame/MarbleArchetypes"));
-	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2));
+	//UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, UIElementWidth, windowDimensions.y/2, "Application/Games/ZumaGame/MarbleArchetypes"));
+	UIElements.push_back(new TextureManager("Textures Manager", 0, 0, UIElementWidth, windowDimensions.y/2));
+	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2, "Application/Games/ZumaGame/MarbleArchetypes"));
 	UIElements.push_back(new EntitiesMenu("Entities", windowDimensions.x-UIElementWidth, 0, UIElementWidth, windowDimensions.y / 2));
 	UIElements.push_back(new PropertiesMenu("Properties", windowDimensions.x-UIElementWidth, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2));
 

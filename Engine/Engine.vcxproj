@@ -164,6 +164,7 @@
     <ClInclude Include="Application\Games\ZumaGame\Scenes\GeneralZumaScene.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\EntitiesMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\PropertiesMenu.hpp" />
+    <ClInclude Include="Application\Games\ZumaGame\UI\TextureManager.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\ZumaMenu.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\MarbleEditor.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\UI\UIWindow.hpp" />
@@ -585,6 +586,7 @@
     <ClCompile Include="Application\Games\ZumaGame\UI\EntitiesMenu.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\MarbleEditor.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\PropertiesMenu.cpp" />
+    <ClCompile Include="Application\Games\ZumaGame\UI\Texturemanager.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\UIWindow.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\UI\ZumaMenu.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ZumaGame.cpp" />

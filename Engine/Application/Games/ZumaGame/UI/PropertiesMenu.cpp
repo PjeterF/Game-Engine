@@ -7,6 +7,7 @@
 #include "../../src/ECS2/Components/AABB.hpp"
 #include "../../src/ECS2/Components/Sprite.hpp"
 #include "../../src/ECS2/Components/Animation.hpp"
+#include "../ECS/Components/MarbleShooter.hpp"
 	
 #include "../../src/ECS2/SystemsManager.hpp"
 #include "../../src/ECS2/Systems/RenderingS.hpp"
@@ -14,6 +15,7 @@
 #include "../../src/ECS2/Systems/MovementS.hpp"
 #include "../../src/ECS2/Systems/ParticleS.hpp"
 #include "../../src/ECS2/Systems/CollisionRepulsionS.hpp"
+#include "../ECS/Systems/ShooterS.hpp"
 
 PropertiesMenu::PropertiesMenu(std::string name, int x, int y, int width, int height) : UIWindow(name, x, y, width, height), EventObserver(UI)
 {
@@ -67,6 +69,11 @@ void PropertiesMenu::render()
 			if (ImGui::Selectable("Animation##A"))
 				ent.addComponent<Animation>(Animation());
 		}
+		if (!ent.hasComponent<MarbleShooter>())
+		{
+			if (ImGui::Selectable("MarbleShooter##A"))
+				ent.addComponent<MarbleShooter>(MarbleShooter());
+		}
 
 		ImGui::EndCombo();
 	}
@@ -97,6 +104,11 @@ void PropertiesMenu::render()
 		{
 			if (ImGui::Selectable("Animation##R"))
 				ent.removeComponent<Animation>();
+		}
+		if (ent.hasComponent<MarbleShooter>())
+		{
+			if (ImGui::Selectable("MarbleShooter##R"))
+				ent.removeComponent<MarbleShooter>();
 		}
 
 		ImGui::EndCombo();
@@ -139,6 +151,13 @@ void PropertiesMenu::render()
 					sys->addEntity(selectedEntID);
 			}
 		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<ShooterS>();
+			if (!sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Shooter"))
+					sys->addEntity(selectedEntID);
+			}
+		}
 
 		ImGui::EndCombo();
 	}
@@ -177,6 +196,13 @@ void PropertiesMenu::render()
 			auto sys = SystemsManager::getInstance().getSystem<ParticleS>();
 			if (sys->entityIsIncluded(selectedEntID)) {
 				if (ImGui::Selectable("Particle"))
+					sys->removeEntity(selectedEntID);
+			}
+		}
+		{
+			auto sys = SystemsManager::getInstance().getSystem<ShooterS>();
+			if (sys->entityIsIncluded(selectedEntID)) {
+				if (ImGui::Selectable("Shooter"))
 					sys->removeEntity(selectedEntID);
 			}
 		}
@@ -414,6 +440,19 @@ void PropertiesMenu::render()
 						ImGui::TreePop();
 					}
 				}
+
+				ImGui::TreePop();
+			}
+		}
+		if (ent.hasComponent<MarbleShooter>())
+		{
+			if (ImGui::TreeNode("ShooterComponent"))
+			{
+				auto& comp = ent.getComponent<MarbleShooter>();
+				auto nodeWidth = ImGui::CalcItemWidth();
+
+				ImGui::InputFloat("speed", &comp.shotSpeed);
+				ImGui::InputInt("cooldown", &comp.cooldown);
 
 				ImGui::TreePop();
 			}
