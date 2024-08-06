@@ -30,8 +30,11 @@ void CollisionS::handleEvent(Event& event)
 			if ((*it).second.ID1 == *ID || (*it).second.ID2 == *ID)
 			{
 				auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
-				colPool->get((*it).second.ID1).collidingEntIDs.erase((*it).second.ID2);
-				colPool->get((*it).second.ID2).collidingEntIDs.erase((*it).second.ID1);
+
+				if(colPool->has((*it).second.ID1))
+					colPool->get((*it).second.ID1).collidingEntIDs.erase((*it).second.ID2);
+				if (colPool->has((*it).second.ID2))
+					colPool->get((*it).second.ID2).collidingEntIDs.erase((*it).second.ID1);
 				collisions.erase(it);
 				break;
 			}

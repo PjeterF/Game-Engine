@@ -39,12 +39,12 @@ void RenderingS::update(float dt)
 	rAPI->drawSpriteInstances();
 }
 
-bool RenderingS::addEntity(int ID)
+bool RenderingS::addEntity(int ID, int layer)
 {
 	if (!SysBase::addEntity(ID))
 		return false;
 
-	layers[ComponentPoolManager::getInstance().getComponent<RenderingLayer>(ID).layer].push_back(ID);
+	layers[layer].push_back(ID);
 
 	return true;
 }
@@ -60,10 +60,12 @@ void RenderingS::removeEntity(int ID)
 
 	Entity ent(ID);
 
-	auto& layer = layers[ent.getComponent<RenderingLayer>().layer];
-	auto it = std::find(layer.begin(), layer.end(), ID);
-	if (it != layer.end())
-		layer.erase(it);
+	for (auto& layer : layers)
+	{
+		auto it = std::find(layer.second.begin(), layer.second.end(), ID);
+		if (it != layer.second.end())
+			layer.second.erase(it);
+	}
 }
 
 struct

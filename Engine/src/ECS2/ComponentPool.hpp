@@ -24,9 +24,8 @@ public:
 	bool remove(int ID);
 	bool has(int ID);
 	void resetComponent(int ID);
-
-	std::vector<int> sparse;
 private:
+	std::vector<int> sparse; // entityID to componentIdx
 	std::vector<T> components;
 	friend class ComponentPoolManager;
 };
