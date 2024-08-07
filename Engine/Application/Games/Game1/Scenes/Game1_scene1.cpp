@@ -97,8 +97,8 @@ void Game1_scene1::update(float dt)
 	getSystem<CollisionRepulsionS>("Repulsion")->update(dt);
 	getSystem<CollisionResolutionS>("ColRes")->update(dt);
 
-	getSystem<CollisionS>("Collision")->lateUpdate(dt);
 	EntityManager::getInstance().update();
+	getSystem<CollisionS>("Collision")->lateUpdate(dt);
 
 	static int i = 0;
 	i++;

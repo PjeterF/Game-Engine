@@ -25,6 +25,9 @@ void CollisionResolutionS::update(float dt)
 
 		for (auto otherID : col.collidingEntIDs)
 		{
+			if (!colPool->has(otherID))
+				continue;
+
 			auto& otherStats = statsPool->get(otherID);
 			auto otherTag = entManager.getTag(otherID);
 

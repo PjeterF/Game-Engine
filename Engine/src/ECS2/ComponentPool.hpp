@@ -79,24 +79,37 @@ template<typename T>
 inline bool ComponentPool<T>::remove(int ID)
 {
 	if (!has(ID))
-		return false;
+		return false; // Component doesn't exist, nothing to remove
 
-	int lastEntID=-1;
-	for (int i=0;i<sparse.size();i++)
+	int componentIdx = sparse[ID]; // Index of the component to remove
+	int lastComponentIdx = components.size() - 1; // Index of the last component
+
+	if (componentIdx != lastComponentIdx)
 	{
-		if (sparse[i] == components.size() - 1)
+		// Swap the component to be removed with the last component
+		components[componentIdx] = components.back(); // Move the last component to the position of the component to be removed
+
+		// Update sparse array to reflect the new position of the moved component
+		int lastID = -1;
+		for (int i = 0; i < sparse.size(); ++i)
 		{
-			lastEntID = i;
-			break;
+			if (sparse[i] == lastComponentIdx)
+			{
+				lastID = i;
+				break;
+			}
+		}
+
+		if (lastID != -1)
+		{
+			sparse[lastID] = componentIdx; // Update the index for the moved component
 		}
 	}
 
-	components[sparse[ID]] = components.back();
-	sparse[lastEntID] = sparse[ID];
-	components.pop_back();
-	sparse[ID] = -1;
+	components.pop_back(); // Remove the last component (which is now at the end of the vector)
+	sparse[ID] = -1; // Invalidate the ID
 
-	return true;
+	return true; // Successfully removed
 }
 
 template<typename T>

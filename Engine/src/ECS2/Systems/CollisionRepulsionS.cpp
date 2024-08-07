@@ -12,6 +12,8 @@ CollisionRepulsionS::CollisionRepulsionS()
 
 void CollisionRepulsionS::update(float dt)
 {
+	auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
+
 	for (auto ID : entities)
 	{
 		Entity ent1(ID);
@@ -19,6 +21,9 @@ void CollisionRepulsionS::update(float dt)
 		for (auto ID2 : col1.collidingEntIDs)
 		{
 			auto tag2 = EntityManager::getInstance().getTag(ID2);
+
+			if (!colPool->has(ID2))
+				continue;
 
 			Entity ent2(ID2);
 			auto& trans1 = ent1.getComponent<Transform>();
