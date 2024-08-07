@@ -2,8 +2,8 @@
 
 #include "../../functions.hpp"
 #include "../../src/ECS2/SystemsManager.hpp"
-
 #include "../../src/ECS2/Systems/RenderingS.hpp"
+#include "../../src/ECS2/Systems/ParticleS.hpp"
 
 #include <filesystem>
 
@@ -142,20 +142,28 @@ nlohmann::json ShooterS::serialize()
 	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
 	auto shooterCPool = ComponentPoolManager::getInstance().getPool<MarbleShooter>();
 	auto spritePool = ComponentPoolManager::getInstance().getPool<Sprite>();
-	auto layerPool = ComponentPoolManager::getInstance().getPool<RenderingLayer>();
 
 	nlohmann::json jOut = nlohmann::json::array();
 	for (auto ID : entities)
 	{
+		Entity ent(ID);
+
 		nlohmann::json jEnt;
 		jEnt["Components"] = nlohmann::json::array();
 
-		jEnt["Components"].push_back(shooterCPool->get(ID).serialize());
-		jEnt["Components"].push_back(transformPool->get(ID).serialize());
-		if (spritePool->has(ID))
-			jEnt["Components"].push_back(spritePool->get(ID).serialize());
-		if (layerPool->has(ID))
-			jEnt["Components"].push_back(layerPool->get(ID).serialize());
+		jEnt["Components"].push_back(ent.getComponent<MarbleShooter>().serialize());
+		jEnt["Components"].push_back(ent.getComponent<Transform>().serialize());
+
+		if (ent.hasComponent<Sprite>())
+			jEnt["Components"].push_back(ent.getComponent<Sprite>().serialize());
+		if (ent.hasComponent<Velocity>())
+			jEnt["Components"].push_back(ent.getComponent<Velocity>().serialize());
+		if (ent.hasComponent<Animation>())
+			jEnt["Components"].push_back(ent.getComponent<Animation>().serialize());
+		if (ent.hasComponent<AABB>())
+			jEnt["Components"].push_back(ent.getComponent<AABB>().serialize());
+		if (ent.hasComponent<Emitter>())
+			jEnt["Components"].push_back(ent.getComponent<Emitter>().serialize());
 
 		jOut.push_back(jEnt);
 	}
@@ -208,18 +216,44 @@ void ShooterS::deSerialize(nlohmann::json j)
 				newEnt.addComponent<Sprite>(comp);
 			}
 			break;
-			case CBase::RenderingLayer:
+			case CBase::Velocity:
 			{
-				RenderingLayer comp;
+				Velocity comp;
 				comp.deSerialize(j[i]["Components"][i2]);
-				newEnt.addComponent<RenderingLayer>(comp);
+				newEnt.addComponent<Velocity>(comp);
+			}
+			break;
+			case CBase::Animation:
+			{
+				Animation comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<Animation>(comp);
+			}
+			break;
+			case CBase::AABB:
+			{
+				AABB comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<AABB>(comp);
+			}
+			break;
+			case CBase::Emitter:
+			{
+				Emitter comp;
+				comp.deSerialize(j[i]["Components"][i2]);
+				newEnt.addComponent<Emitter>(comp);
 			}
 			break;
 			}
 		}
 
-		newEnt.addComponent<Velocity>(Velocity());
+		if(!newEnt.hasComponent<Velocity>())
+			newEnt.addComponent<Velocity>(Velocity());
 		SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(newEnt.getID());
 		this->addEntity(newEnt.getID());
+		SystemsManager::getInstance().getSystem<AnimationS>()->addEntity(newEnt.getID());
+		SystemsManager::getInstance().getSystem<MovementS>()->addEntity(newEnt.getID());
+		SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(newEnt.getID());
+		SystemsManager::getInstance().getSystem<ParticleS>()->addEntity(newEnt.getID());
 	}
 }

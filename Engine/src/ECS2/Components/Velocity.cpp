@@ -16,7 +16,7 @@ void Velocity::deSerialize(nlohmann::json j)
 {
     x = j["velocity"][0];
     y = j["velocity"][1];
-    ax = j["size"][0];
-    ay = j["size"][1];
+    ax = j["acceleration"][0];
+    ay = j["acceleration"][1];
     decay = j["decay"];
 }

@@ -608,6 +608,7 @@
     <ClCompile Include="src\ECS2\Components\Animation.cpp" />
     <ClCompile Include="src\ECS2\Components\CBase.cpp" />
     <ClCompile Include="src\ECS2\Components\Counter.cpp" />
+    <ClCompile Include="src\ECS2\Components\Emitter.cpp" />
     <ClCompile Include="src\ECS2\Components\RenderingLayer.cpp" />
     <ClCompile Include="src\ECS2\Components\Sprite.cpp" />
     <ClCompile Include="src\ECS2\Components\Transform.cpp" />

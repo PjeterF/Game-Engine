@@ -14,6 +14,7 @@ struct CBase
 		Animation = 5,
 		AABB = 6,
 		MarbleShooter = 7,
+		Emitter=8
 	};
 
 	virtual nlohmann::json serialize();

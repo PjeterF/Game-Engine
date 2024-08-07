@@ -53,7 +53,7 @@ struct ComponentSerializationTraits<Transform>
 inline nlohmann::json ComponentSerializationTraits<Transform>::serialize(Transform& c)
 {
 	nlohmann::json j;
-	j["type"] = ComponentSerialization::typeIdentifierMap[std::type_index(typeid(Transform))];
+	j["type"] = CBase::Transform;
 
 	j["position"] = { c.x, c.y };
 	j["size"] = { c.width, c.height };
@@ -84,7 +84,7 @@ struct ComponentSerializationTraits<Velocity>
 inline nlohmann::json ComponentSerializationTraits<Velocity>::serialize(Velocity& c)
 {
 	nlohmann::json j;
-	j["type"] = ComponentSerialization::typeIdentifierMap[std::type_index(typeid(Velocity))];
+	j["type"] = CBase::Velocity;
 
 	j["velocity"] = { c.x, c.y };
 	j["acceleration"] = { c.ax, c.ay };
@@ -112,7 +112,7 @@ struct ComponentSerializationTraits<Sprite>
 inline nlohmann::json ComponentSerializationTraits<Sprite>::serialize(Sprite& c)
 {
 	nlohmann::json j;
-	j["type"] = ComponentSerialization::typeIdentifierMap[std::type_index(typeid(Sprite))];
+	j["type"] = CBase::Sprite;
 
 	j["texture"] = c.getTexture()->getContents()->getFilepath();
 	j["textureSample"] = { c.textureSample.x, c.textureSample.y , c.textureSample.z , c.textureSample.w };
@@ -138,7 +138,7 @@ struct ComponentSerializationTraits<AABB>
 inline nlohmann::json ComponentSerializationTraits<AABB>::serialize(AABB& c)
 {
 	nlohmann::json j;
-	j["type"] = ComponentSerialization::typeIdentifierMap[std::type_index(typeid(AABB))];
+	j["type"] = CBase::AABB;
 
 	j["size"] = { c.width, c.height };
 	j["mass"] = c.mass;
@@ -167,7 +167,7 @@ struct ComponentSerializationTraits<Animation>
 inline nlohmann::json ComponentSerializationTraits<Animation>::serialize(Animation& c)
 {
 	nlohmann::json j;
-	j["type"] = ComponentSerialization::typeIdentifierMap[std::type_index(typeid(Animation))];
+	j["type"] = CBase::Animation;
 
 	j["frameDuration"] = c.frameDuration;
 	j["state"] = c.state;
@@ -206,7 +206,7 @@ struct ComponentSerializationTraits<Counter>
 inline nlohmann::json ComponentSerializationTraits<Counter>::serialize(Counter& c)
 {
 	nlohmann::json j;
-	j["type"] = ComponentSerialization::typeIdentifierMap[std::type_index(typeid(Counter))];
+	j["type"] = CBase::Counter;
 
 	j["val"] = c.val;
 	j["maxValue"] = c.maxValue;

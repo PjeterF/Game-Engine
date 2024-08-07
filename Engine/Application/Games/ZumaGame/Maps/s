@@ -1,0 +1,90 @@
+{
+    "Entities": [
+        {
+            "Components": [
+                {
+                    "cooldown": 30,
+                    "counter": 0,
+                    "shotSpeed": 10.0,
+                    "type": 7
+                },
+                {
+                    "position": [
+                        1000.0,
+                        1000.0
+                    ],
+                    "rot": 0.0,
+                    "rotateToDir": false,
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "type": 0
+                },
+                {
+                    "flipHorizontally": false,
+                    "texture": "Application/Games/ZumaGame/Textures/frog.png",
+                    "textureSample": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "type": 2
+                },
+                {
+                    "acceleration": [
+                        0.0,
+                        0.0
+                    ],
+                    "decay": 1.0,
+                    "type": 1,
+                    "velocity": [
+                        0.0,
+                        0.0
+                    ]
+                }
+            ]
+        }
+    ],
+    "Routes": [
+        {
+            "ctrlPts": [
+                [
+                    100.0,
+                    100.0
+                ],
+                [
+                    200.0,
+                    400.0
+                ],
+                [
+                    300.0,
+                    500.0
+                ],
+                [
+                    700.0,
+                    400.0
+                ],
+                [
+                    1100.0,
+                    300.0
+                ],
+                [
+                    1200.0,
+                    500.0
+                ],
+                [
+                    1300.0,
+                    100.0
+                ]
+            ],
+            "distanceBetween": 40.0,
+            "nMarbles": 10,
+            "nSamples": 10,
+            "popThreshold": 3,
+            "speed": 2.0,
+            "systemID": "R1"
+        }
+    ]
+}
