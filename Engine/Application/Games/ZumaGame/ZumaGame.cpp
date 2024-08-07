@@ -7,8 +7,10 @@
 #include "../../src/ECS2/SystemsManager.hpp"
 void ZumaGame::initialize()
 {
-	ComponentPoolManager::getInstance().addPool<MarbleComponent>();
-	ComponentPoolManager::getInstance().addPool<MarbleShooter>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(MarbleComponent)), "MarbleComponent"))
+		ComponentPoolManager::getInstance().addPool<MarbleComponent>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(MarbleShooter)), "MarbleShooter"))
+		ComponentPoolManager::getInstance().addPool<MarbleShooter>();
 
 	Camera* cam1 = new Camera(0, wndWidth, 0, wndHeight);
 	renderingAPI->setCamera(cam1);

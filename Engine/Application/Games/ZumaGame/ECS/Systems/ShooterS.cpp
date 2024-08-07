@@ -152,9 +152,9 @@ nlohmann::json ShooterS::serialize()
 
 		jEnt["Components"].push_back(shooterCPool->get(ID).serialize());
 		jEnt["Components"].push_back(transformPool->get(ID).serialize());
-		if (spritePool->entityHasComponent[ID])
+		if (spritePool->has(ID))
 			jEnt["Components"].push_back(spritePool->get(ID).serialize());
-		if (layerPool->entityHasComponent[ID])
+		if (layerPool->has(ID))
 			jEnt["Components"].push_back(layerPool->get(ID).serialize());
 
 		jOut.push_back(jEnt);

@@ -523,6 +523,7 @@
     <ClInclude Include="src\ECS2\Components\Counter.hpp" />
     <ClInclude Include="src\ECS2\Components\Emitter.hpp" />
     <ClInclude Include="src\ECS2\Components\RenderingLayer.hpp" />
+    <ClInclude Include="src\ECS2\Components\ComponentSerializationTraits.hpp" />
     <ClInclude Include="src\ECS2\Components\Sprite.hpp" />
     <ClInclude Include="src\ECS2\Components\Transform.hpp" />
     <ClInclude Include="src\ECS2\Components\Velocity.hpp" />
@@ -601,6 +602,7 @@
     <ClCompile Include="Externals\includes\imgui\imgui_widgets.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\ECS2\ComponentPool.cpp" />
     <ClCompile Include="src\ECS2\ComponentPoolManager.cpp" />
     <ClCompile Include="src\ECS2\Components\AABB.cpp" />
     <ClCompile Include="src\ECS2\Components\Animation.cpp" />

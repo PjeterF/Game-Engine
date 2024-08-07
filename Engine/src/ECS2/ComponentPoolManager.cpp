@@ -9,15 +9,6 @@
 #include "Components/Emitter.hpp"
 #include "Components/Counter.hpp"
 
-void ComponentPoolManager::disableComponents(int ID)
-{
-	for (auto& pool : poolsVec)
-	{
-		auto cpool = (ComponentPool<int>*)pool;
-		
-	}
-}
-
 bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 {
 	for (int i = 0; i < indices.size(); i++)
@@ -27,18 +18,28 @@ bool ComponentPoolManager::hasComponentTID(int entID, std::type_index typeID)
 			return ((ComponentPool<int>*)poolsVec[i])->has(entID);
 		}
 	}
+
+	return false;
 }
 
 ComponentPoolManager::ComponentPoolManager()
 {
-	addPool<Transform>();
-	addPool<Velocity>();
-	addPool<Sprite>();
-	addPool<AABB>();
-	addPool<Animation>();
-	addPool<RenderingLayer>();
-	addPool<Emitter>();
-	addPool<Counter>();
+	if(ComponentSerialization::addPairing(std::type_index(typeid(Transform)), "Transform"))
+		addPool<Transform>();
+	if(ComponentSerialization::addPairing(std::type_index(typeid(Velocity)), "Velocity"))
+		addPool<Velocity>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(Sprite)), "Sprite"))
+		addPool<Sprite>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(AABB)), "AABB"))
+		addPool<AABB>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(Animation)), "Animation"))
+		addPool<Animation>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(RenderingLayer)), "RenderingLayer"))
+		addPool<RenderingLayer>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(Emitter)), "Emitter"))
+		addPool<Emitter>();
+	if (ComponentSerialization::addPairing(std::type_index(typeid(Counter)), "Counter"))
+		addPool<Counter>();
 }
 
 ComponentPoolManager& ComponentPoolManager::getInstance()

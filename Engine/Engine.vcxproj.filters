@@ -1275,6 +1275,9 @@
     <ClInclude Include="Application\Games\ZumaGame\UI\TextureManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS2\Components\ComponentSerializationTraits.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1497,6 +1500,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\ZumaGame\UI\Texturemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\ComponentPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

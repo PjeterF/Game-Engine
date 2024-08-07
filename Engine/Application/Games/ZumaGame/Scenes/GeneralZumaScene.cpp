@@ -7,6 +7,8 @@
 
 #include <fstream>
 
+#include "../../src/ECS2/Components/Transform.hpp"
+
 GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
 {
 }
@@ -68,6 +70,8 @@ void GeneralZumaScene::initialize()
 	shooter.addComponent<MarbleShooter>(MarbleShooter(10, 30));
 	shooter.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("Application/Games/ZumaGame/Textures/frog.png")));
 
+	shooter.serialize();
+
 	SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
 	SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());
 
@@ -89,6 +93,11 @@ void GeneralZumaScene::initialize()
 	SystemsManager::getInstance().addSystem<CounterKillerS>(new CounterKillerS());
 
 	//this->serialize("Application/Games/ZumaGame/Maps/serializationTest.json");
+
+	auto transform = Transform(100, -99, 123, 456, 1, true);
+	auto res = ComponentSerializationTraits<Transform>::serialize(transform);
+	auto str = res.dump(4);
+	int x = 0;
 }
 
 void GeneralZumaScene::update(float dt)

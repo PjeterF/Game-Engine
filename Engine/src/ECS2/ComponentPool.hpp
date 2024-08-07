@@ -1,7 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <nlohmann/json.hpp>
 #include "../Events/Eventmanager.hpp"
+
+#include "Components/ComponentSerializationTraits.hpp"
 
 #define MAX_ENTITIES 100000
 
@@ -9,7 +12,12 @@ class ComponentPoolBase
 {
 public:
 	virtual ~ComponentPoolBase() = default;
-	std::vector<bool> entityHasComponent;
+	bool has(int ID);
+
+	virtual nlohmann::json serialize(int ID);
+	virtual void deSerialize(int ID, nlohmann::json j);
+protected:
+	std::vector<int> sparse;
 };
 
 template<typename T>
@@ -22,10 +30,11 @@ public:
 	virtual T& get(int ID);
 	T& add(int ID, T component);
 	bool remove(int ID);
-	bool has(int ID);
 	void resetComponent(int ID);
+
+	virtual nlohmann::json serialize(int ID) override;
+	virtual void deSerialize(int ID, nlohmann::json j) override;
 private:
-	std::vector<int> sparse; // entityID to componentIdx
 	std::vector<T> components;
 	friend class ComponentPoolManager;
 };
@@ -91,16 +100,23 @@ inline bool ComponentPool<T>::remove(int ID)
 }
 
 template<typename T>
-inline bool ComponentPool<T>::has(int ID)
-{
-	if (sparse[ID] != -1)
-		return true;
-	else
-		return false;
-}
-
-template<typename T>
 inline void ComponentPool<T>::resetComponent(int ID)
 {
 	components[sparse[ID]] = T();
+}
+
+template<typename T>
+inline nlohmann::json ComponentPool<T>::serialize(int ID)
+{
+	assert(has(ID) == true);
+
+	return ComponentSerializationTraits<T>::serialize(get(ID));
+}
+
+template<typename T>
+inline void ComponentPool<T>::deSerialize(int ID, nlohmann::json j)
+{
+	assert(has(ID) == true);
+
+	ComponentSerializationTraits<T>::deSerialize(get(ID), j);
 }

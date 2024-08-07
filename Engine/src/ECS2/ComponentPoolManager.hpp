@@ -7,6 +7,7 @@
 #include <vector>
 #include <typeinfo>
 #include <typeindex>
+#include <stdexcept>
 
 #include "../Events/EventManager.hpp"
 
@@ -26,9 +27,9 @@ public:
 	T& addComponent(int ID, T component);
 	template<typename T>
 	void removeComponent(int ID);
-	void disableComponents(int ID);
 
 	bool hasComponentTID(int entID, std::type_index typeID);
+
 private:
 	ComponentPoolManager();
 	std::vector<std::type_index> indices;
@@ -41,11 +42,13 @@ private:
 template<typename T>
 inline bool ComponentPoolManager::addPool()
 {
+
 	for (int i = 0; i < indices.size(); i++)
 	{
 		if (indices[i] == std::type_index(typeid(T)))
 			return false;
 	}
+
 	indices.push_back(std::type_index(typeid(T)));
 	poolsVec.push_back(new ComponentPool<T>());
 
@@ -62,6 +65,9 @@ inline ComponentPool<T>* ComponentPoolManager::getPool()
 			return ((ComponentPool<T>*)poolsVec[i]);
 		}
 	}
+
+	throw std::runtime_error("Component pool not found");
+	return nullptr;
 }
 
 template<typename T>
@@ -74,6 +80,8 @@ inline T& ComponentPoolManager::getComponent(int ID)
 			return ((ComponentPool<T>*)poolsVec[i])->get(ID);
 		}
 	}
+
+	throw std::runtime_error("Component pool not found");
 }
 
 template<typename T>
@@ -88,6 +96,8 @@ inline bool ComponentPoolManager::hasComponent(int ID)
 			return pool->has(ID);
 		}
 	}
+
+	throw std::runtime_error("Component pool not found");
 }
 
 template<typename T>
@@ -101,6 +111,8 @@ inline T& ComponentPoolManager::addComponent(int ID, T component)
 			return pool->add(ID, component);
 		}
 	}
+
+	throw std::runtime_error("Component pool not found");
 }
 
 template<typename T>
@@ -118,5 +130,6 @@ inline void ComponentPoolManager::removeComponent(int ID)
 			return;
 		}
 	}
-}
 
+	throw std::runtime_error("Component pool not found");
+}
