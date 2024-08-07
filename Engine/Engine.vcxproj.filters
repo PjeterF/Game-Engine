@@ -1919,18 +1919,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="imgui.ini" />
-    <None Include="q" />
-    <None Include="qq" />
-    <None Include="qqq" />
-    <None Include="qwe.json" />
-    <None Include="s1.json" />
-    <None Include="s2.json" />
-    <None Include="Scene1" />
-    <None Include="t" />
-    <None Include="Test" />
-    <None Include="w" />
-    <None Include="WaterLava" />
-    <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
     <None Include="src\Shaders\instancedSprite.vert" />
     <None Include="src\Shaders\instancedSprite.frag" />
     <None Include="Application\Games\Game1\EntityArchetypes\GoblinWarriorArchetype.json" />

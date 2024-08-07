@@ -652,7 +652,6 @@
     <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble1.json" />
     <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble2.json" />
     <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble3.json" />
-    <None Include="C:\Users\kupik\source\repos\Zuma2\Zuma\src\Shaders\instancedQuad.frag" />
     <None Include="Externals\includes\glm\detail\func_common.inl" />
     <None Include="Externals\includes\glm\detail\func_common_simd.inl" />
     <None Include="Externals\includes\glm\detail\func_exponential.inl" />
@@ -790,19 +789,8 @@
     <None Include="Externals\includes\glm\gtx\vector_query.inl" />
     <None Include="Externals\includes\glm\gtx\wrap.inl" />
     <None Include="imgui.ini" />
-    <None Include="q" />
-    <None Include="qq" />
-    <None Include="qqq" />
-    <None Include="qwe.json" />
-    <None Include="s1.json" />
-    <None Include="s2.json" />
-    <None Include="Scene1" />
     <None Include="src\Shaders\instancedSprite.frag" />
     <None Include="src\Shaders\instancedSprite.vert" />
-    <None Include="t" />
-    <None Include="Test" />
-    <None Include="w" />
-    <None Include="WaterLava" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

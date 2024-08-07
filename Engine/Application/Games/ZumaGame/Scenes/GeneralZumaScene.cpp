@@ -123,9 +123,8 @@ void GeneralZumaScene::update(float dt)
 	SystemsManager::getInstance().getSystem<AnimationS>()->update(dt);
 	SystemsManager::getInstance().getSystem<MovementS>()->update(dt);
 
-	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
-
 	EntityManager::getInstance().update();
+	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
 
 	for(int i=0;i<10;i++)
 		emitter->emit();
