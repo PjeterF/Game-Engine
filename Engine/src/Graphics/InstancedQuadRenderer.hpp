@@ -45,7 +45,7 @@ private:
 		Camera* camera = nullptr;
 	private:
 		int currentIndex = 0;
-		int bufferSize = 100000;
+		int bufferSize = 1000000;
 	};
 
 	VertexBuffer* VBO;

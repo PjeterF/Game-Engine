@@ -18,6 +18,8 @@ public:
 	template<typename T>
 	std::unordered_map<std::string, SysBase*>& getSystemBin();
 	template<typename T>
+	bool systemBinExists();
+	template<typename T>
 	bool deleteSystem(std::string name = "DEFAULT");
 
 	void update();
@@ -78,8 +80,19 @@ inline T* SystemsManager::getSystem(std::string name)
 template<typename T>
 inline std::unordered_map<std::string, SysBase*>& SystemsManager::getSystemBin()
 {
-	assert(systems.find(std::type_index(typeid(T))) != systems.end());
+	if (systems.find(std::type_index(typeid(T))) == systems.end())
+		systems[std::type_index(typeid(T))] = std::unordered_map<std::string, SysBase*>();
+
 	return systems[std::type_index(typeid(T))];
+}
+
+template<typename T>
+inline bool SystemsManager::systemBinExists()
+{
+	if(systems.find(std::type_index(typeid(T))) != systems.end())
+		return true;
+	else
+		return false;
 }
 
 template<typename T>

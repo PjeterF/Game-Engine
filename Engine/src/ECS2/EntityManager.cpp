@@ -153,10 +153,7 @@ void EntityManager::update()
 void EntityManager::reset()
 {
 	for (auto ID : existingEntities)
-	{
 		deleteEntity(ID);
-	}
-	existingEntities.clear();
 	update();
 
 	availableID = std::stack<int>();

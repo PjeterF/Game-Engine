@@ -60,9 +60,9 @@ void Application::run()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	int fpsCap = 90;
+	int fpsCap = 120;
 	int iteration = 0;
-	float dt = 1;
+	float dt = 0.002;
 	while (!glfwWindowShouldClose(window))
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();
@@ -71,7 +71,7 @@ void Application::run()
 
 		if (paused)
 		{
-			SceneManager::getInstance().update(0);
+			SceneManager::getInstance().update(dt);
 		}
 
 /*======END OF LOGIC==========*/
@@ -105,12 +105,12 @@ void Application::run()
 		auto timeEnd = std::chrono::high_resolution_clock::now();
 
 		// Framerate delay 
-		float frameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart).count();
-		dt = (float)(frameDuration/1000);
+		double frameDuration = std::chrono::duration_cast<std::chrono::nanoseconds>(timeEnd - timeStart).count();
+		dt = (float)(frameDuration/1000000000);
 
-		int msDelay = (1000 / fpsCap) - frameDuration;
-		if (msDelay > 0)
-			std::this_thread::sleep_for(std::chrono::milliseconds(msDelay));
+		int nsDelay = (1000000000.0f / fpsCap) - frameDuration;
+		if (nsDelay > 0)
+			std::this_thread::sleep_for(std::chrono::nanoseconds(nsDelay));
 
 		glfwSetWindowTitle(window, ((wndName + " FT: " + std::to_string(frameDuration)).c_str()));
 		iteration++;

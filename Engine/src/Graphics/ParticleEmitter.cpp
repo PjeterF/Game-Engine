@@ -73,10 +73,8 @@ void ParticeEmitter::draw(RenderingAPI* renderer)
 	for (const auto& particle : particlePool)
 	{
 		if (particle.emitted)
-			//renderer->quadRenderer->draw(particle.pos, glm::vec2(particle.size, particle.size), particle.rot, particle.col);
 			renderer->addQuadInstance(particle.pos, { particle.size, particle.size }, particle.rot, particle.col);
 	}
-	renderer->drawQuadInstances();
 }
 
 void ParticeEmitter::emit()

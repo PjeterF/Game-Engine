@@ -33,7 +33,7 @@ void ZumaMenu::render()
 			if (ImGui::Button("Add route"))
 			{
 				std::string routeName = "Route" + std::to_string(nextRouteID++);
-				routes[routeName] = new RouteS(routeName, {{-100, 200}}, 10, 2, 100, true);
+				routes[routeName] = new RouteS(routeName, {{100, 100}}, 10, 1000, 100, true);
 			}
 			ImGui::Separator();
 
@@ -92,10 +92,10 @@ void ZumaMenu::render()
 			if (ImGui::Button("Create Shooter"))
 			{
 				Entity shooter = EntityManager::getInstance().createEntity();
-				shooter.addComponent<MarbleShooter>(MarbleShooter(1, 10));
+				shooter.addComponent<MarbleShooter>(MarbleShooter(3000, 10));
 				shooter.addComponent<Transform>(Transform(0, 0, 100, 100));
-				shooter.addComponent<Velocity>(Velocity());
 				shooter.addComponent<Sprite>(Sprite());
+				shooter.addComponent<RenderingLayer>(RenderingLayer());
 
 				SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
 				SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());

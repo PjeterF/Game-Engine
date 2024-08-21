@@ -9,7 +9,7 @@
 
 #include "../../src/ECS2/Components/Transform.hpp"
 
-GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera)
+GeneralZumaScene::GeneralZumaScene(Camera& camera) : Scene(camera), EventObserver(ApplicationBin)
 {
 }
 
@@ -34,7 +34,6 @@ void GeneralZumaScene::initialize()
 
 	float UIElementWidth = 300;
 
-	//UIElements.push_back(new MarbleEditor("Marble Editor", 0, 0, UIElementWidth, windowDimensions.y/2, "Application/Games/ZumaGame/MarbleArchetypes"));
 	UIElements.push_back(new TextureManager("Textures Manager", 0, 0, UIElementWidth, windowDimensions.y/2));
 	UIElements.push_back(new ZumaMenu("Zuma Menu", 0, windowDimensions.y / 2, UIElementWidth, windowDimensions.y / 2, "Application/Games/ZumaGame/MarbleArchetypes"));
 	UIElements.push_back(new EntitiesMenu("Entities", windowDimensions.x-UIElementWidth, 0, UIElementWidth, windowDimensions.y / 2));
@@ -52,7 +51,7 @@ void GeneralZumaScene::initialize()
 		{1300, 100}
 	};
 
-	SystemsManager::getInstance().addSystem<RouteS>(new RouteS("R1", ctrlPts, 10, 2, 10), "R1");
+	//SystemsManager::getInstance().addSystem<RouteS>(new RouteS("R1", ctrlPts, 10, 100, 10), "R1");
 	SystemsManager::getInstance().addSystem<MarbleCollisionResolutionS>(new MarbleCollisionResolutionS());
 	SystemsManager::getInstance().addSystem<CollisionS>(new CollisionS(30));
 	SystemsManager::getInstance().addSystem<MovementS>(new MovementS());
@@ -63,19 +62,14 @@ void GeneralZumaScene::initialize()
 
 	auto test = (ResourceManager::getInstance().getResource<Texture>("Application/Games/ZumaGame/Textures/frog.png"));
 
-	Entity shooter = EntityManager::getInstance().createEntity();
+	/*Entity shooter = EntityManager::getInstance().createEntity();
 	shooter.addComponent<Transform>(Transform(1000, 1000, 100, 100));
-	shooter.addComponent<Velocity>(Velocity());
 	shooter.addComponent<RenderingLayer>(RenderingLayer());
-	shooter.addComponent<MarbleShooter>(MarbleShooter(10, 30));
+	shooter.addComponent<MarbleShooter>(MarbleShooter(400, 30));
 	shooter.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("Application/Games/ZumaGame/Textures/frog.png")));
 
-	shooter.serialize();
-
 	SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
-	SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());
-
-	//SystemsManager::getInstance().getSystem<ShooterS>()->deSerialize(SystemsManager::getInstance().getSystem<ShooterS>()->serialize());
+	SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());*/
 
 	emitter = new ParticeEmitter(0, 2000, 10000);
 	emitter->defaultProperties.xPosVar = glm::vec2(-50, 50);
@@ -91,27 +85,25 @@ void GeneralZumaScene::initialize()
 
 	SystemsManager::getInstance().addSystem<ParticleS>(new ParticleS());
 	SystemsManager::getInstance().addSystem<CounterKillerS>(new CounterKillerS());
-
-	//this->serialize("Application/Games/ZumaGame/Maps/serializationTest.json");
-
-	auto transform = Transform(100, -99, 123, 456, 1, true);
-	auto res = ComponentSerializationTraits<Transform>::serialize(transform);
-	auto str = res.dump(4);
-	int x = 0;
 }
 
 void GeneralZumaScene::update(float dt)
 {
-	SystemsManager::getInstance().getSystem<ParticleS>()->update(dt);
-	SystemsManager::getInstance().getSystem<CounterKillerS>()->update(dt);
+	dt = 0.001;
 
+	EntityManager::getInstance().update();
+	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
+	SystemsManager::getInstance().getSystem<CollisionS>()->update(dt);
+
+	SystemsManager::getInstance().getSystem<MarbleCollisionResolutionS>()->update(dt);
 	for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
 	{
 		((RouteS*)item.second)->spawnMarbleIfPossible(
 			marbleArchetypeFilepaths[rand() % marbleArchetypeFilepaths.size()]);
 	}
 
-	SystemsManager::getInstance().getSystem<CollisionS>()->update(dt);
+	SystemsManager::getInstance().getSystem<ParticleS>()->update(dt);
+	SystemsManager::getInstance().getSystem<CounterKillerS>()->update(dt);
 
 	SystemsManager::getInstance().getSystem<ShooterS>()->update(dt);
 	for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
@@ -119,12 +111,9 @@ void GeneralZumaScene::update(float dt)
 		RouteS* route = (RouteS*)item.second;
 		route->update(dt);
 	}
-	SystemsManager::getInstance().getSystem<MarbleCollisionResolutionS>()->update(dt);
+
 	SystemsManager::getInstance().getSystem<AnimationS>()->update(dt);
 	SystemsManager::getInstance().getSystem<MovementS>()->update(dt);
-
-	EntityManager::getInstance().update();
-	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
 
 	for(int i=0;i<10;i++)
 		emitter->emit();
@@ -134,19 +123,28 @@ void GeneralZumaScene::update(float dt)
 
 void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 {
-	SystemsManager::getInstance().getSystem<ParticleS>()->draw(renderingAPI);
-
-	for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
-	{
-		((RouteS*)item.second)->draw(renderingAPI);
-	}
-
+	//SystemsManager::getInstance().getSystem<ParticleS>()->draw(renderingAPI);
+	
 	SystemsManager::getInstance().getSystem<RenderingS>()->update(0);
 
 	for (auto& element : UIElements)
 		element->render();
 
 	emitter->draw(renderingAPI);
+
+	if (paused)
+	{
+		for (auto& item : SystemsManager::getInstance().getSystemBin<RouteS>())
+		{
+			((RouteS*)item.second)->draw(renderingAPI);
+		}
+	}
+
+	if (paused)
+	{
+		renderingAPI->drawLine({ 0, -10000 }, { 0, 10000 }, 5, { 1, 0.5, 0.5 });
+		renderingAPI->drawLine({ -10000, 0 }, { 10000, 0 }, 5, { 1, 0.5, 0.5 });
+	}
 }
 
 void GeneralZumaScene::input()
@@ -277,6 +275,8 @@ void GeneralZumaScene::serialize(std::string filepath)
 			jEnt["Components"].push_back(ent.getComponent<AABB>().serialize());
 		if (ent.hasComponent<Emitter>())
 			jEnt["Components"].push_back(ent.getComponent<Emitter>().serialize());
+		if (ent.hasComponent<RenderingLayer>())
+			jEnt["Components"].push_back(ent.getComponent<RenderingLayer>().serialize());
 
 		jOut["Entities"].push_back(jEnt);
 	}
@@ -346,13 +346,14 @@ void GeneralZumaScene::deSerialize(std::string filepath)
 				comp.deSerialize(jComp);
 				newEnt.addComponent<Velocity>(comp);
 			}
+			break;
 			//case CBase::Animation:
 			//{
 			//	Animation comp;
 			//	comp.deSerialize(jComp);
 			//	newEnt.addComponent<Animation>(comp);
 			//}
-			break;
+			//break;
 			case CBase::AABB:
 			{
 				AABB comp;
@@ -367,6 +368,12 @@ void GeneralZumaScene::deSerialize(std::string filepath)
 				newEnt.addComponent<Emitter>(comp);
 			}
 			break;
+			case CBase::RenderingLayer:
+			{
+				RenderingLayer comp;
+				comp.deSerialize(jComp);
+				newEnt.addComponent<RenderingLayer>(comp);
+			}
 			break;
 			default:
 				break;

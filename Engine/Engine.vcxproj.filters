@@ -1278,6 +1278,15 @@
     <ClInclude Include="src\ECS2\Components\ComponentSerializationTraits.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS2\Systems\FlipToXDirectionS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\TestProject\TestingApplication.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\TestProject\Scenes\RenderingTestScene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1506,6 +1515,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS2\Components\Emitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Systems\FlipToXDirectionS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\TestProject\TestingApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\TestProject\Scenes\RenderingTestScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

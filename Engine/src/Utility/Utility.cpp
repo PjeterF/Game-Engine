@@ -62,3 +62,13 @@ float utility::tweens::easeOutCubic(float t)
 {
     return 1 - pow(1.0f - t, 3);
 }
+
+float utility::random::randomFloat(float min, float max)
+{
+    return min + (float)rand() / (float)RAND_MAX * (max - min);
+}
+
+int utility::random::randomInt(int min, int max)
+{
+    return min + rand() % (max - min + 1);
+}

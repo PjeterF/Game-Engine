@@ -154,6 +154,8 @@
     <ClInclude Include="Application\Games\Game1\Game1.hpp" />
     <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp" />
     <ClInclude Include="Application\Games\Game1\Utility\Game1Utility.hpp" />
+    <ClInclude Include="Application\Games\TestProject\Scenes\RenderingTestScene.hpp" />
+    <ClInclude Include="Application\Games\TestProject\TestingApplication.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleComponent.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleShooter.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\ECS\Systems\CounterKillerS.hpp" />
@@ -531,6 +533,7 @@
     <ClInclude Include="src\ECS2\SystemsManager.hpp" />
     <ClInclude Include="src\ECS2\Systems\AnimationS.hpp" />
     <ClInclude Include="src\ECS2\Systems\CollisionRepulsionS.hpp" />
+    <ClInclude Include="src\ECS2\Systems\FlipToXDirectionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\MovementS.hpp" />
     <ClInclude Include="src\ECS2\Systems\ParticleS.hpp" />
     <ClInclude Include="src\ECS2\Systems\RenderingS.hpp" />
@@ -577,6 +580,8 @@
     <ClCompile Include="Application\Games\Game1\Game1.cpp" />
     <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp" />
     <ClCompile Include="Application\Games\Game1\Utility\Game1Utility.cpp" />
+    <ClCompile Include="Application\Games\TestProject\Scenes\RenderingTestScene.cpp" />
+    <ClCompile Include="Application\Games\TestProject\TestingApplication.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ECS\Components\MarbleShooter.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\CounterKillerS.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ECS\Systems\MarbleCollisionResolutionS.cpp" />
@@ -618,6 +623,7 @@
     <ClCompile Include="src\ECS2\Systems\AnimationS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionRepulsionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionS.cpp" />
+    <ClCompile Include="src\ECS2\Systems\FlipToXDirectionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\MovementS.cpp" />
     <ClCompile Include="src\ECS2\Systems\ParticleS.cpp" />
     <ClCompile Include="src\ECS2\Systems\RenderingS.cpp" />

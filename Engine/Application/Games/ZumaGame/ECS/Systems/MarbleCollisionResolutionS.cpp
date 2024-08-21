@@ -17,6 +17,8 @@ void MarbleCollisionResolutionS::update(float dt)
 	auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
 	auto velPool = ComponentPoolManager::getInstance().getPool<Velocity>();
 
+	if (!SystemsManager::getInstance().systemBinExists<RouteS>())
+		return;
 	std::unordered_map<std::string, SysBase*>& routes = SystemsManager::getInstance().getSystemBin<RouteS>();
 
 	for (auto ID : entities)

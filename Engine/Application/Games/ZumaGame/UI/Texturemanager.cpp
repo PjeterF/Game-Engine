@@ -30,7 +30,7 @@ void TextureManager::render()
 		Resource<Texture>* textureRes = (Resource<Texture>*)(*it).second;
 		Texture* texture = textureRes->getContents();
 
-		if (texture == nullptr) {
+		if (texture == nullptr || (*it).first=="default") {
 			it++;
 			continue;
 		}

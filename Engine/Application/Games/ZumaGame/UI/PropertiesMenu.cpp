@@ -64,6 +64,11 @@ void PropertiesMenu::render()
 			if (ImGui::Selectable("Sprite##A"))
 				ent.addComponent<Sprite>(Sprite());
 		}
+		if (!ent.hasComponent<RenderingLayer>())
+		{
+			if (ImGui::Selectable("RenderingLayer##A"))
+				ent.addComponent<RenderingLayer>(RenderingLayer());
+		}
 		if (!ent.hasComponent<Animation>())
 		{
 			if (ImGui::Selectable("Animation##A"))
@@ -99,6 +104,11 @@ void PropertiesMenu::render()
 		{
 			if (ImGui::Selectable("Sprite##R"))
 				ent.removeComponent<Sprite>();
+		}
+		if (ent.hasComponent<RenderingLayer>())
+		{
+			if (ImGui::Selectable("RenderingLayer##R"))
+				ent.removeComponent<RenderingLayer>();
 		}
 		if (ent.hasComponent<Animation>())
 		{
@@ -374,88 +384,101 @@ void PropertiesMenu::render()
 				}
 				ImGui::EndCombo();
 			}
-			ImGui::Checkbox("collisions enabled", &comp.flipHorizontally);
+			ImGui::Checkbox("Flip Horizontally", &comp.flipHorizontally);
 
 			ImGui::TreePop();
 		}
-		if (ent.hasComponent<Animation>())
+	}
+	if (ent.hasComponent<RenderingLayer>())
+	{
+		if (ImGui::TreeNode("Rendering Layer"))
 		{
-			if (ImGui::TreeNode("Animation"))
-			{
-				auto& comp = ent.getComponent<Animation>();
-				auto nodeWidth = ImGui::CalcItemWidth();
+			auto& comp = ent.getComponent<RenderingLayer>();
 
-				ImGui::SetNextItemWidth(nodeWidth / 2);
-				if (ImGui::InputInt("##currentFrame", &comp.currentFrame))
-				{
-					if (comp.currentFrame >= comp.framesMap[comp.state].size()) {
-						comp.currentFrame = comp.framesMap[comp.state].size() - 1;
-					}
-					else if (comp.currentFrame <= 0) {
-						comp.currentFrame = 0;
-					}
-				}
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(nodeWidth / 2);
-				ImGui::Text("current frame");
+			int layer = comp.layer;
+			if (ImGui::InputInt("Layer", &layer))
+				SystemsManager::getInstance().getSystem<RenderingS>()->moveToLayer(ent.getID(), layer);
 
-				ImGui::SetNextItemWidth(nodeWidth / 2);
-				if (ImGui::InputInt("##frameDuration", &comp.frameDuration))
-				{
-					if (comp.frameDuration < 1)
-						comp.frameDuration = 1;
-				}
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(nodeWidth / 2);
-				ImGui::Text("frame duration");
-
-				ImGui::Text("Animation states' frames");
-				int i = 0;
-				for (auto& state : comp.framesMap)
-				{
-					if(ImGui::TreeNode(std::to_string(state.first).c_str()))
-					{
-						ImGui::Text("x, y, width, height");
-						for (auto& frame : state.second)
-						{
-							ImGui::PushID(i);
-							
-							ImGui::SetNextItemWidth(nodeWidth / 4);
-							ImGui::InputFloat("##xDivisionFrame", &frame.x);
-							ImGui::SameLine();
-							ImGui::SetNextItemWidth(nodeWidth / 4);
-							ImGui::InputFloat("##yDivisionFrame", &frame.y);
-							ImGui::SameLine();
-							ImGui::SetNextItemWidth(nodeWidth / 4);
-							ImGui::InputFloat("##widthDivisionFrame", &frame.z);
-							ImGui::SameLine();
-							ImGui::SetNextItemWidth(nodeWidth / 4);
-							ImGui::InputFloat("##heightDivisionFrame", &frame.w);
-
-							ImGui::PopID();
-
-							i++;
-						}
-
-						ImGui::TreePop();
-					}
-				}
-
-				ImGui::TreePop();
-			}
+			ImGui::TreePop();
 		}
-		if (ent.hasComponent<MarbleShooter>())
+	}
+	if (ent.hasComponent<Animation>())
+	{
+		if (ImGui::TreeNode("Animation"))
 		{
-			if (ImGui::TreeNode("ShooterComponent"))
+			auto& comp = ent.getComponent<Animation>();
+			auto nodeWidth = ImGui::CalcItemWidth();
+
+			ImGui::SetNextItemWidth(nodeWidth / 2);
+			if (ImGui::InputInt("##currentFrame", &comp.currentFrame))
 			{
-				auto& comp = ent.getComponent<MarbleShooter>();
-				auto nodeWidth = ImGui::CalcItemWidth();
-
-				ImGui::InputFloat("speed", &comp.shotSpeed);
-				ImGui::InputInt("cooldown", &comp.cooldown);
-
-				ImGui::TreePop();
+				if (comp.currentFrame >= comp.framesMap[comp.state].size()) {
+					comp.currentFrame = comp.framesMap[comp.state].size() - 1;
+				}
+				else if (comp.currentFrame <= 0) {
+					comp.currentFrame = 0;
+				}
 			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(nodeWidth / 2);
+			ImGui::Text("current frame");
+
+			ImGui::SetNextItemWidth(nodeWidth / 2);
+			if (ImGui::InputInt("##frameDuration", &comp.frameDuration))
+			{
+				if (comp.frameDuration < 1)
+					comp.frameDuration = 1;
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(nodeWidth / 2);
+			ImGui::Text("frame duration");
+
+			ImGui::Text("Animation states' frames");
+			int i = 0;
+			for (auto& state : comp.framesMap)
+			{
+				if (ImGui::TreeNode(std::to_string(state.first).c_str()))
+				{
+					ImGui::Text("x, y, width, height");
+					for (auto& frame : state.second)
+					{
+						ImGui::PushID(i);
+
+						ImGui::SetNextItemWidth(nodeWidth / 4);
+						ImGui::InputFloat("##xDivisionFrame", &frame.x);
+						ImGui::SameLine();
+						ImGui::SetNextItemWidth(nodeWidth / 4);
+						ImGui::InputFloat("##yDivisionFrame", &frame.y);
+						ImGui::SameLine();
+						ImGui::SetNextItemWidth(nodeWidth / 4);
+						ImGui::InputFloat("##widthDivisionFrame", &frame.z);
+						ImGui::SameLine();
+						ImGui::SetNextItemWidth(nodeWidth / 4);
+						ImGui::InputFloat("##heightDivisionFrame", &frame.w);
+
+						ImGui::PopID();
+
+						i++;
+					}
+
+					ImGui::TreePop();
+				}
+			}
+
+			ImGui::TreePop();
+		}
+	}
+	if (ent.hasComponent<MarbleShooter>())
+	{
+		if (ImGui::TreeNode("ShooterComponent"))
+		{
+			auto& comp = ent.getComponent<MarbleShooter>();
+			auto nodeWidth = ImGui::CalcItemWidth();
+
+			ImGui::InputFloat("speed", &comp.shotSpeed);
+			ImGui::InputInt("cooldown", &comp.cooldown);
+
+			ImGui::TreePop();
 		}
 	}
 

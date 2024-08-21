@@ -24,6 +24,8 @@ void CollisionS::handleEvent(Event& event)
 	case Event::EntityRemoval:
 	{
 		int* ID = (int*)event.getPayload();
+		
+		std::vector<int> collisionsToRemove;
 		auto it = collisions.begin();
 		while (it != collisions.end())
 		{
@@ -32,14 +34,15 @@ void CollisionS::handleEvent(Event& event)
 				auto colPool = ComponentPoolManager::getInstance().getPool<AABB>();
 
 				//if(colPool->has((*it).second.ID1))
-					colPool->get((*it).second.ID1).collidingEntIDs.erase((*it).second.ID2);
+				colPool->get((*it).second.ID1).collidingEntIDs.erase((*it).second.ID2);
 				//if (colPool->has((*it).second.ID2))
-					colPool->get((*it).second.ID2).collidingEntIDs.erase((*it).second.ID1);
-				collisions.erase(it);
-				break;
+				colPool->get((*it).second.ID2).collidingEntIDs.erase((*it).second.ID1);
+				collisionsToRemove.push_back((*it).first);
 			}
 			it++;
 		}
+		for (auto collisionID : collisionsToRemove)
+			collisions.erase(collisionID);
 	}
 	break;
 	}
@@ -54,19 +57,19 @@ void CollisionS::update(float dt)
 	for (auto& col : collisions)
 	{
 		int ID1 = col.second.ID1;
-		if (!AABBPool->has(ID1))
+		/*if (!AABBPool->has(ID1))
 			continue;
 		if (!transformPool->has(ID1))
-			continue;
+			continue;*/
 
 		Transform& t1 = transformPool->get(ID1);
 		AABB& c1 = AABBPool->get(ID1);
 
 		int ID2 = col.second.ID2;
-		if (!AABBPool->has(ID2))
+		/*if (!AABBPool->has(ID2))
 			continue;
 		if (!transformPool->has(ID2))
-			continue;
+			continue;*/
 
 		Transform& t2 = transformPool->get(ID2);
 		AABB& c2 = AABBPool->get(ID2);
@@ -96,10 +99,10 @@ void CollisionS::update(float dt)
 		for (int i = 0; i < cell.second.size(); i++)
 		{
 			int ID1 = cell.second[i];
-			/*if(!AABBPool->has(ID1))
-				continue;
-			if (!transformPool->has(ID1))
-				continue;*/
+			//if(!AABBPool->has(ID1))
+			//	continue;
+			//if (!transformPool->has(ID1))
+			//	continue;
 
 			AABB& c1 = AABBPool->get(ID1);
 			if (!c1.enabled)
@@ -109,10 +112,10 @@ void CollisionS::update(float dt)
 			for (int j = i + 1; j < cell.second.size(); j++)
 			{
 				int ID2 = cell.second[j];
-				/*if (!AABBPool->has(ID2))
-					continue;
-				if (!transformPool->has(ID2))
-					continue;*/
+				//if (!AABBPool->has(ID2))
+				//	continue;
+				//if (!transformPool->has(ID2))
+				//	continue;
 
 				AABB& c2 = AABBPool->get(ID2);
 				if (!c2.enabled)

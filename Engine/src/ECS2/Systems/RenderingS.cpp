@@ -5,15 +5,14 @@
 RenderingS::RenderingS(RenderingAPI* rAPI) : rAPI(rAPI)
 {
 	requiredComponents = {
-		std::type_index(typeid(Transform)),
-		std::type_index(typeid(Sprite)),
-		std::type_index(typeid(Velocity))
+		std::type_index(typeid(RenderingLayer))
 	};
 }
 
 void RenderingS::update(float dt)
 {
 	auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();
+	auto emitterPool = ComponentPoolManager::getInstance().getPool<Emitter>();
 	auto spritePool = ComponentPoolManager::getInstance().getPool<Sprite>();
 	auto velocityPool = ComponentPoolManager::getInstance().getPool<Velocity>();
 
@@ -21,30 +20,36 @@ void RenderingS::update(float dt)
 	{
 		for (auto entID : layer.second)
 		{
-			Transform& trans = transformPool->get(entID);
-			Sprite& sprite = spritePool->get(entID);
-			Velocity& vel = velocityPool->get(entID);
+			if (ComponentPoolManager::getInstance().hasComponent<Sprite>(entID) && ComponentPoolManager::getInstance().hasComponent<Transform>(entID))
+			{
+				Transform& trans = transformPool->get(entID);
+				Sprite& sprite = spritePool->get(entID);
 
-			if (vel.x < 0)
-				sprite.flipHorizontally = true;
-			else
-				sprite.flipHorizontally = false;
+				if (sprite.getTexture() != nullptr)
+					rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample, sprite.flipHorizontally);
+			}
+			if (ComponentPoolManager::getInstance().hasComponent<Emitter>(entID))
+			{
+				Emitter& emitter = emitterPool->get(entID);
 
-			
-			if(sprite.getTexture()!=nullptr)
-				rAPI->addSpriteInstance({ trans.x, trans.y }, { trans.width, trans.height }, trans.rot, sprite.getTexture()->getContents(), sprite.textureSample, sprite.flipHorizontally);
+				emitter.emitter.draw(rAPI);
+			}
 		}	
-	}
 
-	rAPI->drawSpriteInstances();
+		rAPI->drawSpriteInstances();
+		rAPI->drawQuadInstances();
+	}
 }
 
-bool RenderingS::addEntity(int ID, int layer)
+bool RenderingS::addEntity(int ID)
 {
 	if (!SysBase::addEntity(ID))
 		return false;
 
-	layers[layer].push_back(ID);
+	Entity ent(ID);
+
+	RenderingLayer& layer = ent.getComponent<RenderingLayer>();
+	layers[layer.layer].push_back(ID);
 
 	return true;
 }
@@ -56,16 +61,13 @@ bool RenderingS::addEntity(Entity ent)
 
 void RenderingS::removeEntity(int ID)
 {
-	SysBase::removeEntity(ID);
-
-	Entity ent(ID);
-
-	for (auto& layer : layers)
+	if (entities.find(ID) != entities.end())
 	{
-		auto it = std::find(layer.second.begin(), layer.second.end(), ID);
-		if (it != layer.second.end())
-			layer.second.erase(it);
+		RenderingLayer& layer = ComponentPoolManager::getInstance().getComponent<RenderingLayer>(ID);
+		layers[layer.layer].erase(std::find(layers[layer.layer].begin(), layers[layer.layer].end(), ID));
 	}
+
+	SysBase::removeEntity(ID);
 }
 
 struct
@@ -83,4 +85,18 @@ void RenderingS::ySortLayer(int layer)
 	auto it = layers.find(layer);
 	if (it != layers.end())
 		std::sort((*it).second.begin(), (*it).second.end(), yComparator);
+}
+
+bool RenderingS::moveToLayer(int ID, int newLayer)
+{
+	if (entities.find(ID) == entities.end())
+		return false;
+
+	auto& layer = ComponentPoolManager::getInstance().getComponent<RenderingLayer>(ID);
+	layers[layer.layer].erase(std::find(layers[layer.layer].begin(), layers[layer.layer].end(), ID));
+
+	layers[newLayer].push_back(ID);
+	layer.layer = newLayer;
+
+	return true;
 }

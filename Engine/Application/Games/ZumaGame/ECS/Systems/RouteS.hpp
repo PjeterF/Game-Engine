@@ -35,6 +35,7 @@ public:
 	bool insertAt(int entID, int inserteeID);
 	void reset();
 	void setNumberOfMarbles(int n);
+	void selfDestruct();
 
 	int ctrlPointIntersection(glm::vec2 pos);
 
@@ -51,6 +52,8 @@ private:
 	unsigned int nSamples;
 	unsigned int nMarbles;
 	unsigned int remainingMarbles;
+
+	bool destroyed = false;
 
 	std::string systemID;
 

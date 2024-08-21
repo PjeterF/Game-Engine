@@ -27,4 +27,9 @@ namespace utility
 	{
 		float easeOutCubic(float t);
 	}
+	namespace random
+	{
+		float randomFloat(float min, float max);
+		int randomInt(int min, int max);
+	}
 }
