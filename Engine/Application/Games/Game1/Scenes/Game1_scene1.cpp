@@ -7,6 +7,7 @@
 #include "../ECS/Systems/CollisionResolutionS.hpp"
 #include "../ECS/Systems/HealthBarDrawingS.hpp"
 #include "../ECS/Systems/ORbitParentS.hpp"
+#include "../../src/ECS2/Systems/FlipToXDirectionS.hpp"
 
 Game1_scene1::Game1_scene1(Camera& camera) : Scene(camera)
 {
@@ -18,6 +19,7 @@ void Game1_scene1::initialize()
 	addSystem<CollisionRepulsionS>("Repulsion", new CollisionRepulsionS(), true);
 	getSystem<CollisionRepulsionS>("Repulsion")->repulsionStrength = 0.5;
 	addSystem<AnimationS>("Anim", new AnimationS(), true);
+	addSystem<FlipSpriteToXDirectionS>("Flip", new FlipSpriteToXDirectionS(), true);
 
 	addSystem<CollisionResolutionS>("ColRes", new CollisionResolutionS(), true);
 
@@ -44,6 +46,7 @@ void Game1_scene1::initialize()
 		getSystem<CollisionRepulsionS>("Repulsion")->addEntity(playerEntID);
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(playerEntID);
 		getSystem<HealthBarDrawingS>("HealthBarDrawing")->addEntity(playerEntID);
+		getSystem<FlipSpriteToXDirectionS>("Flip")->addEntity(playerEntID);
 	}
 
 	std::vector<glm::vec4> groundTileDivisions = utility::sampling::sampleEvenly(256, 256, 0, 0, 8, 8);
@@ -93,6 +96,7 @@ void Game1_scene1::update(float dt)
 	getSystem<FollowS>("Follow")->update(dt);
 	getSystem<MovementS>("Movement")->update(dt);
 	getSystem<AnimationS>("Anim")->update(dt);
+	getSystem<FlipSpriteToXDirectionS>("Flip")->update(dt);
 
 	getSystem<CollisionRepulsionS>("Repulsion")->update(dt);
 	getSystem<CollisionResolutionS>("ColRes")->update(dt);
@@ -128,6 +132,7 @@ void Game1_scene1::update(float dt)
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(newEntID);
 		getSystem<FollowS>("Follow")->addEntity(newEntID);
 		getSystem<HealthBarDrawingS>("HealthBarDrawing")->addEntity(newEntID);
+		getSystem<FlipSpriteToXDirectionS>("Flip")->addEntity(newEntID);
 	}
 }
 
@@ -192,6 +197,7 @@ void Game1_scene1::input()
 		getSystem<FollowS>("Follow")->addEntity(newEntID);
 		getSystem<HealthBarDrawingS>("HealthBarDrawing")->addEntity(newEntID);
 		getSystem<AnimationS>("Anim")->addEntity(newEntID);
+		getSystem<FlipSpriteToXDirectionS>("Flip")->addEntity(newEntID);
 	}
 
 	if (input->mouseKeyClicked[ZE_MOUSE_BUTTON_1])
@@ -221,6 +227,7 @@ void Game1_scene1::input()
 		getSystem<AnimationS>("Anim")->addEntity(newEntID);
 		getSystem<CollisionS>("Collision")->addEntity(newEntID);
 		getSystem<CollisionResolutionS>("ColRes")->addEntity(newEntID);
+		getSystem<FlipSpriteToXDirectionS>("Flip")->addEntity(newEntID);
 	}
 
 	input->update();
@@ -265,6 +272,7 @@ int Game1_scene1::spawnEntity(std::string archetypeFilePath, glm::vec2 pos)
 	auto it = framesMap.begin();
 	auto div = (*it).second[0];
 	newEnt.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>(j["texture"]), div));
+	newEnt.addComponent<RenderingLayer>(RenderingLayer());
 
 	return newEnt.getID();
 }

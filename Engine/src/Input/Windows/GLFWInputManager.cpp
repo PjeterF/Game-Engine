@@ -110,3 +110,8 @@ glm::vec2 GLFWInputManager::getNormalizedCursorPos()
 	pos.y = pos.y / wndSize.y;
 	return pos;
 }
+
+std::vector<TouchPoint> GLFWInputManager::getActiveTouches()
+{
+	throw "Not implemented";
+}

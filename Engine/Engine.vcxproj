@@ -554,7 +554,6 @@
     <ClInclude Include="src\Graphics\ParticleEmitter.hpp" />
     <ClInclude Include="src\Graphics\QuadRenderer.hpp" />
     <ClInclude Include="src\Graphics\SpriteRenderer.hpp" />
-    <ClInclude Include="src\Input\InputMap.hpp" />
     <ClInclude Include="src\Input\Windows\GLFWInputManager.hpp" />
     <ClInclude Include="src\Input\InputManager.hpp" />
     <ClInclude Include="src\Managers\Resource\Resource.hpp" />
@@ -639,7 +638,6 @@
     <ClCompile Include="src\Graphics\ParticleEmitter.cpp" />
     <ClCompile Include="src\Graphics\QuadRenderer.cpp" />
     <ClCompile Include="src\Graphics\SpriteRenderer.cpp" />
-    <ClCompile Include="src\Input\InputMap.cpp" />
     <ClCompile Include="src\Input\Windows\GLFWInputManager.cpp" />
     <ClCompile Include="src\Managers\Scene\SceneManager.cpp" />
     <ClCompile Include="src\OpenGL\ElementBuffer.cpp" />
@@ -658,6 +656,7 @@
     <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble1.json" />
     <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble2.json" />
     <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble3.json" />
+    <None Include="Application\Games\ZumaGame\MarbleArchetypes\marble4.json" />
     <None Include="Externals\includes\glm\detail\func_common.inl" />
     <None Include="Externals\includes\glm\detail\func_common_simd.inl" />
     <None Include="Externals\includes\glm\detail\func_exponential.inl" />
@@ -797,6 +796,12 @@
     <None Include="imgui.ini" />
     <None Include="src\Shaders\instancedSprite.frag" />
     <None Include="src\Shaders\instancedSprite.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\marbles\marble1.png" />
+    <Image Include="..\..\..\..\Desktop\marbles\marble2.png" />
+    <Image Include="..\..\..\..\Desktop\marbles\marble3.png" />
+    <Image Include="..\..\..\..\Desktop\marbles\marble4.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

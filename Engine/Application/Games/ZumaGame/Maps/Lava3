@@ -48,8 +48,8 @@
             "Components": [
                 {
                     "cooldown": 10,
-                    "counter": 0,
-                    "shotSpeed": 600.0,
+                    "counter": 10,
+                    "shotSpeed": 60000.0,
                     "type": 7
                 },
                 {
@@ -57,7 +57,7 @@
                         0.0,
                         0.0
                     ],
-                    "rot": -4.177610397338867,
+                    "rot": -2.989393472671509,
                     "rotateToDir": false,
                     "size": [
                         100.0,
@@ -203,7 +203,7 @@
             "nMarbles": 100,
             "nSamples": 10,
             "popThreshold": 3,
-            "speed": 80.0,
+            "speed": 8000.0,
             "systemID": "Route0"
         },
         {
@@ -313,7 +313,7 @@
             "nMarbles": 100,
             "nSamples": 10,
             "popThreshold": 3,
-            "speed": 80.0,
+            "speed": 8000.0,
             "systemID": "Route1"
         }
     ]

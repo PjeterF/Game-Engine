@@ -89,8 +89,6 @@ void GeneralZumaScene::initialize()
 
 void GeneralZumaScene::update(float dt)
 {
-	dt = 0.001;
-
 	EntityManager::getInstance().update();
 	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
 	SystemsManager::getInstance().getSystem<CollisionS>()->update(dt);
@@ -199,10 +197,6 @@ void GeneralZumaScene::input()
 	if (input.mouseKeyClicked[ZE_MOUSE_BUTTON_1])
 		EventManager::getInstance().notify(Event(Event::Shoot, &cursorPos), ECS2);
 
-	if (input.keyClicked[ZE_KEY_Z])
-		this->deSerialize("Application/Games/ZumaGame/Maps/serializationTest.json");
-	
-
 	if (movingPt)
 	{
 		auto route = SystemsManager::getInstance().getSystem<RouteS>(selectedRoute);
@@ -258,7 +252,7 @@ void GeneralZumaScene::serialize(std::string filepath)
 		nlohmann::json jEnt;
 		jEnt["Components"] = nlohmann::json::array();
 
-		if (ent.hasComponent<MarbleComponent>())
+		if (ent.hasComponent<MarbleComponent>() || ent.hasComponent<Emitter>())
 			continue;
 
 		if (ent.hasComponent<MarbleShooter>())
@@ -269,8 +263,8 @@ void GeneralZumaScene::serialize(std::string filepath)
 			jEnt["Components"].push_back(ent.getComponent<Sprite>().serialize());
 		if (ent.hasComponent<Velocity>())
 			jEnt["Components"].push_back(ent.getComponent<Velocity>().serialize());
-		if (ent.hasComponent<Animation>())
-			jEnt["Components"].push_back(ent.getComponent<Animation>().serialize());
+		/*if (ent.hasComponent<Animation>())
+			jEnt["Components"].push_back(ent.getComponent<Animation>().serialize());*/
 		if (ent.hasComponent<AABB>())
 			jEnt["Components"].push_back(ent.getComponent<AABB>().serialize());
 		if (ent.hasComponent<Emitter>())
@@ -316,6 +310,7 @@ void GeneralZumaScene::deSerialize(std::string filepath)
 		for (int i2 = 0; i2 < jEnt.size(); i2++)
 		{
 			nlohmann::json& jComp = jEnt[i2];
+			auto str = jEnt[i2].dump(4);
 			int type = jComp["type"];
 			switch (type)
 			{

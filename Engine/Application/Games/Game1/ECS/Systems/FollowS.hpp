@@ -11,7 +11,7 @@ public:
 	bool setTarget(int ID);
 
 	float acceleration = 0.0f;
-	float interceptStrength = 40.0f;
+	float interceptStrength = 0.0f;
 	float rePositioningDistance = 1500;
 	float teleportDistance = 1000;
 private:

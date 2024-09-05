@@ -5,7 +5,8 @@
 RenderingS::RenderingS(RenderingAPI* rAPI) : rAPI(rAPI)
 {
 	requiredComponents = {
-		std::type_index(typeid(RenderingLayer))
+		std::type_index(typeid(RenderingLayer)),
+		std::type_index(typeid(Transform))
 	};
 }
 

@@ -1,12 +1,16 @@
 #include "RenderingTestScene.hpp"
 
+#include "../../Game1/ECS/Systems/FollowS.hpp"
+
 RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 {
+	SystemsManager::getInstance().addSystem<FollowS>(new FollowS());
+
 	std::vector<glm::vec4> fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
 
 	int maxVel = 0;
-	glm::vec2 xPos = { 0, 1920 };
-	glm::vec2 yPos = { 0, 1080 };
+	glm::vec2 xPos = { 0, 500 };
+	glm::vec2 yPos = { 0, 500 };
 	glm::vec2 sizeVar = { 5, 10 };
 
 	for (int i = 0; i < 6000; i++)
@@ -26,10 +30,17 @@ RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 		SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(ent.getID());
 		SystemsManager::getInstance().getSystem<MovementS>()->addEntity(ent.getID());
 		SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(ent.getID());
+		SystemsManager::getInstance().getSystem<FollowS>()->addEntity(ent.getID());
 		SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->addEntity(ent.getID());
-
-		SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength = 0.5;
 	}
+
+
+	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength = 0.050;
+	SystemsManager::getInstance().getSystem<FollowS>()->acceleration = 0.001;
+
+	SystemsManager::getInstance().getSystem<FollowS>()->setTarget(0);
+	SystemsManager::getInstance().getSystem<MovementS>()->removeEntity(0);
+	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->removeEntity(0);
 
 	{
 		int partilceCount = 1000000;
@@ -52,8 +63,6 @@ RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 		//
 		//SystemsManager::getInstance().getSystem<ParticleS>()->update(0);
 	}
-
-	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength = 5;
 }
 
 void RenderingTestScene::initialize()
@@ -91,6 +100,7 @@ void RenderingTestScene::update(float dt)
 	
 	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->update(dt);
 	SystemsManager::getInstance().getSystem<MovementS>()->update(dt);
+	SystemsManager::getInstance().getSystem<FollowS>()->update(dt);
 
 	//SystemsManager::getInstance().getSystem<ParticleS>()->update(dt);
 }
@@ -120,6 +130,14 @@ void RenderingTestScene::draw(RenderingAPI* renderingAPI)
 	}
 
 	i++;
+
+	ImGui::Begin("Debug");
+
+	ImGui::InputFloat("Acceleration", &SystemsManager::getInstance().getSystem<FollowS>()->acceleration);
+	ImGui::InputFloat("Repulsion", &SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength);
+	ImGui::InputFloat("Cell size", &SystemsManager::getInstance().getSystem<CollisionS>()->cellSize);
+
+	ImGui::End();
 }
 
 void RenderingTestScene::input()

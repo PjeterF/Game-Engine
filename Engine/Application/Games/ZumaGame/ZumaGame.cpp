@@ -13,6 +13,7 @@ void ZumaGame::initialize()
 		ComponentPoolManager::getInstance().addPool<MarbleShooter>();
 
 	Camera* cam1 = new Camera(0, wndWidth, 0, wndHeight);
+	cam1->setPosition(-wndWidth / 2, -wndHeight / 2);
 	renderingAPI->setCamera(cam1);
 
 	SystemsManager::getInstance().addSystem<RenderingS>(new RenderingS(renderingAPI));

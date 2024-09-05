@@ -3,8 +3,6 @@
 #include "../InputManager.hpp"
 #include "GLFW/glfw3.h"
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 class GLFWInputManager : public InputManager
 {
 public:
@@ -23,6 +21,8 @@ public:
 	virtual void update() override;
 	virtual glm::vec2 getCursorPos() override;
 	virtual glm::vec2 getNormalizedCursorPos() override;
+
+	virtual std::vector<TouchPoint> getActiveTouches() override;
 
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	{

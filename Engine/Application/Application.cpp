@@ -62,7 +62,7 @@ void Application::run()
 
 	int fpsCap = 120;
 	int iteration = 0;
-	float dt = 0.002;
+	float dt = 0.0f;
 	while (!glfwWindowShouldClose(window))
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();
@@ -104,15 +104,18 @@ void Application::run()
 
 		auto timeEnd = std::chrono::high_resolution_clock::now();
 
-		// Framerate delay 
 		double frameDuration = std::chrono::duration_cast<std::chrono::nanoseconds>(timeEnd - timeStart).count();
-		dt = (float)(frameDuration/1000000000);
 
 		int nsDelay = (1000000000.0f / fpsCap) - frameDuration;
-		if (nsDelay > 0)
+		if (nsDelay > 0) {
 			std::this_thread::sleep_for(std::chrono::nanoseconds(nsDelay));
+		}
 
-		glfwSetWindowTitle(window, ((wndName + " FT: " + std::to_string(frameDuration)).c_str()));
+		dt = frameDuration / 10000000.0f;
+
+		std::cout << dt << "\n";
+
+		glfwSetWindowTitle(window, ((wndName + " " + std::to_string(frameDuration / 1000000.0f) + "ms").c_str()));
 		iteration++;
 	}
 

@@ -21,7 +21,7 @@
 
 int main(void)
 {
-    int cmd = 1;
+    int cmd = 0;
 
     switch (cmd)
     {

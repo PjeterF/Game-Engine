@@ -221,7 +221,7 @@ void RouteS::update(float dt)
 			velocity.x = dir.x;
 			velocity.y = dir.y;
 
-			transform.rot = atan2(-dir.y, dir.x)-3.14;
+			transform.rot = atan2(-dir.y, dir.x);
 
 			transform.x += dt * velocity.x;
 			transform.y += dt * velocity.y;
@@ -579,7 +579,7 @@ bool RouteS::popSame(std::list<int>::iterator it)
 		auto& transform = transformPool->get(*itForwards);
 		auto& transformPrev = transformPool->get(*itForwarsPrev);
 
-		if (marbleCPool->get(*itForwards).type != type || glm::distance(glm::vec2(transform.x, transform.y), glm::vec2(transformPrev.x, transformPrev.y ))>distanceBetween)
+		if (marbleCPool->get(*itForwards).type != type || glm::distance(glm::vec2(transform.x, transform.y), glm::vec2(transformPrev.x, transformPrev.y ))>distanceBetween*1.5)
 			break;
 
 		count++;
@@ -592,7 +592,7 @@ bool RouteS::popSame(std::list<int>::iterator it)
 		auto& transform = transformPool->get(*itBackwards);
 		auto& transformPrev = transformPool->get(*itBackwardsPrev);
 
-		if (marbleCPool->get(*itBackwards).type != type || glm::distance(glm::vec2(transform.x, transform.y), glm::vec2(transformPrev.x, transformPrev.y)) > distanceBetween)
+		if (marbleCPool->get(*itBackwards).type != type || glm::distance(glm::vec2(transform.x, transform.y), glm::vec2(transformPrev.x, transformPrev.y)) > distanceBetween*1.5)
 		{
 			itBackwards++;
 			break;

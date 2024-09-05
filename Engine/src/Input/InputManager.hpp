@@ -2,6 +2,12 @@
 
 #include "keyCodes.h"
 #include <glm/vec2.hpp>
+#include <vector>
+
+struct TouchPoint {
+	glm::vec2 position;
+	float pressure;
+};
 
 class InputManager
 {
@@ -13,6 +19,8 @@ public:
 	virtual void update() = 0;
 	virtual glm::vec2 getCursorPos() = 0;
 	virtual glm::vec2 getNormalizedCursorPos() = 0;
+
+	virtual std::vector<TouchPoint> getActiveTouches() = 0;
 
 	bool keyDown[No_Keys];
 	bool keyClicked[No_Keys];
