@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;$(SolutionDir)Engine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -95,7 +95,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;$(SolutionDir)Engine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;$(SolutionDir)Engine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -132,7 +132,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Externals\includes;$(SolutionDir)Engine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -154,6 +154,8 @@
     <ClInclude Include="Application\Games\Game1\Game1.hpp" />
     <ClInclude Include="Application\Games\Game1\Scenes\Game1_scene1.hpp" />
     <ClInclude Include="Application\Games\Game1\Utility\Game1Utility.hpp" />
+    <ClInclude Include="Application\Games\Game2\Game2.hpp" />
+    <ClInclude Include="Application\Games\Game2\Scenes\Game2Scene1.hpp" />
     <ClInclude Include="Application\Games\TestProject\Scenes\RenderingTestScene.hpp" />
     <ClInclude Include="Application\Games\TestProject\TestingApplication.hpp" />
     <ClInclude Include="Application\Games\ZumaGame\ECS\Components\MarbleComponent.hpp" />
@@ -533,6 +535,7 @@
     <ClInclude Include="src\ECS2\SystemsManager.hpp" />
     <ClInclude Include="src\ECS2\Systems\AnimationS.hpp" />
     <ClInclude Include="src\ECS2\Systems\CollisionRepulsionS.hpp" />
+    <ClInclude Include="src\ECS2\Systems\ElasticCollisionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\FlipToXDirectionS.hpp" />
     <ClInclude Include="src\ECS2\Systems\MovementS.hpp" />
     <ClInclude Include="src\ECS2\Systems\ParticleS.hpp" />
@@ -558,6 +561,7 @@
     <ClInclude Include="src\Input\InputManager.hpp" />
     <ClInclude Include="src\Managers\Resource\Resource.hpp" />
     <ClInclude Include="src\Managers\Resource\ResourceManager.hpp" />
+    <ClInclude Include="src\MultiThreading\ThreadPool.hpp" />
     <ClInclude Include="src\OpenGL\ElementBuffer.hpp" />
     <ClInclude Include="src\OpenGL\FrameBuffer.hpp" />
     <ClInclude Include="src\OpenGL\ShaderProgram.hpp" />
@@ -579,6 +583,8 @@
     <ClCompile Include="Application\Games\Game1\Game1.cpp" />
     <ClCompile Include="Application\Games\Game1\Scenes\Game1_scene1.cpp" />
     <ClCompile Include="Application\Games\Game1\Utility\Game1Utility.cpp" />
+    <ClCompile Include="Application\Games\Game2\Game2.cpp" />
+    <ClCompile Include="Application\Games\Game2\Scenes\Game2Scene1.cpp" />
     <ClCompile Include="Application\Games\TestProject\Scenes\RenderingTestScene.cpp" />
     <ClCompile Include="Application\Games\TestProject\TestingApplication.cpp" />
     <ClCompile Include="Application\Games\ZumaGame\ECS\Components\MarbleShooter.cpp" />
@@ -622,6 +628,7 @@
     <ClCompile Include="src\ECS2\Systems\AnimationS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionRepulsionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\CollisionS.cpp" />
+    <ClCompile Include="src\ECS2\Systems\ElasticCollisionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\FlipToXDirectionS.cpp" />
     <ClCompile Include="src\ECS2\Systems\MovementS.cpp" />
     <ClCompile Include="src\ECS2\Systems\ParticleS.cpp" />
@@ -640,6 +647,7 @@
     <ClCompile Include="src\Graphics\SpriteRenderer.cpp" />
     <ClCompile Include="src\Input\Windows\GLFWInputManager.cpp" />
     <ClCompile Include="src\Managers\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\MultiThreading\ThreadPool.cpp" />
     <ClCompile Include="src\OpenGL\ElementBuffer.cpp" />
     <ClCompile Include="src\OpenGL\FrameBuffer.cpp" />
     <ClCompile Include="src\OpenGL\ShaderProgram.cpp" />

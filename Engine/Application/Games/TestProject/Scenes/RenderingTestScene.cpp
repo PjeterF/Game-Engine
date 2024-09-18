@@ -5,15 +5,16 @@
 RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 {
 	SystemsManager::getInstance().addSystem<FollowS>(new FollowS());
+	SystemsManager::getInstance().addSystem<ElasticCollisionS>(new ElasticCollisionS());
 
 	std::vector<glm::vec4> fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
 
-	int maxVel = 0;
-	glm::vec2 xPos = { 0, 500 };
-	glm::vec2 yPos = { 0, 500 };
-	glm::vec2 sizeVar = { 5, 10 };
+	int maxVel = 1;
+	glm::vec2 xPos = { 0, 1920 };
+	glm::vec2 yPos = { 0, 1080 };
+	glm::vec2 sizeVar = { 10, 50 };
 
-	for (int i = 0; i < 6000; i++)
+	for (int i = 0; i < 2000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 
@@ -22,9 +23,9 @@ RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 		int size = utility::random::randomFloat(sizeVar.x, sizeVar.y);
 
 		ent.addComponent<Transform>(Transform(pos.x, pos.y, size, size));
-		ent.addComponent<Velocity>(Velocity(vel.x, vel.y, 0, 0, 0.95));
+		ent.addComponent<Velocity>(Velocity(vel.x, vel.y, 0, 0, 0.999));
 		ent.addComponent<RenderingLayer>(RenderingLayer());
-		ent.addComponent<AABB>(AABB(size, size, 1));
+		ent.addComponent<AABB>(AABB(size, size, size));
 		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[rand()%fruitDivisions.size()]));
 
 		SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(ent.getID());
@@ -32,13 +33,15 @@ RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 		SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(ent.getID());
 		SystemsManager::getInstance().getSystem<FollowS>()->addEntity(ent.getID());
 		SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->addEntity(ent.getID());
+		SystemsManager::getInstance().getSystem<ElasticCollisionS>()->addEntity(ent.getID());
 	}
 
-
-	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength = 0.050;
-	SystemsManager::getInstance().getSystem<FollowS>()->acceleration = 0.001;
+	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength = 0.000;
+	SystemsManager::getInstance().getSystem<FollowS>()->acceleration = 0.000;
 
 	SystemsManager::getInstance().getSystem<FollowS>()->setTarget(0);
+	SystemsManager::getInstance().getSystem<FollowS>()->rePositioningDistance=10000000;
+	SystemsManager::getInstance().getSystem<FollowS>()->teleportDistance=10000000;
 	SystemsManager::getInstance().getSystem<MovementS>()->removeEntity(0);
 	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->removeEntity(0);
 
@@ -62,6 +65,30 @@ RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 		//SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(ent.getID());
 		//
 		//SystemsManager::getInstance().getSystem<ParticleS>()->update(0);
+	}
+
+	float s = 50;
+	{
+		Entity ent = EntityManager::getInstance().createEntity();
+
+		ent.addComponent<Transform>(Transform(2090, 2060, s, s, 0));
+		ent.addComponent<AABB>(AABB(s, s));
+		ent.addComponent<RenderingLayer>(RenderingLayer());
+		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[0]));
+
+		SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(ent.getID());
+		SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(ent.getID());
+	}
+	{
+		Entity ent = EntityManager::getInstance().createEntity();
+
+		ent.addComponent<Transform>(Transform(2150, 2150, s, s, 0));
+		ent.addComponent<AABB>(AABB(s, s));
+		ent.addComponent<RenderingLayer>(RenderingLayer());
+		ent.addComponent<Sprite>(Sprite(ResourceManager::getInstance().getResource<Texture>("src/Textures/Fruit+.png"), fruitDivisions[20]));
+
+		SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(ent.getID());
+		SystemsManager::getInstance().getSystem<CollisionS>()->addEntity(ent.getID());
 	}
 }
 
@@ -98,6 +125,7 @@ void RenderingTestScene::update(float dt)
 	SystemsManager::getInstance().getSystem<CollisionS>()->lateUpdate(dt);
 	SystemsManager::getInstance().getSystem<CollisionS>()->update(dt);
 	
+	SystemsManager::getInstance().getSystem<ElasticCollisionS>()->update(dt);
 	SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->update(dt);
 	SystemsManager::getInstance().getSystem<MovementS>()->update(dt);
 	SystemsManager::getInstance().getSystem<FollowS>()->update(dt);
@@ -131,11 +159,23 @@ void RenderingTestScene::draw(RenderingAPI* renderingAPI)
 
 	i++;
 
+	static bool showGrid = false;
+
+	if (showGrid)
+	{
+		SystemsManager::getInstance().getSystem<CollisionS>()->drawGrid(*renderingAPI, camera, 1, { 1, 1, 1 ,1 }, true);
+		SystemsManager::getInstance().getSystem<CollisionS>()->drawCellsWithColliders(*renderingAPI, camera, 1, { 1, 0, 0 ,1 }, true);
+	}
+
 	ImGui::Begin("Debug");
+
+	ImGui::SliderFloat("Acceleration slider", &SystemsManager::getInstance().getSystem<FollowS>()->acceleration, -0.5, 0.5);
+	ImGui::SliderFloat("Repulsion slider", &SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength, 0, 0.5);
 
 	ImGui::InputFloat("Acceleration", &SystemsManager::getInstance().getSystem<FollowS>()->acceleration);
 	ImGui::InputFloat("Repulsion", &SystemsManager::getInstance().getSystem<CollisionRepulsionS>()->repulsionStrength);
 	ImGui::InputFloat("Cell size", &SystemsManager::getInstance().getSystem<CollisionS>()->cellSize);
+	ImGui::Checkbox("Show grid", &showGrid);
 
 	ImGui::End();
 }

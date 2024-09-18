@@ -7,7 +7,11 @@
 
 CollisionRepulsionS::CollisionRepulsionS()
 {
-	requiredComponents = { std::type_index(typeid(Transform)), std::type_index(typeid(AABB)), std::type_index(typeid(Velocity)) };
+	requiredComponents = {
+		std::type_index(typeid(Transform)),
+		std::type_index(typeid(AABB)),
+		std::type_index(typeid(Velocity))
+	};
 }
 
 void CollisionRepulsionS::update(float dt)
@@ -37,7 +41,7 @@ void CollisionRepulsionS::update(float dt)
 				direction.y += rand() % 2 - 0.5f;
 			}
 
-			direction = repulsionStrength * col1.mass*col2.mass * glm::normalize(direction);
+			direction = repulsionStrength * glm::normalize(direction);
 
 			vel1.x += direction.x;
 			vel1.y += direction.y;

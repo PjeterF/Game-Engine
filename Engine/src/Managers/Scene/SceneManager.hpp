@@ -13,7 +13,7 @@ class Scene
 public:
 	Scene(Camera& camera);
 	~Scene();
-	virtual void initialize() = 0;
+	virtual void initialize();
 	virtual void update(float dt) = 0;
 	virtual void draw(RenderingAPI* renderingAPI) = 0;
 	virtual void input() = 0;

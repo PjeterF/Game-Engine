@@ -33,12 +33,13 @@ public:
 	T& getComponent();
 	EntityTag getTag();
 	void setTag(EntityTag tag);
-	void delete_();
+	void kill();
 
 	nlohmann::json serialize();
 private:
 	int ID;
 	bool valid;
+	ComponentPoolManager& manager;
 };
 
 class EntityManager
@@ -66,23 +67,23 @@ private:
 template<typename T>
 inline bool Entity::hasComponent()
 {
-	return ComponentPoolManager::getInstance().hasComponent<T>(this->ID);
+	return manager.hasComponent<T>(this->ID);
 }
 
 template<typename T>
 inline T& Entity::addComponent(T component)
 {
-	return ComponentPoolManager::getInstance().addComponent<T>(this->ID, component);
+	return manager.addComponent<T>(this->ID, component);
 }
 
 template<typename T>
 inline void Entity::removeComponent()
 {
-	ComponentPoolManager::getInstance().removeComponent<T>(this->ID);
+	manager.removeComponent<T>(this->ID);
 }
 
 template<typename T>
 inline T& Entity::getComponent()
 {
-	return ComponentPoolManager::getInstance().getComponent<T>(this->ID);
+	return manager.getComponent<T>(this->ID);
 }

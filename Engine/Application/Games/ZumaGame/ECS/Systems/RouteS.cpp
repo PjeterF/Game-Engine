@@ -401,7 +401,7 @@ bool RouteS::insertAt(int entID, int inserteeID)
 		{
 			if (addEntity(inserteeID))
 			{
-				marbleCPool->get(inserteeID).targetPointIdx = marbleCPool->get(*it).targetPointIdx;
+				marbleCPool->get(inserteeID).targetPointIdx = marbleCPool->get(*it).targetPointIdx+1;
 				marbleCPool->get(inserteeID).routeName = systemID;
 
 				auto& inserteeTransform = transformPool->get(inserteeID);

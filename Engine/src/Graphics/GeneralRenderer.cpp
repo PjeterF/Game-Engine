@@ -1,4 +1,5 @@
 #include "GeneralRenderer.hpp"
+#include <glm/glm.hpp>
 
 RenderingAPI::RenderingAPI(Camera* camera, GLuint lineShaderID, GLuint spriteShaderID, GLuint quadShaderID, GLuint instancedQuadShaderId, GLuint instancedSpriteShaderId) : camera(camera)
 {
@@ -57,4 +58,14 @@ void RenderingAPI::addSpriteInstance(glm::vec2 position, glm::vec2 scale, float 
 void RenderingAPI::drawSpriteInstances()
 {
 	instancedSpriteRenderer->drawInstances();
+}
+
+void RenderingAPI::addQuadLineInstance(glm::vec2 p0, glm::vec2 p1, float width, glm::vec4 color)
+{
+	glm::vec2 diff = p0 - p1;
+	float length = 0.5f * glm::length(diff);
+	glm::vec2 normal = glm::normalize(diff);
+	float angle = atan2(normal.y, normal.x);
+
+	instancedQuadRenderer->commisionInstance(0.5f * (p0.x + p1.x), 0.5f * (p0.y + p1.y), length, width, angle, color.r, color.g, color.b, color.a);
 }

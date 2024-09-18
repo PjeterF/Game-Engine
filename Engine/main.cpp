@@ -1,3 +1,5 @@
+#pragma once
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -18,10 +20,13 @@
 #include "Application/Games/Game1/Game1.hpp"
 #include "Application/Games/ZumaGame/ZumaGame.hpp"
 #include "Application/Games/TestProject/TestingApplication.hpp"
+#include "Application/Games/Game2/Game2.hpp"
+
+#include "src/MultiThreading/ThreadPool.hpp"
 
 int main(void)
 {
-    int cmd = 0;
+    int cmd = 1;
 
     switch (cmd)
     {
@@ -42,6 +47,12 @@ int main(void)
     case 2:
     {
         TestingApplicaton app(1920, 1080, "Testing Application");
+        app.run();
+    }
+    break;
+    case 3:
+    {
+        Game2 app(1920, 1080, "Game2");
         app.run();
     }
     break;

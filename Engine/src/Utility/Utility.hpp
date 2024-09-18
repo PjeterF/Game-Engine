@@ -10,6 +10,7 @@ namespace utility
 	namespace pairing
 	{
 		int mapIntegerToNatural(int a);
+		int unMapNaturalToInteger(int a);
 
 		int cantorPair(int a, int b);
 		int cantorTriple(int a, int b, int c);
@@ -17,7 +18,8 @@ namespace utility
 		int integerPair(int a, int b);
 		int integerTriple(int a, int b, int c);
 
-		std::tuple<int, int> undoCantorPair(int pair);
+		glm::ivec2 undoCantorPair(int pair);
+		glm::ivec2 undoIntegerPair(int n);
 	}
 	namespace sampling
 	{

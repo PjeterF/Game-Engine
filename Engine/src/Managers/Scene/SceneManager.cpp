@@ -81,6 +81,10 @@ Scene::~Scene()
     }
 }
 
+void Scene::initialize()
+{
+}
+
 void Scene::setCamera(Camera& camera)
 {
     this->camera = camera;

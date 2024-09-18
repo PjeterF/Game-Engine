@@ -96,9 +96,10 @@ void InstancedSpriteRenderer::addInstance(glm::vec2 position, glm::vec2 dimensio
 	}
 
 	auto batch_it = texBatchMap.find(texture->getId());
+	//does tex belong to a batch
 	if (batch_it == texBatchMap.end())
 	{
-		//tex belongs to no batch
+		//can tex fit into current batch
 		if (batches.back().texUnitMap.size() < SPRITE_RENDERER_MAX_TEX_SLOTS)
 		{
 			//add to current batch;

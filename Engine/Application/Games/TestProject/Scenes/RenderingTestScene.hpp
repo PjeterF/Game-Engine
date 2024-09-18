@@ -10,6 +10,7 @@
 #include "../../src/ECS2/Systems/AnimationS.hpp"
 #include "../../src/ECS2/Systems/CollisionRepulsionS.hpp"
 #include "../../src/ECS2/Systems/ParticleS.hpp"
+#include "../../src/ECS2/Systems/ElasticCollisionS.hpp"
 
 #include "../../src/Utility/Utility.hpp"
 
@@ -24,7 +25,6 @@ public:
 	virtual void update(float dt) override;
 	virtual void draw(RenderingAPI* renderingAPI) override;
 	virtual void input() override;
-
 private:
 	std::chrono::steady_clock::time_point timeStart, timeEnd;
 };

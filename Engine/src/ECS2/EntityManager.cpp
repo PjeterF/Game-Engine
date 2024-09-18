@@ -2,7 +2,7 @@
 
 #include "../Events/EventManager.hpp"
 
-Entity::Entity(int ID) : ID(ID)
+Entity::Entity(int ID) : ID(ID), manager(ComponentPoolManager::getInstance())
 {
 	if (ID == -1)
 		valid = false;
@@ -30,7 +30,7 @@ void Entity::setTag(EntityTag tag)
 	EntityManager::getInstance().setTag(ID, tag);
 }
 
-void Entity::delete_()
+void Entity::kill()
 {
 	EntityManager::getInstance().deleteEntity(this->ID);
 }

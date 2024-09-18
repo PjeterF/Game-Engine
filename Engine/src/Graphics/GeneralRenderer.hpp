@@ -27,6 +27,7 @@ public:
 	void drawQuadInstances();
 	void addSpriteInstance(glm::vec2 position, glm::vec2 scale, float angle, Texture* texture, glm::vec4 texTransform = {0, 0, 0, 0}, bool flipHorizontally=false);
 	void drawSpriteInstances();
+	void addQuadLineInstance(glm::vec2 p0, glm::vec2 p1, float width, glm::vec4 color);
 private:
 	Camera* camera;
 };

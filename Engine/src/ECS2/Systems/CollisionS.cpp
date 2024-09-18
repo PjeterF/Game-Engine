@@ -213,6 +213,54 @@ CollisionS::Collision& CollisionS::getCollision(int ID1, int ID2)
 		return (*it).second;
 }
 
+void CollisionS::drawGrid(RenderingAPI& rAPI, Camera& camera, float width, glm::vec4 color, bool commisionDrawing)
+{
+	float x = round(camera.getFrustrumX().x / cellSize) * cellSize;
+	while (x < camera.getFrustrumX().y+cellSize)
+	{
+		rAPI.addQuadLineInstance({ x, camera.getFrustrumY().x }, { x, camera.getFrustrumY().y }, width, color);
+		x += cellSize;
+	}
+
+	float y = round(camera.getFrustrumY().x / cellSize) * cellSize;
+	while (y < camera.getFrustrumY().y + cellSize)
+	{
+		rAPI.addQuadLineInstance({ camera.getFrustrumX().x, y }, { camera.getFrustrumX().y, y }, width, color);
+		y += cellSize;
+	}
+
+	if (commisionDrawing)
+		rAPI.drawQuadInstances();
+}
+
+void CollisionS::drawCellsWithColliders(RenderingAPI& rAPI, Camera& camera, float width, glm::vec4 color, bool commisionDrawing)
+{
+	for (auto& cell : grid)
+	{
+		if (cell.second.empty())
+			continue;
+
+		glm::vec2 cellCoord = cellSize * (glm::vec2)utility::pairing::undoIntegerPair(cell.first);
+		if (!camera.isPointInFrustrum(cellCoord, 10))
+			continue;
+
+		if (cellCoord.x < 0)
+			cellCoord.x -= cellSize;
+		if (cellCoord.y < 0)
+			cellCoord.y -= cellSize;
+
+		rAPI.addQuadLineInstance(cellCoord, cellCoord + cellSize, width, color);
+
+		if(cellCoord.x == 0)
+			rAPI.addQuadLineInstance(cellCoord - glm::vec2(cellSize, 0), cellCoord + cellSize - glm::vec2(cellSize, 0), width, color);
+		if (cellCoord.y == 0)
+			rAPI.addQuadLineInstance(cellCoord - glm::vec2(0, cellSize), cellCoord + cellSize - glm::vec2(0, cellSize), width, color);
+	}
+
+	if (commisionDrawing)
+		rAPI.drawQuadInstances();
+}
+
 void CollisionS::addToGrid(int ID)
 {
 	static auto transformPool = ComponentPoolManager::getInstance().getPool<Transform>();

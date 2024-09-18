@@ -17,13 +17,13 @@ public:
 	virtual void removeEntity(int ID);
 	virtual void update(float dt) = 0;
 	virtual void lateUpdate(float dt);
-	const std::set<int>& getEntitySet();
+	const std::unordered_set<int>& getEntitySet();
 
 	bool entityIsIncluded(int ID);
 protected:
 	SysBase(bool deleteOnSceneEnd=false);
 	std::vector<std::type_index> requiredComponents;
-	std::set<int> entities;
+	std::unordered_set<int> entities;
 	bool deleteOnSceneEnd = false;
 
 	friend class Scene;

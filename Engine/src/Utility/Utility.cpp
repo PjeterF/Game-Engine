@@ -12,6 +12,14 @@ namespace utility
                 return -2 * a - 1;
         }
 
+        int unMapNaturalToInteger(int a)
+        {
+            if (a % 2 == 0)
+                return a / 2;
+            else
+                return -(a + 1) / 2;
+        }
+
         int cantorPair(int a, int b)
         {
             return (a + b) * (a + b + 1) / 2 + b;
@@ -32,13 +40,19 @@ namespace utility
             return integerPair(integerPair(a, b), c);
         }
 
-        std::tuple<int, int> undoCantorPair(int pair)
+        glm::ivec2 undoCantorPair(int pair)
         {
             int w = (int)((sqrt(8 * pair + 1) - 1) / 2);
             int t = (w * w + w) / 2;
             int y = pair - t;
             int x = w - y;
             return { x, y };
+        }
+
+        glm::ivec2 undoIntegerPair(int n)
+        {
+            glm::ivec2 mapped = undoCantorPair(n);
+            return { unMapNaturalToInteger(mapped.x), unMapNaturalToInteger(mapped.y) };
         }
     }
 }

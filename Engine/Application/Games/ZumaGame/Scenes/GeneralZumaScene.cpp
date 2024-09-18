@@ -140,9 +140,27 @@ void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 
 	if (paused)
 	{
-		renderingAPI->drawLine({ 0, -10000 }, { 0, 10000 }, 5, { 1, 0.5, 0.5 });
-		renderingAPI->drawLine({ -10000, 0 }, { 10000, 0 }, 5, { 1, 0.5, 0.5 });
+		renderingAPI->drawLine({ 0, -10000 }, { 0, 10000 }, 5, { 0.7, 0.7, 0.7 });
+		renderingAPI->drawLine({ -10000, 0 }, { 10000, 0 }, 5, { 0.7, 0.7, 0.7 });
 	}
+
+	if (showCollisionGrid)
+	{
+		SystemsManager::getInstance().getSystem<CollisionS>()->drawGrid(*renderingAPI, camera, gridLineWidth, { 1, 1, 1 ,1 }, true);
+		SystemsManager::getInstance().getSystem<CollisionS>()->drawCellsWithColliders(*renderingAPI, camera, gridLineWidth, { 1, 0, 0 ,1 }, true);
+	}
+
+	if (showDebug)
+	{
+		ImGui::Begin("Debug");
+
+		ImGui::InputFloat("Collision grid cell size", &SystemsManager::getInstance().getSystem<CollisionS>()->cellSize);
+		ImGui::InputFloat("Collision grid line width", &gridLineWidth);
+		ImGui::Checkbox("Show collision grid", &showCollisionGrid);
+
+		ImGui::End();
+	}
+	
 }
 
 void GeneralZumaScene::input()
@@ -168,6 +186,9 @@ void GeneralZumaScene::input()
 		camera.setPosition(cameraPosition.x, cameraPosition.y + rate);
 	if (wheel != 0)
 		camera.changeZoom(wheel * zoomRate);
+
+	if (input.keyReleased[ZE_KEY_P])
+		showDebug = !showDebug;
 
 	for (auto& element : UIElements)
 	{

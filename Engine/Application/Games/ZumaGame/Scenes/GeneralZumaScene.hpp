@@ -51,4 +51,10 @@ private:
 	std::vector<UIWindow*> UIElements;
 
 	bool paused = false;
+
+	bool showCollisionGrid = false;
+	float cellSize = 30;
+	float gridLineWidth = 1;
+
+	bool showDebug = false;
 };

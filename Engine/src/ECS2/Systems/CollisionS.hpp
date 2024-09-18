@@ -11,6 +11,8 @@
 #include <map>
 
 #include "../../Utility/Utility.hpp"
+#include "../../Graphics/Camera.hpp"
+#include "../../Graphics/GeneralRenderer.hpp"
 
 class CollisionS : public SysBase
 {
@@ -31,6 +33,8 @@ public:
 	virtual bool addEntity(int ID) override;
 	virtual bool addEntity(Entity entity) override;
 	CollisionS::Collision& getCollision(int ID1, int ID2);
+	void drawGrid(RenderingAPI& rAPI, Camera& camera, float width, glm::vec4 color, bool commisionDrawing);
+	void drawCellsWithColliders(RenderingAPI& rAPI, Camera& camera, float width, glm::vec4 color, bool commisionDrawing);
 
 	float cellSize;
 private:

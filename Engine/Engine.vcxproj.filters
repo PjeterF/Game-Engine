@@ -1284,6 +1284,18 @@
     <ClInclude Include="Application\Games\TestProject\Scenes\RenderingTestScene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Games\Game2\Game2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Games\Game2\Scenes\Game2Scene1.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MultiThreading\ThreadPool.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS2\Systems\ElasticCollisionS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events\EventManager.cpp">
@@ -1518,6 +1530,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application\Games\TestProject\Scenes\RenderingTestScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game2\Game2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Games\Game2\Scenes\Game2Scene1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MultiThreading\ThreadPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS2\Systems\ElasticCollisionS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

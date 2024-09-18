@@ -47,7 +47,7 @@ void SysBase::lateUpdate(float dt)
 {
 }
 
-const std::set<int>& SysBase::getEntitySet()
+const std::unordered_set<int>& SysBase::getEntitySet()
 {
     return entities;
 }

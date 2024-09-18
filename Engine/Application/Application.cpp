@@ -63,6 +63,7 @@ void Application::run()
 	int fpsCap = 120;
 	int iteration = 0;
 	float dt = 0.0f;
+	float accumulated_dt = 0;
 	while (!glfwWindowShouldClose(window))
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();
@@ -113,7 +114,7 @@ void Application::run()
 
 		dt = frameDuration / 10000000.0f;
 
-		std::cout << dt << "\n";
+		//std::cout << dt << "\n";
 
 		glfwSetWindowTitle(window, ((wndName + " " + std::to_string(frameDuration / 1000000.0f) + "ms").c_str()));
 		iteration++;
