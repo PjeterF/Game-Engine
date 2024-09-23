@@ -63,7 +63,6 @@ void Application::run()
 	int fpsCap = 120;
 	int iteration = 0;
 	float dt = 0.0f;
-	float accumulated_dt = 0;
 	while (!glfwWindowShouldClose(window))
 	{
 		auto timeStart = std::chrono::high_resolution_clock::now();

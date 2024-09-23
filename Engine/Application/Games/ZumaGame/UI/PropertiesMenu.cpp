@@ -424,7 +424,7 @@ void PropertiesMenu::render()
 			ImGui::Text("current frame");
 
 			ImGui::SetNextItemWidth(nodeWidth / 2);
-			if (ImGui::InputInt("##frameDuration", &comp.frameDuration))
+			if (ImGui::InputFloat("##frameDuration", &comp.frameDuration))
 			{
 				if (comp.frameDuration < 1)
 					comp.frameDuration = 1;

@@ -25,6 +25,7 @@ void AnimationS::update(float dt)
 		else
 			anim.state = Animation::run;
 
+		anim.counter = anim.counter + dt;
 		if (++anim.counter >= anim.frameDuration)
 		{
 			anim.counter = 0;
