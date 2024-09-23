@@ -60,7 +60,7 @@ void Application::run()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	int fpsCap = 120;
+	int fpsCap = 30;
 	int iteration = 0;
 	float dt = 0.0f;
 	while (!glfwWindowShouldClose(window))
@@ -109,9 +109,12 @@ void Application::run()
 		int nsDelay = (1000000000.0f / fpsCap) - frameDuration;
 		if (nsDelay > 0) {
 			std::this_thread::sleep_for(std::chrono::nanoseconds(nsDelay));
+			dt = 1.0f/fpsCap*100;
 		}
-
-		dt = frameDuration / 10000000.0f;
+		else
+		{
+			dt = frameDuration / 10000000.0f;
+		}
 
 		//std::cout << dt << "\n";
 
