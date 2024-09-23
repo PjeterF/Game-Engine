@@ -9,12 +9,12 @@ RenderingTestScene::RenderingTestScene(Camera& camera) : Scene(camera)
 
 	std::vector<glm::vec4> fruitDivisions = utility::sampling::sampleEvenly(608, 96, 0, 0, 36, 6);
 
-	int maxVel = 1;
-	glm::vec2 xPos = { 0, 1920 };
-	glm::vec2 yPos = { 0, 1080 };
+	int maxVel = 5;
+	glm::vec2 xPos = { 0, 1000 };
+	glm::vec2 yPos = { 0, 1000 };
 	glm::vec2 sizeVar = { 10, 50 };
 
-	for (int i = 0; i < 2000; i++)
+	for (int i = 0; i < 5000; i++)
 	{
 		Entity ent = EntityManager::getInstance().createEntity();
 

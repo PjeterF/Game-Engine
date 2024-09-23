@@ -71,7 +71,7 @@ void GeneralZumaScene::initialize()
 	SystemsManager::getInstance().getSystem<RenderingS>()->addEntity(shooter.getID());
 	SystemsManager::getInstance().getSystem<ShooterS>()->addEntity(shooter.getID());*/
 
-	emitter = new ParticeEmitter(0, 2000, 10000);
+	emitter = new ParticeEmitter(0, 0, 10000);
 	emitter->defaultProperties.xPosVar = glm::vec2(-50, 50);
 	emitter->defaultProperties.yPosVar = glm::vec2(0, 25);
 	emitter->defaultProperties.yVelVar = glm::vec2(1, 2);
@@ -128,7 +128,8 @@ void GeneralZumaScene::draw(RenderingAPI* renderingAPI)
 	for (auto& element : UIElements)
 		element->render();
 
-	emitter->draw(renderingAPI);
+	//emitter->draw(renderingAPI);
+	//renderingAPI->drawQuadInstances();
 
 	if (paused)
 	{
